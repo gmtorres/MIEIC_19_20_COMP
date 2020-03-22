@@ -1,16 +1,15 @@
-options
-{
-    LOOKAHEAD=2;
-}
+options { LOOKAHEAD = 2; }
 
-PARSER_BEGIN(Calculator)
+PARSER_BEGIN(Jmm)
 
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.File;
 
-public class Calculator
-{
+
+
+public class Jmm {
+
     public static int max_errors = 10;
 
     public static void main(String args[]) throws ParseException {   
@@ -19,11 +18,13 @@ public class Calculator
 	        SimpleNode root = myJmm.Program();
 	        root.dump("");
 
+
     }
-
 }
+//TODO
 
-PARSER_END(Calculator)
+
+PARSER_END(Jmm)
 
 SKIP : {  " " | "\r" | "\t" | "\n" | <"//"(~[ "\n", "\r" ]) * ("\n" | "\r" | "\r\n")> |
       <"/*"(~["*"]) * "*"("*" | ~[ "*", "/" ](~["*"]) * "*") * "/"> } 
