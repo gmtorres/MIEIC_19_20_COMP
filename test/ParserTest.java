@@ -53,10 +53,10 @@ public class ParserTest {
         }
     }
 
-    /*@Test
+    @Test
     public void testFindMaximum() {
         test("./fixtures/public/FindMaximum.jmm", false);
-    }*/
+    }
 /*
     @Test
     public void testHelloWorld() {
@@ -173,11 +173,11 @@ public class ParserTest {
         test("./fixtures/public/fail/syntactical/MissingRightPar.jmm", true);
     }
 
-    @Test
+   */ @Test
     public void testMultipleSequential() {
         test("./fixtures/public/fail/syntactical/MultipleSequential.jmm", true);
     }
-*/
+
     @Test
     public void testNestedLoop() {
         test("./fixtures/public/fail/syntactical/NestedLoop.jmm", true);

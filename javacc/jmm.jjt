@@ -1,21 +1,20 @@
-options
-{
-    LOOKAHEAD=2;
-}
+options { LOOKAHEAD = 2; }
 
-PARSER_BEGIN(Calculator)
+PARSER_BEGIN(Jmm)
 
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.File;
 
-public class Calculator
-{
+
+
+public class Jmm {
+
     public static int max_errors = 10;
 
     public static void main(String args[]) throws ParseException {   
-			
-System.out.println("TESTE:");
+
+        	System.out.println("TESTE:");
 	        InputStream initialStream = null;
 	        try {
 	            initialStream = new FileInputStream(new File(args[0]));
@@ -28,15 +27,16 @@ System.out.println("TESTE:");
 	        SimpleNode root = myJmm.Program();
 	        root.dump("");
 	        
-	        /*if(max_errors != 10)
-	        	throw new ParseException();*/
-        
+	        
+	        throw new ParseException();
+
 
     }
-
 }
+//TODO
 
-PARSER_END(Calculator)
+
+PARSER_END(Jmm)
 
 SKIP : {  " " | "\r" | "\t" | "\n" | <"//"(~[ "\n", "\r" ]) * ("\n" | "\r" | "\r\n")> |
       <"/*"(~["*"]) * "*"("*" | ~[ "*", "/" ](~["*"]) * "*") * "/"> } 
@@ -159,7 +159,7 @@ void While() #void: {} {
             System.out.println(e.toString());  // print the error message
             error_skipto(e, ROUND_BRACE_CLOSE);
             if(Jmm.max_errors == 0)
-                System.exit(0);
+                throw e;
         }
         Statement() #WHILE_STATEMENT
     
