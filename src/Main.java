@@ -7,9 +7,21 @@ public class Main {
 
     public static void main(String args[]) throws ParseException {   
 
-        	Calculator myJmm = new Calculator(System.in);     
+		
+            System.out.println("TESTE:");
+	        InputStream initialStream = null;
+	        try {
+	            initialStream = new FileInputStream(new File(args[0]));
+	        } catch(Exception e){
+	            System.out.println("Could not found file");
+	            System.exit(0);
+	        }
+	        
+	        Jmm myJmm = new Jmm(initialStream);     
 	        SimpleNode root = myJmm.Program();
 	        root.dump("");
+	        
+
 
     }
 
