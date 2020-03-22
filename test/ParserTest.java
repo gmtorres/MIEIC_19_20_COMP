@@ -53,11 +53,11 @@ public class ParserTest {
         }
     }
 
-   /* @Test
+    @Test
     public void testFindMaximum() {
         test("./fixtures/public/FindMaximum.jmm", false);
     }
-
+/*
     @Test
     public void testHelloWorld() {
         test("./fixtures/public/HelloWorld.jmm", false);
