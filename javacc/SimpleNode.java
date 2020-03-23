@@ -7,17 +7,18 @@ class SimpleNode implements Node {
   protected Node[] children;
   protected int id;
   protected Object value;
-  protected Calculator parser;
+  protected Jmm parser;
 
     // added
-    public int val;
+    public Integer val = null;
     public Operator op = null;
+    public String name = null;
 
   public SimpleNode(int i) {
     id = i;
   }
 
-  public SimpleNode(Calculator p, int i) {
+  public SimpleNode(Jmm p, int i) {
     this(i);
     parser = p;
   }
@@ -60,7 +61,7 @@ class SimpleNode implements Node {
      you need to do. */
 
   public String toString() {
-    return CalculatorTreeConstants.jjtNodeName[id];
+    return JmmTreeConstants.jjtNodeName[id];
   }
   public String toString(String prefix) { return prefix + toString(); }
 
@@ -68,15 +69,19 @@ class SimpleNode implements Node {
      out its children. */
 
   public void dump(String prefix) {
-    System.out.println(toString(prefix));
-    if (children != null) {
-      for (int i = 0; i < children.length; ++i) {
-        SimpleNode n = (SimpleNode)children[i];
-        if (n != null) {
-          n.dump(prefix + " ");
-        }
-      }
-    }
+	  String str = toString(prefix);
+	/*if(this.val != null) System.out.print("\t" + val);
+	if(this.name != null) System.out.print("\t" + toString(name));
+	if(this.op != null) System.out.print("\t" + op.getOp());*/
+	System.out.println(str);
+	if (children != null) {
+	  for (int i = 0; i < children.length; ++i) {
+	    SimpleNode n = (SimpleNode)children[i];
+	    if (n != null) {
+	      n.dump(prefix + " ");
+	    }
+	  }
+	}
   }
 
   public int getId() {

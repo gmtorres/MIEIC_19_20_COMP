@@ -128,11 +128,10 @@ void Statement() #void: {} {
     
     <CURLY_BRACE_OPEN> 
         
-            ( Statement() #INLINE_STATEMENT )* <CURLY_BRACE_CLOSE>
+            ( Statement()  )* <CURLY_BRACE_CLOSE>
 
     | <IF> 
-        
-            <ROUND_BRACE_OPEN> Expression() #IF_CONDITION <ROUND_BRACE_CLOSE> 
+        	<ROUND_BRACE_OPEN> Expression() #IF_CONDITION <ROUND_BRACE_CLOSE> 
             Statement() #IF_STATAMENT_BODY 
             <ELSE> Statement() #ELSE_STATEMENT_BODY
     | While()
@@ -164,8 +163,10 @@ void While() #void: {} {
     
 }
 
-void Expression() #void: {} {
-    ( <IDENTIFIER> #IDENTIFIER
+void Expression() #void: {Token t1;} {
+    ( t1=<IDENTIFIER> {  
+    	jjtThis.name = t1.image;
+     }  #IDENTIFIER
     | <INTEGERLITERAL> #INTEGERLITERAL
     | <TRUE> #BOOL_TRUE
     | <FALSE> #BOOL_FALSE
