@@ -70,10 +70,10 @@ class SimpleNode implements Node {
 
   public void dump(String prefix) {
 	  String str = toString(prefix);
-	/*if(this.val != null) System.out.print("\t" + val);
-	if(this.name != null) System.out.print("\t" + toString(name));
-	if(this.op != null) System.out.print("\t" + op.getOp());*/
-	System.out.println(str);
+	if(this.val != null) str += "\t" + val;
+	else if(this.name != null) str +="\t" + name;
+	else if(this.op != null) str +="\t" + op.getOp();
+	System.out.print(str + "\n");
 	if (children != null) {
 	  for (int i = 0; i < children.length; ++i) {
 	    SimpleNode n = (SimpleNode)children[i];
