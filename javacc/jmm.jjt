@@ -28,8 +28,7 @@ public class Jmm {
 	        root.dump("");
 	        
 	        
-	        throw new ParseException();
-
+	       
 
     }
 }
