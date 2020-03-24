@@ -109,17 +109,20 @@ void MethodDeclaration() #void: {Token t1,t2,t3;} {
     <PUBLIC>
     (    Type() #RETURN_TYPE t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #METHOD_NAME 
             "(" [ ( Type() (t2 = <IDENTIFIER> {  jjtThis.name = t2.image; } #PARAM_ID) ("," Type() (t3 = <IDENTIFIER> {  jjtThis.name = t3.image; } #PARAM_ID) )* ) #PARAMS ] ")" "{" 
-            ( VarDeclaration() #VAR_DEC(2) )* 
-            ( Statement() )* 
+            MethodBody()
             <RETURN> (Expression() #EXPRESSION) #RETURN_EXPRESSION ";" 
         "}"
     | 
         <STATIC> <VOID> t1 = <MAIN> {  jjtThis.name = t1.image; } #METHOD_NAME "(" <STRING> "[" "]" <IDENTIFIER> ")" "{" 
-            ( VarDeclaration() #VAR_DEC(2) )* 
-            ( Statement() )* 
+            MethodBody()
         "}"
     )
     
+}
+
+void MethodBody() #void: {} {
+    ( VarDeclaration() #VAR_DEC(2) )* 
+    ( Statement() )* 
 }
 
 void VarDeclaration() #void: {Token t1;} {
@@ -127,6 +130,7 @@ void VarDeclaration() #void: {Token t1;} {
 }
 
 void Type() #void: {Token t1;} {
+    LOOKAHEAD(2)
     t1 = <INT> "[" "]" {  jjtThis.name = t1.image + "[]" ; } #INT_ARR
     | t1 = <BOOL> {  jjtThis.name = t1.image; } #BOOL
     | t1 = <INT> {  jjtThis.name = t1.image; } #INT
@@ -135,21 +139,19 @@ void Type() #void: {Token t1;} {
 }
 
 void Statement() #void: {Token t1;} {
-    
+    LOOKAHEAD(2)
     <CURLY_BRACE_OPEN> ( Statement()  )* <CURLY_BRACE_CLOSE>
 
     | <IF> <ROUND_BRACE_OPEN> ( Expression() #EXPRESSION ) #IF_CONDITION <ROUND_BRACE_CLOSE> 
             Statement() #IF_STATAMENT_BODY 
             <ELSE> Statement() #ELSE_STATEMENT_BODY
     | While()
-    |  ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #IDENTIFIER 
-            <EQUALS> ( Expression() #EXPRESSION ) ) #ASSIGN1 <SEMICOLON>
-    | ( ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #IDENTIFIER  <SQUARE_BRACE_OPEN> ( Expression() #EXPRESSIONn ) #INDEX <SQUARE_BRACE_CLOSE> ) #ARRAY 
-                <EQUALS> ( Expression() #EXPRESSION ) ) #ASSIGN2 <SEMICOLON>
-
+    
+    | ( t1 = <IDENTIFIER>  { jjtThis.name = t1.image; } #IDENTIFIER 
+        [ <SQUARE_BRACE_OPEN> ( Expression() #EXPRESSION ) #INDEX <SQUARE_BRACE_CLOSE> ] 
+      ) #VAR
+        <EQUALS> ( Expression() #EXPRESSION )  #ASSIGN_VAR(2) <SEMICOLON>
     |  Expression() #EXPRESSION <SEMICOLON>
-
-
 }
 
 void While() #void: {} {
@@ -175,8 +177,10 @@ void Expression() #void: {Token t1;} {
     | <TRUE> #BOOL_TRUE
     | <FALSE> #BOOL_FALSE
     | <THIS> #THIS
-    | (<NEW> <INT> <SQUARE_BRACE_OPEN> Expression() <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
-    | (<NEW> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #IDENTIFIER <ROUND_BRACE_OPEN> <ROUND_BRACE_CLOSE>) #NEW_ID
+    | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #SIZE <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
+    |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #IDENTIFIER <ROUND_BRACE_OPEN> <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
+
+    
     | <NOT> Expression() #NOT_EXPRESSION
     | <ROUND_BRACE_OPEN>
         try {
@@ -193,10 +197,11 @@ void Expression() #void: {Token t1;} {
 
 void Expression2() #void: {Token t1;} {
     "[" Expression() #INDEX "]" [ Expression2() ] 
-    | "." "length" #LENGTH(1) [ Expression2() ] 
-    |  "&&" Expression() #AND(2)
+    | "." ( ( "length" #LENGTH(1) [ Expression2() ] ) |
+          ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #FUCTION 
+            "(" [ Expression()  ("," Expression() )* ] #PARAM ")" [ Expression2()  ] ) )
     | Aritm() 
-    | "." t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #FUCTION "(" [ Expression()  ("," Expression() )* ] #PARAM ")" [ Aritm()  ]
+    
 }
 
 void Aritm() #void : {} {
@@ -205,6 +210,7 @@ void Aritm() #void : {} {
     | "/" Expression() #DIV(2) 
     | "*" Expression() #MULT(2) 
     | "<" Expression() #LESS_THAN(2) 
+    | "&&" Expression() #AND(2)
 }
 
 JAVACODE
