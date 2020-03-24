@@ -5,7 +5,7 @@ import java.io.File;
 public class Main {
 	
 
-    public static void main(String args[]) throws ParseException {   
+    public static void main(String args[]) {   
 
 		
             System.out.println("TESTE:");
@@ -17,9 +17,23 @@ public class Main {
 	            System.exit(0);
 	        }
 	        
-	        Jmm myJmm = new Jmm(initialStream);     
-	        SimpleNode root = myJmm.Program();
-	        root.dump("");
+	        try {
+		        Jmm myJmm = new Jmm(initialStream);   
+		        {
+		        	myJmm.failed = false;
+		        	myJmm.max_errors = 10;
+		        }
+		        SimpleNode root = myJmm.Program();
+		        root.dump("");
+		        
+		        if(myJmm.failed == true) {
+		        	throw new ParseException();
+		        }
+		        
+	        }catch(ParseException e) {
+	        	throw new RuntimeException("Error during parsing");
+	        }
+	        
 	        
 	        
 

@@ -11,6 +11,7 @@ import java.io.File;
 public class Jmm {
 
     public static int max_errors = 10;
+    public static boolean failed = false;
 
     public static void main(String args[]) throws ParseException {   
 
@@ -26,7 +27,10 @@ public class Jmm {
 	        Jmm myJmm = new Jmm(initialStream);     
 	        SimpleNode root = myJmm.Program();
 	        root.dump("");
-	        
+	       	System.out.println("LSD");
+	       	if(2 == 5){
+	       		throw new ParseException();
+	       	}
 	        
 	       
 
@@ -161,6 +165,7 @@ void While() #void: {} {
         }
         catch (ParseException e) {
             Jmm.max_errors--;
+            Jmm.failed = true;
             System.out.println("Exception on WHILE CONDITION caught.");
             System.out.println(e.toString());  // print the error message
             error_skipto(e, ROUND_BRACE_CLOSE);
@@ -222,5 +227,5 @@ void error_skipto(ParseException e, int kind) {
     if(t.kind == ROUND_BRACE_OPEN){
         error_skipto(e,ROUND_BRACE_CLOSE);
     }
-  } while (t.kind != kind);
+  } while (t.kind != kind  && t.kind != EOF);
 }

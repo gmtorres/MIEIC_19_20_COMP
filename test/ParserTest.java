@@ -52,12 +52,12 @@ public class ParserTest {
             fail();
         }
     }
-/*
+
     @Test
     public void testFindMaximum() {
         test("./fixtures/public/FindMaximum.jmm", false);
-    }*/
-/*
+    }
+
     @Test
     public void testHelloWorld() {
         test("./fixtures/public/HelloWorld.jmm", false);
@@ -82,12 +82,12 @@ public class ParserTest {
     public void testQuickSort() {
         test("./fixtures/public/QuickSort.jmm", false);
     }
-*/
+
     @Test
     public void testSimple() {
         test("./fixtures/public/Simple.jmm", false);
     }
-/*
+
     @Test
     public void testTicTacToe() {
         test("./fixtures/public/TicTacToe.jmm", false);
@@ -96,7 +96,7 @@ public class ParserTest {
     @Test
     public void testWhileAndIF() {
         test("./fixtures/public/WhileAndIF.jmm", false);
-    }*/
+    }
 
    /* @Test
     public void testarr_index_not_int() {
@@ -153,7 +153,7 @@ public class ParserTest {
         test("fixtures/public/fail/semantic/extra/miss_type.jmm", true);
     }*/
 
-   /* @Test
+    @Test
     public void testBlowUp() {
         test("./fixtures/public/fail/syntactical/BlowUp.jmm", true);
     }
@@ -173,7 +173,7 @@ public class ParserTest {
         test("./fixtures/public/fail/syntactical/MissingRightPar.jmm", true);
     }
 
-   *//* @Test
+    @Test
     public void testMultipleSequential() {
         test("./fixtures/public/fail/syntactical/MultipleSequential.jmm", true);
     }
@@ -181,6 +181,6 @@ public class ParserTest {
     @Test
     public void testNestedLoop() {
         test("./fixtures/public/fail/syntactical/NestedLoop.jmm", true);
-    }*/
+    }
 
 }
