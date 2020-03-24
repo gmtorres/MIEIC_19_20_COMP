@@ -174,17 +174,17 @@ void While() #void: {} {
 void Expression() #void: {Token t1;} {
     ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; }  #IDENTIFIER
     | t1 = <INTEGERLITERAL> {  jjtThis.val = Integer.parseInt(t1.image); }  #INTEGERLITERAL
-    | <TRUE> #BOOL_TRUE
-    | <FALSE> #BOOL_FALSE
-    | <THIS> #THIS
+    | t1 = <TRUE> {  jjtThis.val = 1; } #BOOL_TRUE
+    | t1 = <FALSE> {  jjtThis.val = 0; } #BOOL_FALSE
+    | t1 =  <THIS> {  jjtThis.name = t1.image; } #THIS
     | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #SIZE <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
     |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #IDENTIFIER <ROUND_BRACE_OPEN> <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
 
     
-    | <NOT> Expression() #NOT_EXPRESSION
+    | ( <NOT> Expression() ) #NOT_EXPRESSION
     | <ROUND_BRACE_OPEN>
         try {
-             Expression() <ROUND_BRACE_CLOSE> #PAR_EXPRESSION
+             Expression() #PAR_EXPRESSION <ROUND_BRACE_CLOSE> 
         }
         catch (ParseException e) {
             //System.out.println("Exception on ROUND_BRACES caught.");
