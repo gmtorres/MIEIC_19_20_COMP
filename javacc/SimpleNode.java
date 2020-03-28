@@ -9,10 +9,12 @@ class SimpleNode implements Node {
   protected Object value;
   protected Jmm parser;
 
-    // added
-    public Integer val = null;
-    public Operator op = null;
-    public String name = null;
+  // added
+  public Integer val = null;
+    
+  public String type = null;
+  public String name = null;
+    
 
   public SimpleNode(int i) {
     id = i;
@@ -70,9 +72,9 @@ class SimpleNode implements Node {
 
   public void dump(String prefix) {
 	  String str = toString(prefix);
+	if(this.type != null) str+= "\t" + this.type;
+	if(this.name != null) str +="\t" + name;
 	if(this.val != null) str += "\t" + val;
-	else if(this.name != null) str +="\t" + name;
-	else if(this.op != null) str +="\t" + op.getOp();
 	System.out.print(str + "\n");
 	if (children != null) {
 	  for (int i = 0; i < children.length; ++i) {

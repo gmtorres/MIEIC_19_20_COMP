@@ -1,4 +1,4 @@
-options { LOOKAHEAD = 2; }
+options { LOOKAHEAD = 1; }
 
 PARSER_BEGIN(Jmm)
 
@@ -75,7 +75,16 @@ TOKEN:{
     | <NOT : "!">
 
     | <SEMICOLON : ";">
+    | <DOT : ".">
+    | <COMMA : ",">
+
     | <EQUALS : "=">
+    | <ADD : "+">
+    | <SUB : "-">
+    | <MUL : "*">
+    | <DIV : "/">
+    | <AND : "&&">
+    | <LESS_THAN : "<">
 
 
 
@@ -112,34 +121,39 @@ void ClassDeclaration() #void: {Token t1;} {
 void MethodDeclaration() #void: {Token t1,t2,t3;} {
     <PUBLIC>
     (    Type() #RETURN_TYPE t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #METHOD_NAME 
-            "(" [ ( Type() (t2 = <IDENTIFIER> {  jjtThis.name = t2.image; } #PARAM_ID) ("," Type() (t3 = <IDENTIFIER> {  jjtThis.name = t3.image; } #PARAM_ID) )* ) #PARAMS ] ")" "{" 
-            MethodBody()
-            <RETURN> (Expression() #EXPRESSION) #RETURN_EXPRESSION ";" 
-        "}"
+            <ROUND_BRACE_OPEN> [ Argument() ( <COMMA> Argument() )* ]  <ROUND_BRACE_CLOSE> 
+            <CURLY_BRACE_OPEN> 
+	            MethodBody()
+	            <RETURN> (Expression() #EXPRESSION) #RETURN_EXPRESSION <SEMICOLON>
+        	<CURLY_BRACE_CLOSE>
     | 
-        <STATIC> <VOID> t1 = <MAIN> {  jjtThis.name = t1.image; } #METHOD_NAME "(" <STRING> "[" "]" <IDENTIFIER> ")" "{" 
-            MethodBody()
-        "}"
+        <STATIC> <VOID> t1 = <MAIN> {  jjtThis.name = t1.image; } #METHOD_NAME 
+        	<ROUND_BRACE_OPEN> <STRING> <SQUARE_BRACE_OPEN> <SQUARE_BRACE_CLOSE> <IDENTIFIER>  <ROUND_BRACE_CLOSE> 
+			<CURLY_BRACE_OPEN> 
+            	MethodBody()
+        	<CURLY_BRACE_CLOSE>
     )
     
 }
 
+void Argument() #ARGUMENT: {Token t1; String s1;} {
+	s1 = Type() t1 = <IDENTIFIER> { jjtThis.type = s1; jjtThis.name = t1.image; }
+}
+
 void MethodBody() #void: {} {
-    ( VarDeclaration() #VAR_DEC(2) )* 
+    (LOOKAHEAD(2)( VarDeclaration()  ))*
     ( Statement() )* 
 }
 
-void VarDeclaration() #void: {Token t1;} {
-    Type()  t1 = <IDENTIFIER>  { jjtThis.name = t1.image; } #IDENTIFIER ";"     
+void VarDeclaration() #VAR_DEC: {Token t1;String s1;} {
+    s1 = Type()  t1 = <IDENTIFIER>  { jjtThis.type = s1; jjtThis.name = t1.image; } <SEMICOLON>     
 }
 
-void Type() #void: {Token t1;} {
-    LOOKAHEAD(2)
-    t1 = <INT> "[" "]" {  jjtThis.name = t1.image + "[]" ; } #INT_ARR
-    | t1 = <BOOL> {  jjtThis.name = t1.image; } #BOOL
-    | t1 = <INT> {  jjtThis.name = t1.image; } #INT
-    | t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #IDENTIFIER
-    | t1 = <VOID> {  jjtThis.name = t1.image; } #VOID
+String Type() #void: {Token t1; String s1 = "";} {
+     ( t1 = <INT> [ <SQUARE_BRACE_OPEN> <SQUARE_BRACE_CLOSE> {s1 = "[]";} ] {  return t1.image + s1 ; } )
+    | t1 = <BOOL> {  return t1.image; }
+    | t1 = <IDENTIFIER> {  return t1.image; }
+    | t1 = <VOID> {  return t1.image; } 
 }
 
 void Statement() #void: {Token t1;} {
@@ -151,7 +165,7 @@ void Statement() #void: {Token t1;} {
             <ELSE> Statement() #ELSE_STATEMENT_BODY
     | While()
     
-    | ( t1 = <IDENTIFIER>  { jjtThis.name = t1.image; } #IDENTIFIER 
+    |  LOOKAHEAD(2)( t1 = <IDENTIFIER>  { jjtThis.name = t1.image; } #IDENTIFIER 
         [ <SQUARE_BRACE_OPEN> ( Expression() #EXPRESSION ) #INDEX <SQUARE_BRACE_CLOSE> ] 
       ) #VAR
         <EQUALS> ( Expression() #EXPRESSION )  #ASSIGN_VAR(2) <SEMICOLON>
@@ -185,8 +199,6 @@ void Expression() #void: {Token t1;} {
     | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #SIZE <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
     |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #IDENTIFIER <ROUND_BRACE_OPEN> <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
 
-    
-    | ( <NOT> Expression() ) #NOT_EXPRESSION
     | <ROUND_BRACE_OPEN>
         try {
              Expression() #PAR_EXPRESSION <ROUND_BRACE_CLOSE> 
@@ -198,24 +210,25 @@ void Expression() #void: {Token t1;} {
         }
      )
     [ Expression2() ]
+    | ( <NOT> Expression() ) #NOT_EXPRESSION
 }
 
 void Expression2() #void: {Token t1;} {
-    "[" Expression() #INDEX "]" [ Expression2() ] 
-    | "." ( ( "length" #LENGTH(1) [ Expression2() ] ) |
+    <SQUARE_BRACE_OPEN> Expression() #INDEX <SQUARE_BRACE_CLOSE> [ Expression2() ] 
+    | <DOT> ( ( <LENGTH> #LENGTH(1) [ Expression2() ] ) |
           ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #FUCTION 
-            "(" [ Expression()  ("," Expression() )* ] #PARAM ")" [ Expression2()  ] ) )
+            <ROUND_BRACE_OPEN> [ LOOKAHEAD(2) Expression()  (<COMMA> Expression() )* ] #PARAM <ROUND_BRACE_CLOSE> [ Expression2()  ] ) )
     | Aritm() 
     
 }
 
 void Aritm() #void : {} {
-    "+" Expression() #ADD(2) 
-    | "-" Expression() #SUB(2) 
-    | "/" Expression() #DIV(2) 
-    | "*" Expression() #MULT(2) 
-    | "<" Expression() #LESS_THAN(2) 
-    | "&&" Expression() #AND(2)
+    <AND> Expression() #AND(2)
+    | <ADD> Expression() #ADD(2) 
+    | <SUB> Expression() #SUB(2) 
+    | <DIV> Expression() #DIV(2) 
+    | <MUL> Expression() #MULT(2) 
+    | <LESS_THAN> Expression() #LESS_THAN(2)
 }
 
 JAVACODE
