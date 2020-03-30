@@ -95,26 +95,26 @@ TOKEN:{
 
 
 SimpleNode Program(): {} {
-    (ImportDeclaration() #IMPORT_DEC )* ClassDeclaration() #CLASS_DEC <EOF>  {return jjtThis;}
+    (ImportDeclaration() #IMPORT )* ClassDeclaration() #CLASS_DEC <EOF>  {return jjtThis;}
 }
 
 void ImportDeclaration() #void: { Token t1;} {
     <IMPORT> 
-    ( <STATIC> 
-        t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #LIB MethodImport()
-        | t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #LIB [MethodImport() ])
+    ( <STATIC> #STATIC
+        t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #CLASS MethodImport()
+        | t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #CLASS [MethodImport() ])
      <SEMICOLON> 
 }
 
-void MethodImport() #void: {Token t1,t2;} {
-    "." t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #METHOD <ROUND_BRACE_OPEN> [Type() ("," Type())*] #PARAMS <ROUND_BRACE_CLOSE> [Type() #FCNT_RETURN]
+void MethodImport() #void: {Token t1,t2;String s1,s2,s3;} {
+    <DOT> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #METHOD <ROUND_BRACE_OPEN> [(s1 = Type() {  jjtThis.type =s1; } #PARAM) ("," (s2 = Type(){  jjtThis.type =s2; } #PARAM))*] #PARAMS <ROUND_BRACE_CLOSE> [s3=Type() {  jjtThis.type =s3; } #FCNT_RETURN]
 }
 
 void ClassDeclaration() #void: {Token t1;} {
-    <CLASS> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #CLASS_NAME [ <EXTENDS> <IDENTIFIER> ] "{" 
+    <CLASS> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #CLASS_NAME [ <EXTENDS> <IDENTIFIER> ] <CURLY_BRACE_OPEN>
     ( VarDeclaration() #VAR_DEC )* 
     ( MethodDeclaration() #METHOD_DEC )* 
-    "}" 
+    <CURLY_BRACE_CLOSE>
 }
 
 
@@ -157,7 +157,7 @@ String Type() #void: {Token t1; String s1 = "";} {
 }
 
 void Statement() #void: {Token t1;} {
-    LOOKAHEAD(2)
+   
     <CURLY_BRACE_OPEN> ( Statement()  )* <CURLY_BRACE_CLOSE>
 
     | <IF> <ROUND_BRACE_OPEN> ( Expression() #EXPRESSION ) #IF_CONDITION <ROUND_BRACE_CLOSE> 
@@ -186,7 +186,7 @@ void While() #void: {} {
             if(Jmm.max_errors == 0)
                 throw e;
         }
-        Statement() #WHILE_STATEMENT) #WHILE
+        Statement() #BODY) #WHILE
     
 }
 
