@@ -5,7 +5,7 @@ import java.io.File;
 public class Main {
 	
 
-    public static void main(String args[]) {   
+    public static void main(String args[]) throws ParseException {   
 
 		
             System.out.println("TESTE:");
@@ -16,23 +16,19 @@ public class Main {
 	            System.out.println("Could not found file");
 	            System.exit(0);
 	        }
+
+	        Jmm myJmm = new Jmm(initialStream);   
+
+        	myJmm.failed = false;
+        	myJmm.max_errors = 10;
+
+	        SimpleNode root = myJmm.Program();
+	        root.dump("");
 	        
-	        try {
-		        Jmm myJmm = new Jmm(initialStream);   
-		        {
-		        	myJmm.failed = false;
-		        	myJmm.max_errors = 10;
-		        }
-		        SimpleNode root = myJmm.Program();
-		        root.dump("");
-		        
-		        if(myJmm.failed == true) {
-		        	throw new ParseException();
-		        }
-		        
-	        }catch(ParseException e) {
-	        	throw new RuntimeException("Error during parsing");
+	        if(myJmm.failed == true) {
+	        	throw new ParseException();
 	        }
+
 	        
 	        
 	        

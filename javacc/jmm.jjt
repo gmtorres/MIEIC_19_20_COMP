@@ -1,4 +1,7 @@
-options { LOOKAHEAD = 1; }
+options {  
+	MULTI=true;
+    LOOKAHEAD=1;
+    }
 
 PARSER_BEGIN(Jmm)
 
@@ -95,40 +98,42 @@ TOKEN:{
 
 
 SimpleNode Program(): {} {
-    (ImportDeclaration() #IMPORT )* ClassDeclaration() #CLASS_DEC <EOF>  {return jjtThis;}
+    (ImportDeclaration() #IMPORT )* ClassDeclaration() <EOF>  {return jjtThis;}
 }
 
 void ImportDeclaration() #void: { Token t1;} {
     <IMPORT> 
-    ( <STATIC> #STATIC
-        t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #CLASS MethodImport()
+    ( <STATIC> 
+        t1 = <IDENTIFIER> {  jjtThis.name = "static " + t1.image; } #CLASS MethodImport()
         | t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #CLASS [MethodImport() ])
      <SEMICOLON> 
 }
 
 void MethodImport() #void: {Token t1,t2;String s1,s2,s3;} {
-    <DOT> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #METHOD <ROUND_BRACE_OPEN> [(s1 = Type() {  jjtThis.type =s1; } #PARAM) ("," (s2 = Type(){  jjtThis.type =s2; } #PARAM))*] #PARAMS <ROUND_BRACE_CLOSE> [s3=Type() {  jjtThis.type =s3; } #FCNT_RETURN]
+    <DOT> ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.type = "void"; } 
+     <ROUND_BRACE_OPEN> [(s1 = Type() {  jjtThis.type =s1; } #ARGUMENT) ("," (s2 = Type(){  jjtThis.type =s2; } #ARGUMENT))*] #ARGUMENTS <ROUND_BRACE_CLOSE> 
+    [ s3=Type() {  jjtThis.type =s3; } ] ) #METHOD 
 }
 
-void ClassDeclaration() #void: {Token t1;} {
-    <CLASS> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #CLASS_NAME [ <EXTENDS> <IDENTIFIER> ] <CURLY_BRACE_OPEN>
-    ( VarDeclaration() #VAR_DEC )* 
-    ( MethodDeclaration() #METHOD_DEC )* 
+void ClassDeclaration() #CLASS: {Token t1;} {
+    <CLASS> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } [ <EXTENDS> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #EXTENDS ] <CURLY_BRACE_OPEN>
+    ( VarDeclaration()  )* 
+    ( MethodDeclaration()  )* 
     <CURLY_BRACE_CLOSE>
 }
 
 
-void MethodDeclaration() #void: {Token t1,t2,t3;} {
+void MethodDeclaration() #METHOD: {Token t1,t2,t3;String s1;} {
     <PUBLIC>
-    (    Type() #RETURN_TYPE t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #METHOD_NAME 
-            <ROUND_BRACE_OPEN> [ Argument() ( <COMMA> Argument() )* ]  <ROUND_BRACE_CLOSE> 
+    (    s1 = Type() { jjtThis.type = s1;} t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } 
+            <ROUND_BRACE_OPEN> ( [ Argument() ( <COMMA> Argument() )* ] ) #ARGUMENTS  <ROUND_BRACE_CLOSE> 
             <CURLY_BRACE_OPEN> 
 	            MethodBody()
 	            <RETURN> (Expression() #EXPRESSION) #RETURN_EXPRESSION <SEMICOLON>
         	<CURLY_BRACE_CLOSE>
     | 
-        <STATIC> <VOID> t1 = <MAIN> {  jjtThis.name = t1.image; } #METHOD_NAME 
-        	<ROUND_BRACE_OPEN> <STRING> <SQUARE_BRACE_OPEN> <SQUARE_BRACE_CLOSE> <IDENTIFIER>  <ROUND_BRACE_CLOSE> 
+        <STATIC> <VOID> t1 = <MAIN> {  jjtThis.name = t1.image; }
+        	<ROUND_BRACE_OPEN> ( <STRING> <SQUARE_BRACE_OPEN> <SQUARE_BRACE_CLOSE> t1 = <IDENTIFIER> {  jjtThis.type = "String []" ; jjtThis.name = t1.image; } ) #ARGUMENT <ROUND_BRACE_CLOSE> 
 			<CURLY_BRACE_OPEN> 
             	MethodBody()
         	<CURLY_BRACE_CLOSE>
@@ -158,24 +163,34 @@ String Type() #void: {Token t1; String s1 = "";} {
 
 void Statement() #void: {Token t1;} {
    
-    <CURLY_BRACE_OPEN> ( Statement()  )* <CURLY_BRACE_CLOSE>
+    ( <CURLY_BRACE_OPEN> ( Statement()  )* <CURLY_BRACE_CLOSE> ) #CODE_BLOCK
 
-    | <IF> <ROUND_BRACE_OPEN> ( Expression() #EXPRESSION ) #IF_CONDITION <ROUND_BRACE_CLOSE> 
-            Statement() #IF_STATAMENT_BODY 
-            <ELSE> Statement() #ELSE_STATEMENT_BODY
+    | If()
+    
     | While()
     
     |  LOOKAHEAD(2)( t1 = <IDENTIFIER>  { jjtThis.name = t1.image; } #IDENTIFIER 
-        [ <SQUARE_BRACE_OPEN> ( Expression() #EXPRESSION ) #INDEX <SQUARE_BRACE_CLOSE> ] 
+        [ <SQUARE_BRACE_OPEN> ( Expression() #EXPRESSION ) <SQUARE_BRACE_CLOSE> ] 
       ) #VAR
         <EQUALS> ( Expression() #EXPRESSION )  #ASSIGN_VAR(2) <SEMICOLON>
     |  Expression() #EXPRESSION <SEMICOLON>
 }
 
+void If() #IF_STATEMENT: {} {
+	<IF> <ROUND_BRACE_OPEN> Condition() <ROUND_BRACE_CLOSE> 
+	    Statement() #BODY 
+	 <ELSE>
+	 	Statement() #BODY
+}
+
+void Condition() #CONDITION: {} {
+	Expression() #EXPRESSION
+}
+
 void While() #void: {} {
     (<WHILE>
         try {
-        <ROUND_BRACE_OPEN> ( Expression() #EXPRESSION )  #WHILE_CONDITION <ROUND_BRACE_CLOSE>
+        <ROUND_BRACE_OPEN> Condition() <ROUND_BRACE_CLOSE>
         }
         catch (ParseException e) {
             Jmm.max_errors--;
@@ -193,10 +208,10 @@ void While() #void: {} {
 void Expression() #void: {Token t1;} {
     ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; }  #IDENTIFIER
     | t1 = <INTEGERLITERAL> {  jjtThis.val = Integer.parseInt(t1.image); }  #INTEGERLITERAL
-    | t1 = <TRUE> {  jjtThis.val = 1; } #BOOL_TRUE
-    | t1 = <FALSE> {  jjtThis.val = 0; } #BOOL_FALSE
+    | t1 = <TRUE> {  jjtThis.val = 1; } #BOOL
+    | t1 = <FALSE> {  jjtThis.val = 0; } #BOOL
     | t1 =  <THIS> {  jjtThis.name = t1.image; } #THIS
-    | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #SIZE <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
+    | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
     |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #IDENTIFIER <ROUND_BRACE_OPEN> <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
 
     | <ROUND_BRACE_OPEN>
@@ -215,20 +230,20 @@ void Expression() #void: {Token t1;} {
 
 void Expression2() #void: {Token t1;} {
     <SQUARE_BRACE_OPEN> Expression() #INDEX <SQUARE_BRACE_CLOSE> [ Expression2() ] 
-    | <DOT> ( ( <LENGTH> #LENGTH(1) [ Expression2() ] ) |
-          ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #FUCTION 
-            <ROUND_BRACE_OPEN> [ LOOKAHEAD(2) Expression()  (<COMMA> Expression() )* ] #PARAM <ROUND_BRACE_CLOSE> [ Expression2()  ] ) )
+    | <DOT> ( ( <LENGTH> #LENGTH(1) [ Expression2() ] ) 
+          	  | ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #FUNCTION 
+            <ROUND_BRACE_OPEN> [ LOOKAHEAD(2) Expression()  (<COMMA> Expression() )* ] #ARGUMENT <ROUND_BRACE_CLOSE> [ Expression2()  ] ) )
     | Aritm() 
     
 }
 
-void Aritm() #void : {} {
-    <AND> Expression() #AND(2)
-    | <ADD> Expression() #ADD(2) 
-    | <SUB> Expression() #SUB(2) 
-    | <DIV> Expression() #DIV(2) 
-    | <MUL> Expression() #MULT(2) 
-    | <LESS_THAN> Expression() #LESS_THAN(2)
+void Aritm() #OPERATOR(2) : {Token t1;} {
+    t1 = <AND> Expression() {  jjtThis.name = t1.image; }
+    | t1 = <ADD> Expression() {  jjtThis.name = t1.image; } 
+    | t1 = <SUB> Expression() {  jjtThis.name = t1.image; }
+    | t1 = <DIV> Expression() {  jjtThis.name = t1.image; } 
+    | t1 = <MUL> Expression() {  jjtThis.name = t1.image; }
+    | t1 = <LESS_THAN> Expression() {  jjtThis.name = t1.image; }
 }
 
 JAVACODE
