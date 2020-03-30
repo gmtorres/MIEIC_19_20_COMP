@@ -97,7 +97,7 @@ TOKEN:{
 
 
 
-SimpleNode Program(): {} {
+ASTProgram Program(): {} {
     (ImportDeclaration() #IMPORT )* ClassDeclaration() <EOF>  {return jjtThis;}
 }
 
@@ -111,8 +111,8 @@ void ImportDeclaration() #void: { Token t1;} {
 
 void MethodImport() #void: {Token t1,t2;String s1,s2,s3;} {
     <DOT> ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.type = "void"; } 
-     <ROUND_BRACE_OPEN> [(s1 = Type() {  jjtThis.type =s1; } #ARGUMENT) ("," (s2 = Type(){  jjtThis.type =s2; } #ARGUMENT))*] #ARGUMENTS <ROUND_BRACE_CLOSE> 
-    [ s3=Type() {  jjtThis.type =s3; } ] ) #METHOD 
+     <ROUND_BRACE_OPEN> [(s1 = Type() {  jjtThis.type =s1; } #PARAM) ("," (s2 = Type(){  jjtThis.type =s2; } #PARAM))*] #PARAMS <ROUND_BRACE_CLOSE> 
+    [ s3=Type() {  jjtThis.type =s3; } ] ) #METHOD_PROT
 }
 
 void ClassDeclaration() #CLASS: {Token t1;} {
@@ -126,17 +126,17 @@ void ClassDeclaration() #CLASS: {Token t1;} {
 void MethodDeclaration() #METHOD: {Token t1,t2,t3;String s1;} {
     <PUBLIC>
     (    s1 = Type() { jjtThis.type = s1;} t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } 
-            <ROUND_BRACE_OPEN> ( [ Argument() ( <COMMA> Argument() )* ] ) #ARGUMENTS  <ROUND_BRACE_CLOSE> 
-            <CURLY_BRACE_OPEN> 
+            <ROUND_BRACE_OPEN> ( [ Argument() ( <COMMA> Argument() )* ] )  <ROUND_BRACE_CLOSE> 
+            ( <CURLY_BRACE_OPEN> 
 	            MethodBody()
 	            <RETURN> (Expression() #EXPRESSION) #RETURN_EXPRESSION <SEMICOLON>
-        	<CURLY_BRACE_CLOSE>
+        	<CURLY_BRACE_CLOSE> ) #METHOD_BODY
     | 
         <STATIC> <VOID> t1 = <MAIN> {  jjtThis.name = t1.image; }
         	<ROUND_BRACE_OPEN> ( <STRING> <SQUARE_BRACE_OPEN> <SQUARE_BRACE_CLOSE> t1 = <IDENTIFIER> {  jjtThis.type = "String []" ; jjtThis.name = t1.image; } ) #ARGUMENT <ROUND_BRACE_CLOSE> 
-			<CURLY_BRACE_OPEN> 
+			( <CURLY_BRACE_OPEN> 
             	MethodBody()
-        	<CURLY_BRACE_CLOSE>
+        	<CURLY_BRACE_CLOSE> ) #METHOD_BODY
     )
     
 }
@@ -212,7 +212,7 @@ void Expression() #void: {Token t1;} {
     | t1 = <FALSE> {  jjtThis.val = 0; } #BOOL
     | t1 =  <THIS> {  jjtThis.name = t1.image; } #THIS
     | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
-    |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #IDENTIFIER <ROUND_BRACE_OPEN> <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
+    |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #TYPE <ROUND_BRACE_OPEN> <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
 
     | <ROUND_BRACE_OPEN>
         try {
@@ -232,7 +232,7 @@ void Expression2() #void: {Token t1;} {
     <SQUARE_BRACE_OPEN> Expression() #INDEX <SQUARE_BRACE_CLOSE> [ Expression2() ] 
     | <DOT> ( ( <LENGTH> #LENGTH(1) [ Expression2() ] ) 
           	  | ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #FUNCTION 
-            <ROUND_BRACE_OPEN> [ LOOKAHEAD(2) Expression()  (<COMMA> Expression() )* ] #ARGUMENT <ROUND_BRACE_CLOSE> [ Expression2()  ] ) )
+            <ROUND_BRACE_OPEN> [ LOOKAHEAD(2) (Expression() #PARAM)  (<COMMA> Expression() )* ] #PARAM <ROUND_BRACE_CLOSE> [ Expression2()  ] ) )
     | Aritm() 
     
 }

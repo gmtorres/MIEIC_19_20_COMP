@@ -95,6 +95,60 @@ class SimpleNode implements Node {
   public int getId() {
     return id;
   }
+  
+  
+  public boolean makeSimbolTable() {
+	  
+	  if(this.has_scope == false) {
+		  if(this.parent != null) {
+			  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
+			  //this.simbolTable.setParent( ((SimpleNode)this.parent).parentTable );
+		  }
+	  }
+	  else if(this.has_scope == true){
+		  this.simbolTable = new SimbolTable();
+		  if(this.parent != null){
+			  this.simbolTable.setParent( ( (SimpleNode)this.parent ).simbolTable);
+		  }
+	  }
+	  
+	  if(toString().equals("VAR_DEC") || toString().equals("ARGUMENT")) {
+		  this.simbolTable.addSimbol(this.type,this.name);
+	  }
+	  
+	  if(toString().equals("IDENTIFIER")) {
+		  if(this.simbolTable.isSimbolKnown(this.name) == false) {
+			  System.out.println("Simbol " + this.name + " is not known.");
+		  }
+	  }
+	  
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  if ( ((SimpleNode) node).makeSimbolTable() == false)
+				  return false;
+		  }
+	  }
+	  return true;
+  }
+  
+  public void printTables() {
+	  
+	  if(this.has_scope) {
+		  String str = "I have scope:   " + toString();
+		  if(this.parent != null) str+= "    my parent is:    " + ( (SimpleNode)this.parent ).toString();
+		  System.out.println(str);
+		  this.simbolTable.printTable();
+	  }
+	  
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  ((SimpleNode) node).printTables();
+		  }
+	  }
+	  
+  }
+  
+  
 }
 
 /* JavaCC - OriginalChecksum=d33fdb2b8063d5de3474649324d5d160 (do not edit this line) */

@@ -22,14 +22,16 @@ public class Main {
         	myJmm.failed = false;
         	myJmm.max_errors = 10;
 
-	        SimpleNode root = myJmm.Program();
+        	ASTProgram root = myJmm.Program();
 	        root.dump("");
 	        
 	        if(myJmm.failed == true) {
 	        	throw new ParseException();
 	        }
-
 	        
+	        root.makeSimbolTable();
+
+	        root.printTables();
 	        
 	        
 
