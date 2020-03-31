@@ -29,7 +29,9 @@ public class Main {
 	        	throw new ParseException();
 	        }
 	        
-	        root.makeSimbolTable();
+	        if(root.makeSimbolTable() == false) {
+	        	System.out.println("There are semantic errors.");
+	        }
 
 	        root.printTables();
 	        

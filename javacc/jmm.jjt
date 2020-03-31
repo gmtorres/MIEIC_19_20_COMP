@@ -207,9 +207,9 @@ void While() #void: {} {
 
 void Expression() #void: {Token t1;} {
     ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; }  #IDENTIFIER
-    | t1 = <INTEGERLITERAL> {  jjtThis.val = Integer.parseInt(t1.image); }  #INTEGERLITERAL
-    | t1 = <TRUE> {  jjtThis.val = 1; } #BOOL
-    | t1 = <FALSE> {  jjtThis.val = 0; } #BOOL
+    | t1 = <INTEGERLITERAL> {  jjtThis.val = Integer.parseInt(t1.image); jjtThis.type = "int"; }  #INTEGERLITERAL
+    | t1 = <TRUE> {  jjtThis.val = 1; jjtThis.type = "bool"; } #BOOL
+    | t1 = <FALSE> {  jjtThis.val = 0; jjtThis.type = "bool"; } #BOOL
     | t1 =  <THIS> {  jjtThis.name = t1.image; } #THIS
     | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
     |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #TYPE <ROUND_BRACE_OPEN> <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
@@ -230,9 +230,9 @@ void Expression() #void: {Token t1;} {
 
 void Expression2() #void: {Token t1;} {
     <SQUARE_BRACE_OPEN> Expression() #INDEX <SQUARE_BRACE_CLOSE> [ Expression2() ] 
-    | <DOT> ( ( <LENGTH> #LENGTH(1) [ Expression2() ] ) 
-          	  | ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #FUNCTION 
-            <ROUND_BRACE_OPEN> [ LOOKAHEAD(2) (Expression() #PARAM)  (<COMMA> Expression() )* ] #PARAM <ROUND_BRACE_CLOSE> [ Expression2()  ] ) )
+    | <DOT> ( ( <LENGTH> {  jjtThis.type = "int"; } #LENGTH(1)  [ Expression2() ] ) 
+          	  | ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #FUNCTION(1) 
+            <ROUND_BRACE_OPEN> [ LOOKAHEAD(2) (Expression() #PARAM)  (<COMMA> Expression() #PARAM )* ] <ROUND_BRACE_CLOSE> [ Expression2()  ] ) )
     | Aritm() 
     
 }

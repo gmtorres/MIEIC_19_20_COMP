@@ -36,6 +36,16 @@ public class SimbolTable {
 		}
 	}
 	
+	Simbol getSimbol(String id) {
+		if(isSimbolHere(id))
+			return this.simbols.get(id);
+		else {
+			if(this.parent == null)
+				return null;
+			else return this.parent.getSimbol(id);
+		}
+	}
+	
 	void printTable() {
 		for (HashMap.Entry<String, Simbol> entry : simbols.entrySet()) {
 		    String key = entry.getKey();

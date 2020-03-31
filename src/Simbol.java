@@ -15,4 +15,8 @@ public class Simbol {
     	return type + " :  " + identifier; 
     }
     
+    public String getType() {
+    	return type;
+    }
+    
 }
