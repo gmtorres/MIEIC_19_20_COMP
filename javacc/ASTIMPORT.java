@@ -46,7 +46,7 @@ public boolean createTable() {
 				  this.simbolTable.addSimbol(d, String.valueOf("a" + i));
 		  }
 
-		  this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable);
+		  this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable, this.is_static);
 	  }
 	  
 	  

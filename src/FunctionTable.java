@@ -25,6 +25,13 @@ public class FunctionTable {
         return true;
     }
 
+    boolean addFunction(String return_type, String object, String name, SimbolTable st, boolean stFlag) {
+        //TODO: Questao das 2 funcoes com mesmo nome
+        Function f = new Function(return_type, object, name, st, stFlag);
+        functions.put(object +"."+ name, f);
+        return true;
+    }
+
     Function getFunction(String object ,String name) {
         if (isFunctionHere(name)) {
             return this.functions.get(object +"."+ name);

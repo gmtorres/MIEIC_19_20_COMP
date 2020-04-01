@@ -6,12 +6,22 @@ public class Function {
     String name;
     String object;
     SimbolTable vars;
+    boolean isStatic;
     
     Function(String retType,String obj, String name, SimbolTable vars) {
         this.return_type = retType;
         this.name = name;
         this.vars = vars;
         this.object = obj;
+        this.isStatic = false;
+    }
+
+    Function(String retType,String obj, String name, SimbolTable vars, boolean staticFlag) {
+        this.return_type = retType;
+        this.name = name;
+        this.vars = vars;
+        this.object = obj;
+        this.isStatic = staticFlag;
     }
 
     public String toString() {
