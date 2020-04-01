@@ -12,5 +12,27 @@ class ASTProgram extends SimpleNode {
     this.has_scope = true;
   }
 
+
+  public boolean createTable() {
+
+    boolean result = true;
+
+    this.functionTable = new FunctionTable();
+
+    this.simbolTable = new SimbolTable();
+
+
+    if(this.children != null) {
+      for(Node node : this.children) {
+        boolean r = ((SimpleNode) node).createTable();
+        result = result && r;
+      }
+    }
+    
+    return result;
+  }
+
+  
+
 }
 /* JavaCC - OriginalChecksum=985279cf398b94f70dee66131d101454 (do not edit this line) */

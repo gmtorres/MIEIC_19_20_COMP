@@ -5,6 +5,7 @@ public class Function {
     String return_type;
     String name;
     SimbolTable vars;
+    
     Function(String retType, String name, SimbolTable vars) {
         this.return_type = retType;
         this.name = name;
