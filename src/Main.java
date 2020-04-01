@@ -29,7 +29,7 @@ public class Main {
 	        	throw new ParseException();
 	        }
 	        
-	        if(root.makeSimbolTable() == false) {
+	        if(root.doSemanticAnalysis() == false) {
 	        	System.out.println("There are semantic errors.");
 	        }
 

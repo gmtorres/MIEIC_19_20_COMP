@@ -9,6 +9,70 @@ class ASTOPERATOR extends SimpleNode {
   public ASTOPERATOR(Jmm p, int id) {
     super(p, id);
   }
+  
+  
+public boolean doSemanticAnalysis() {
+	  
+	  if(this.has_scope == false && this.parent != null) {
+			  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
+	  }
+	  else if(this.has_scope == true){
+		  this.simbolTable = new SimbolTable();
+		  if(this.parent != null){
+			  this.simbolTable.setParent( ( (SimpleNode)this.parent ).simbolTable);
+		  }
+	  }
+	  
+	  boolean result = true;
+	   
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  result = result && r;
+		  }
+	  }
+	  
+	  SimpleNode lhn  = (SimpleNode) this.children[0];
+	  SimpleNode rhn  = (SimpleNode) this.children[1];
+	  if(lhn.toString().equals("IDENTIFIER")) {
+		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
+			  System.out.println("Simbol " + lhn.name + " is not known.");
+			  return false;
+		  }else {
+			  lhn.type = this.simbolTable.getSimbol(lhn.name).getType();
+		  }
+	  }
+	  if(rhn.toString().equals("IDENTIFIER")) {
+		  if(this.simbolTable.isSimbolKnown(rhn.name) == false){
+			  System.out.println("Simbol " + lhn.name + " is not known.");
+			  return false;
+		  }else {
+			  rhn.type = this.simbolTable.getSimbol(rhn.name).getType();
+		  }
+	  }
+	  
+	  /*if(result = false)
+		  return false;
+	  
+	  System.out.println(lhn.type + "  " + lhn.toString());
+	  System.out.println(rhn.type + "  " + rhn.toString());
+	  if(!lhn.type.equals(rhn.type)) {
+		  System.out.println("Types incompatible.");
+		  result = false;
+	  }
+	  
+	  if(this.name.equals("&&")) {
+		  if(!lhn.type.equals("bool")) { System.out.println(lhn.name + " must be bool."); result = false; }
+		  else if(!lhn.type.equals("bool")) { System.out.println(rhn.name + " must be bool."); result = false; }
+		  else this.type = "bool";
+	  }else {
+		  if(!lhn.type.equals("int")) { System.out.println(lhn.name + " must be int."); result = false; }
+		  else if(!lhn.type.equals("int")) { System.out.println(rhn.name + " must be int."); result = false; }
+		  else this.type = "int";
+	  }
+	  //this.type = "int";*/
+	  return result;
+  }
 
 }
 /* JavaCC - OriginalChecksum=ea0b61aa43566c51566716de5ad918ef (do not edit this line) */

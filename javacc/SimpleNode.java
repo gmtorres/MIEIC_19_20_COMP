@@ -97,13 +97,10 @@ class SimpleNode implements Node {
   }
   
   
-  public boolean makeSimbolTable() {
+  public boolean doSemanticAnalysis() {
 	  
-	  if(this.has_scope == false) {
-		  if(this.parent != null) {
+	  if(this.has_scope == false && this.parent != null) {
 			  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
-			  //this.simbolTable.setParent( ((SimpleNode)this.parent).parentTable );
-		  }
 	  }
 	  else if(this.has_scope == true){
 		  this.simbolTable = new SimbolTable();
@@ -116,7 +113,7 @@ class SimpleNode implements Node {
 	   
 	  if(this.children != null) {
 		  for(Node node : this.children) {
-			  boolean r = ((SimpleNode) node).makeSimbolTable();
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
 			  result = result && r;
 		  }
 	  }
@@ -124,7 +121,8 @@ class SimpleNode implements Node {
 	  return result;
   }
   
-  public boolean doSemanticAnalysis() {
+  /*
+  public boolean temp() {
 	  boolean result = true;
 	  
 	  if(toString().equals("VAR_DEC") || toString().equals("ARGUMENT")) {
@@ -174,18 +172,18 @@ class SimpleNode implements Node {
 			  System.out.println("Types incompatible.");
 			  result = false;
 		  }	
-		  /*if(this.name.equals("&&")) {
+		  if(this.name.equals("&&")) {
 			  if(!lhn.type.equals("bool")) { System.out.println(lhn.name + " must be bool."); result = false; }
 			  if(!lhn.type.equals("bool")) { System.out.println(rhn.name + " must be bool."); result = false; }
 		  }else {
 			  if(!lhn.type.equals("int")) { System.out.println(lhn.name + " must be int."); result = false; }
 			  if(!lhn.type.equals("int")) { System.out.println(rhn.name + " must be int."); result = false; }
-		  }*/
+		  }
 	  }
 	  
 	  
 	  return result;
-  }
+  }*/
   
   public void printTables() {
 	  

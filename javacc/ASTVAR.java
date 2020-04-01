@@ -9,6 +9,37 @@ class ASTVAR extends SimpleNode {
   public ASTVAR(Jmm p, int id) {
     super(p, id);
   }
+  
+  public boolean doSemanticAnalysis() {
+	  
+	  if(this.has_scope == false && this.parent != null) {
+			  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
+	  }
+	  else if(this.has_scope == true){
+		  this.simbolTable = new SimbolTable();
+		  if(this.parent != null){
+			  this.simbolTable.setParent( ( (SimpleNode)this.parent ).simbolTable);
+		  }
+	  }
+	  
+	  boolean result = true;
+	  
+	  SimpleNode lhn  = (SimpleNode) this.children[0]; // IDENTIFIER to assing
+	  if( lhn.toString().equals("IDENTIFIER") && 
+			  this.simbolTable.isSimbolKnown(lhn.name) == false) {
+		  System.out.println("Simbol " + lhn.name + " is not known.");
+		  result = false;
+	  }
+	   
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  result = result && r;
+		  }
+	  }
 
+	  return result;
+  }
+  
 }
 /* JavaCC - OriginalChecksum=3d5ba3dbf45f9bb899864a825571601d (do not edit this line) */
