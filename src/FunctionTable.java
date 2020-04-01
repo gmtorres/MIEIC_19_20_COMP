@@ -3,17 +3,26 @@ import java.util.HashMap;
 public class FunctionTable {
 
     HashMap<String,Function> functions;
+    String parentClass;
 
     FunctionTable() {
-        functions = new HashMap<String,Function>();
+        this.functions = new HashMap<String,Function>();
+        this.parentClass = "";
+    }
+
+    void setParentClass(String parentClass) {
+        this.parentClass = parentClass;
     }
 
     boolean isFunctionHere(String name) {
 		return functions.get(name) != null;
     }
     
-    void addFunction(Function f) {
-        functions.put(f.getName(), f);
+    boolean addFunction(String return_type, String name, SimbolTable st) {
+        //TODO: Questao das 2 funcoes com mesmo nome
+        Function f = new Function(return_type, name, st);
+        functions.put(name, f);
+        return true;
     }
 
     Function getFunction(String name) {
