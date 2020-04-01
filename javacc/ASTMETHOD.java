@@ -13,15 +13,36 @@ class ASTMETHOD extends SimpleNode {
   }
 
   public boolean createTable() {
-    if (this.parent == null) {
-      System.out.println("Null Parent");
-    }
-    else {this.functionTable = ((SimpleNode)this.parent).functionTable;}
-    if (this.functionTable.addFunction(this.type, this.name, this.simbolTable) == false) {
-      System.out.println("Error adding function" + this.type + " " + this.name);
-      return false;
-    }
-    else return true;
+	  
+	  boolean result = true;
+	  
+	  if(this.parent != null) {
+		  this.functionTable = ((SimpleNode)this.parent).functionTable;
+	  }
+  
+	if(this.has_scope == false && this.parent != null) {
+		  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
+	}
+	else if(this.has_scope == true){
+	  this.simbolTable = new SimbolTable();
+	  if(this.parent != null){
+		  this.simbolTable.setParent( ( (SimpleNode)this.parent ).simbolTable);
+	  }
+	}
+	
+	if (this.functionTable.addFunction(this.type, this.name, this.simbolTable) == false) {
+	    System.out.println("Error adding function" + this.type + " " + this.name);
+	    result = false;
+	  }
+	
+	if(this.children != null) {
+	  for(Node node : this.children) {
+		  boolean r = ((SimpleNode) node).createTable();
+		  result = result && r;
+	  }
+	}
+	
+	return result;
   }
 
 }

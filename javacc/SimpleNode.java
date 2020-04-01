@@ -22,7 +22,7 @@ class SimpleNode implements Node {
   public FunctionTable functionTable = null;
   public boolean has_scope = false;
   
-  public DescriptorTable descriptorsTable = null;
+  //public DescriptorTable descriptorsTable = null;
     
 
   public SimpleNode(int i) {
@@ -127,6 +127,10 @@ class SimpleNode implements Node {
   public boolean doSemanticAnalysis() {
 	  
 	  boolean result = true;
+	  
+	  if(this.parent != null) {
+		  this.functionTable = ((SimpleNode)this.parent).functionTable;
+	  }
 	  
 	  if(this.children != null) {
 		  for(Node node : this.children) {
