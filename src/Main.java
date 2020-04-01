@@ -29,7 +29,7 @@ public class Main {
 	        	throw new ParseException();
 	        }
 	        
-	        if(root.doSemanticAnalysis() == false) {
+	        if(root.createTable() == false) {
 	        	System.out.println("There are semantic errors.");
 	        }
 

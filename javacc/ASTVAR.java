@@ -10,7 +10,7 @@ class ASTVAR extends SimpleNode {
     super(p, id);
   }
   
-  public boolean doSemanticAnalysis() {
+  public boolean createTable() {
 	  
 	  if(this.has_scope == false && this.parent != null) {
 			  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
@@ -33,7 +33,7 @@ class ASTVAR extends SimpleNode {
 	   
 	  if(this.children != null) {
 		  for(Node node : this.children) {
-			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  boolean r = ((SimpleNode) node).createTable();
 			  result = result && r;
 		  }
 	  }

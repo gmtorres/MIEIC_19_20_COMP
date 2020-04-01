@@ -97,7 +97,7 @@ class SimpleNode implements Node {
   }
   
   
-  public boolean doSemanticAnalysis() {
+  public boolean createTable() {
 	  
 	  if(this.has_scope == false && this.parent != null) {
 			  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
@@ -113,7 +113,7 @@ class SimpleNode implements Node {
 	   
 	  if(this.children != null) {
 		  for(Node node : this.children) {
-			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  boolean r = ((SimpleNode) node).createTable();
 			  result = result && r;
 		  }
 	  }

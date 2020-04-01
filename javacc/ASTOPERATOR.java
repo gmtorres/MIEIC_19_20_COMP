@@ -13,18 +13,9 @@ class ASTOPERATOR extends SimpleNode {
   
 public boolean doSemanticAnalysis() {
 	  
-	  if(this.has_scope == false && this.parent != null) {
-			  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
-	  }
-	  else if(this.has_scope == true){
-		  this.simbolTable = new SimbolTable();
-		  if(this.parent != null){
-			  this.simbolTable.setParent( ( (SimpleNode)this.parent ).simbolTable);
-		  }
-	  }
 	  
 	  boolean result = true;
-	   
+	  /* 
 	  if(this.children != null) {
 		  for(Node node : this.children) {
 			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
@@ -49,7 +40,7 @@ public boolean doSemanticAnalysis() {
 		  }else {
 			  rhn.type = this.simbolTable.getSimbol(rhn.name).getType();
 		  }
-	  }
+	  }*/
 	  
 	  /*if(result = false)
 		  return false;
