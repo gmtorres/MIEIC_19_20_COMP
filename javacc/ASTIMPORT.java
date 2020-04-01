@@ -34,7 +34,14 @@ public boolean createTable() {
 	  if(this.jjtGetNumChildren() == 1) {
 		  	this.descriptors.addDescriptor( ((SimpleNode) this.children[0]).name, this.simbolTable );
 	  }else if(this.jjtGetNumChildren() == 2) {
-		  
+		  SimpleNode rhs = (SimpleNode) this.children[1];
+		  int childrenNo = rhs.jjtGetNumChildren();
+
+		  for (int i = 0; i < childrenNo; i++) {
+			  this.simbolTable.addSimbol(rhs.children[i].type, String.valueOf("a" + i));
+		  }
+
+		  this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable);
 	  }
 	  
 	  
