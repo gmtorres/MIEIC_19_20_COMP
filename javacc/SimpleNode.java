@@ -20,6 +20,8 @@ class SimpleNode implements Node {
   
   public SimbolTable simbolTable = null;
   public boolean has_scope = false;
+  
+  public DescriptorTable descriptorsTable = null;
     
 
   public SimpleNode(int i) {
@@ -119,6 +121,21 @@ class SimpleNode implements Node {
 	  }
 
 	  return result;
+  }
+  
+  public boolean doSemanticAnalysis() {
+	  
+	  boolean result = true;
+	  
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  result = result && r;
+		  }
+	  }
+	  
+	  return result;
+	  
   }
   
   /*

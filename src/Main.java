@@ -30,7 +30,11 @@ public class Main {
 	        }
 	        
 	        if(root.createTable() == false) {
-	        	System.out.println("There are semantic errors.");
+	        	System.out.println("There are semantic errors while creating table.");
+	        }
+	        
+	        if(root.doSemanticAnalysis() == false) {
+	        	System.out.println("There are semantic errors while analysing.");
 	        }
 
 	        root.printTables();

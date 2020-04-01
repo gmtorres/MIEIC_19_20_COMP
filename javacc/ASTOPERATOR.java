@@ -15,7 +15,7 @@ public boolean doSemanticAnalysis() {
 	  
 	  
 	  boolean result = true;
-	  /* 
+	  
 	  if(this.children != null) {
 		  for(Node node : this.children) {
 			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
@@ -40,7 +40,7 @@ public boolean doSemanticAnalysis() {
 		  }else {
 			  rhn.type = this.simbolTable.getSimbol(rhn.name).getType();
 		  }
-	  }*/
+	  }
 	  
 	  /*if(result = false)
 		  return false;
