@@ -14,7 +14,7 @@ class SimpleNode implements Node {
 
   // added
   public Integer val = null;
-    
+  public boolean is_static = false;
   public String type = null;
   public String name = null;
   

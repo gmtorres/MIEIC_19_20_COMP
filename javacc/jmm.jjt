@@ -104,7 +104,7 @@ ASTProgram Program(): {} {
 void ImportDeclaration() #void: { Token t1;} {
     <IMPORT> 
     ( <STATIC> 
-        t1 = <IDENTIFIER> {  jjtThis.name = "static " + t1.image; } #CLASS MethodImport()
+        t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.is_static = true; } #CLASS MethodImport()
         | t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #CLASS [MethodImport() ])
      <SEMICOLON> 
 }
