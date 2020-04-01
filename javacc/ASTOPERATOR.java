@@ -30,7 +30,7 @@ public boolean doSemanticAnalysis() {
 			  System.out.println("Simbol " + lhn.name + " is not known.");
 			  return false;
 		  }else {
-			  lhn.type = this.simbolTable.getSimbol(lhn.name).getType();
+			  lhn.type = this.simbolTable.getSimbol(lhn.name).getType().getName();
 		  }
 	  }
 	  if(rhn.toString().equals("IDENTIFIER")) {
@@ -38,7 +38,7 @@ public boolean doSemanticAnalysis() {
 			  System.out.println("Simbol " + lhn.name + " is not known.");
 			  return false;
 		  }else {
-			  rhn.type = this.simbolTable.getSimbol(rhn.name).getType();
+			  rhn.type = this.simbolTable.getSimbol(rhn.name).getType().getName();
 		  }
 	  }
 	  

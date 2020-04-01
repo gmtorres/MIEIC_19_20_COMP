@@ -38,7 +38,12 @@ public boolean createTable() {
 		  int childrenNo = rhs.jjtGetNumChildren();
 
 		  for (int i = 0; i < childrenNo; i++) {
-			  this.simbolTable.addSimbol(rhs.children[i].type, String.valueOf("a" + i));
+			  Descriptor d = this.descriptors.getDescriptor(((SimpleNode) rhs.children[i]).type);
+			  if(d == null) {
+				  System.out.println("Could not find type " + this.type);
+				  result = false; 
+			  }else
+				  this.simbolTable.addSimbol(d, String.valueOf("a" + i));
 		  }
 
 		  this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable);

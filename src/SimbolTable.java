@@ -19,7 +19,7 @@ public class SimbolTable {
 		return simbols.get(id) != null;
 	}
 	
-	boolean addSimbol(String tp , String id) {
+	boolean addSimbol(Descriptor tp , String id) {
 		if(isSimbolHere(id))
 			return false;
 		simbols.put(id,new Simbol(tp,id,false));

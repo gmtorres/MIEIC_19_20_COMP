@@ -22,4 +22,8 @@ public class Descriptor {
 		return name;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 }

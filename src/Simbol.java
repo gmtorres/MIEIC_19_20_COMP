@@ -1,21 +1,21 @@
 
 public class Simbol {
 
-	private String type; 
+	private Descriptor type; 
     private String identifier;
     private boolean isInitialized;
     
-    Simbol(String tp , String id , boolean init){
+    Simbol(Descriptor tp , String id , boolean init){
     	this.type = tp;
     	this.identifier = id;
     	this.isInitialized = init;
     }
     
     public String toString() {
-    	return type + " :  " + identifier; 
+    	return type.toString() + " :  " + identifier; 
     }
     
-    public String getType() {
+    public Descriptor getType() {
     	return type;
     }
     
