@@ -47,6 +47,7 @@ public class SimbolTable {
 	}
 	
 	void printTable() {
+		System.out.println("SimbolTable");
 		for (HashMap.Entry<String, Simbol> entry : simbols.entrySet()) {
 		    String key = entry.getKey();
 		    Simbol value = entry.getValue();

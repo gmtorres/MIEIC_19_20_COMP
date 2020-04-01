@@ -14,11 +14,12 @@ class ASTMETHOD extends SimpleNode {
 
   public boolean createTable() {
 	  
-	  boolean result = true;
+	boolean result = true;
 	  
-	  if(this.parent != null) {
-		  this.functionTable = ((SimpleNode)this.parent).functionTable;
-	  }
+	if(this.parent != null) {
+		 this.functionTable = ((SimpleNode)this.parent).functionTable;
+		 this.descriptors = ((SimpleNode)this.parent).descriptors;
+	}
   
 	if(this.has_scope == false && this.parent != null) {
 		  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
@@ -30,7 +31,7 @@ class ASTMETHOD extends SimpleNode {
 	  }
 	}
 	
-	if (this.functionTable.addFunction(this.type, this.name, this.simbolTable) == false) {
+	if (this.functionTable.addFunction(this.type,this.descriptors.getDescriptor("this").name, this.name, this.simbolTable) == false) {
 	    System.out.println("Error adding function" + this.type + " " + this.name);
 	    result = false;
 	  }

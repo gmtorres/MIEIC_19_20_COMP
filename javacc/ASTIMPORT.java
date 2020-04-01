@@ -9,6 +9,45 @@ class ASTIMPORT extends SimpleNode {
   public ASTIMPORT(Jmm p, int id) {
     super(p, id);
   }
+  
+public boolean createTable() {
+	  
+	  
+	  if(this.parent != null) {
+		 this.functionTable = ((SimpleNode)this.parent).functionTable;
+		 this.descriptors = ((SimpleNode)this.parent).descriptors;
+	  }
+	  
+	  if(this.has_scope == false && this.parent != null) {
+		  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
+	  }
+	  else if(this.has_scope == true){
+		  this.simbolTable = new SimbolTable();
+		  if(this.parent != null){
+			  this.simbolTable.setParent( ( (SimpleNode)this.parent ).simbolTable);
+		  }
+	  }
+	  
+	  boolean result = true;
+	  
+	  
+	  if(this.jjtGetNumChildren() == 1) {
+		  	this.descriptors.addDescriptor( ((SimpleNode) this.children[0]).name, this.simbolTable );
+	  }else if(this.jjtGetNumChildren() == 2) {
+		  
+	  }
+	  
+	  
+	   
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).createTable();
+			  result = result && r;
+		  }
+	  }
+
+	  return result;
+  }
 
 }
 /* JavaCC - OriginalChecksum=e2397454924d9f234df48d132afaab47 (do not edit this line) */

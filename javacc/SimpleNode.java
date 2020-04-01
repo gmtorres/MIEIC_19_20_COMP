@@ -20,6 +20,7 @@ class SimpleNode implements Node {
   
   public SimbolTable simbolTable = null;
   public FunctionTable functionTable = null;
+  public DescriptorTable descriptors = null;
   public boolean has_scope = false;
   
   //public DescriptorTable descriptorsTable = null;
@@ -102,8 +103,14 @@ class SimpleNode implements Node {
   
   public boolean createTable() {
 	  
+	  
+	  if(this.parent != null) {
+		 this.functionTable = ((SimpleNode)this.parent).functionTable;
+		 this.descriptors = ((SimpleNode)this.parent).descriptors;
+	  }
+	  
 	  if(this.has_scope == false && this.parent != null) {
-			  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
+		  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
 	  }
 	  else if(this.has_scope == true){
 		  this.simbolTable = new SimbolTable();
@@ -128,10 +135,6 @@ class SimpleNode implements Node {
 	  
 	  boolean result = true;
 	  
-	  if(this.parent != null) {
-		  this.functionTable = ((SimpleNode)this.parent).functionTable;
-	  }
-	  
 	  if(this.children != null) {
 		  for(Node node : this.children) {
 			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
@@ -142,70 +145,6 @@ class SimpleNode implements Node {
 	  return result;
 	  
   }
-  
-  /*
-  public boolean temp() {
-	  boolean result = true;
-	  
-	  if(toString().equals("VAR_DEC") || toString().equals("ARGUMENT")) {
-		  if(this.simbolTable.addSimbol(this.type,this.name) == false) {
-			  System.out.println("Duplicate simbol " + this.name);
-			  result = false; 
-		  }
-	  }
-	  
-	  if(toString().equals("VAR") ) {
-		  SimpleNode lhn  = (SimpleNode) this.children[0];
-		  if( lhn.toString().equals("IDENTIFIER") && 
-				  this.simbolTable.isSimbolKnown(lhn.name) == false) {
-			  System.out.println("Simbol " + lhn.name + " is not known.");
-			  result = false;
-		  }
-	  }
-	  
-	  
-	  if(this.children != null) {
-		  for(Node node : this.children) {
-			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
-			  result = result && r;
-		  }
-	  }
-	  
-	  if(toString().equals("OPERATOR")) {
-		  SimpleNode lhn  = (SimpleNode) this.children[0];
-		  SimpleNode rhn  = (SimpleNode) this.children[1];
-		  if(lhn.toString().equals("IDENTIFIER")) {
-			  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
-				  System.out.println("Simbol " + lhn.name + " is not known.");
-				  return false;
-			  }else {
-				  lhn.type = this.simbolTable.getSimbol(lhn.name).getType();
-			  }
-		  }
-		  if(rhn.toString().equals("IDENTIFIER")) {
-			  if(this.simbolTable.isSimbolKnown(rhn.name) == false){
-				  System.out.println("Simbol " + lhn.name + " is not known.");
-				  return false;
-			  }else {
-				  rhn.type = this.simbolTable.getSimbol(rhn.name).getType();
-			  }
-		  }
-		  if(!lhn.type.equals(rhn.type)) {
-			  System.out.println("Types incompatible.");
-			  result = false;
-		  }	
-		  if(this.name.equals("&&")) {
-			  if(!lhn.type.equals("bool")) { System.out.println(lhn.name + " must be bool."); result = false; }
-			  if(!lhn.type.equals("bool")) { System.out.println(rhn.name + " must be bool."); result = false; }
-		  }else {
-			  if(!lhn.type.equals("int")) { System.out.println(lhn.name + " must be int."); result = false; }
-			  if(!lhn.type.equals("int")) { System.out.println(rhn.name + " must be int."); result = false; }
-		  }
-	  }
-	  
-	  
-	  return result;
-  }*/
   
   public void printTables() {
 	  

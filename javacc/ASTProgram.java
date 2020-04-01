@@ -18,9 +18,12 @@ class ASTProgram extends SimpleNode {
     boolean result = true;
 
     this.functionTable = new FunctionTable();
-
     this.simbolTable = new SimbolTable();
-
+    this.descriptors = new DescriptorTable();
+    
+    this.descriptors.addDescriptor("int",this.simbolTable);
+    this.descriptors.addDescriptor("bool",this.simbolTable);
+    this.descriptors.addDescriptor("int[]",this.simbolTable,this.descriptors.getDescriptor("int"));
 
     if(this.children != null) {
       for(Node node : this.children) {
@@ -30,6 +33,24 @@ class ASTProgram extends SimpleNode {
     }
     
     return result;
+  }
+  
+public void printTables() {
+	  
+	  if(this.has_scope) {
+		  String str = "I have scope:   " + toString();
+		  if(this.parent != null) str+= "    my parent is:    " + ( (SimpleNode)this.parent ).toString();
+		  System.out.println(str);
+		  this.simbolTable.printTable();
+	  }
+	  this.functionTable.printTable();
+	  
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  ((SimpleNode) node).printTables();
+		  }
+	  }
+	  
   }
 
   

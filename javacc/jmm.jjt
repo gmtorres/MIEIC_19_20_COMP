@@ -115,7 +115,7 @@ void MethodImport() #void: {Token t1,t2;String s1,s2,s3;} {
     [ s3=Type() {  jjtThis.type =s3; } ] ) #METHOD_PROT
 }
 
-void ClassDeclaration() #CLASS: {Token t1;} {
+void ClassDeclaration() #CLASS_DECL: {Token t1;} {
     <CLASS> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } [ <EXTENDS> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #EXTENDS ] <CURLY_BRACE_OPEN>
     ( VarDeclaration()  )* 
     ( MethodDeclaration()  )* 
@@ -132,7 +132,7 @@ void MethodDeclaration() #METHOD: {Token t1,t2,t3;String s1;} {
 	            <RETURN> (Expression() #EXPRESSION) #RETURN_EXPRESSION <SEMICOLON>
         	<CURLY_BRACE_CLOSE> ) #METHOD_BODY
     | 
-        <STATIC> <VOID> t1 = <MAIN> {  jjtThis.name = t1.image; }
+        <STATIC> <VOID> t1 = <MAIN> {  jjtThis.name = t1.image; jjtThis.type = "void"; }
         	<ROUND_BRACE_OPEN> ( <STRING> <SQUARE_BRACE_OPEN> <SQUARE_BRACE_CLOSE> t1 = <IDENTIFIER> {  jjtThis.type = "String []" ; jjtThis.name = t1.image; } ) #ARGUMENT <ROUND_BRACE_CLOSE> 
 			( <CURLY_BRACE_OPEN> 
             	MethodBody()

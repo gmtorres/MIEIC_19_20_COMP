@@ -12,6 +12,11 @@ class ASTARGUMENT extends SimpleNode {
 
   public boolean createTable() {
 	  
+	  if(this.parent != null) {
+		 this.functionTable = ((SimpleNode)this.parent).functionTable;
+		 this.descriptors = ((SimpleNode)this.parent).descriptors;
+	  }
+	  
 	  if(this.has_scope == false && this.parent != null) {
 			  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
 	  }

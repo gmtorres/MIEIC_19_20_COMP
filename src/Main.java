@@ -39,6 +39,7 @@ public class Main {
 
 	        root.printTables();
 	        
+	        root.descriptors.printTable();
 	        
 
 
