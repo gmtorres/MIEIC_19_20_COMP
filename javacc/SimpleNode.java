@@ -19,6 +19,7 @@ class SimpleNode implements Node {
   public String name = null;
   
   public SimbolTable simbolTable = null;
+  public FunctionTable functionTable = null;
   public boolean has_scope = false;
     
 

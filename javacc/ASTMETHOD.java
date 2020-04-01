@@ -12,5 +12,17 @@ class ASTMETHOD extends SimpleNode {
     this.has_scope = true;
   }
 
+  public boolean createTable() {
+    if (this.parent == null) {
+      System.out.println("Null Parent");
+    }
+    else {this.functionTable = ((SimpleNode)this.parent).functionTable;}
+    if (this.functionTable.addFunction(this.type, this.name, this.simbolTable) == false) {
+      System.out.println("Error adding function" + this.type + " " + this.name);
+      return false;
+    }
+    else return true;
+  }
+
 }
 /* JavaCC - OriginalChecksum=388f83dfa80f76895eee35b7c442ec5f (do not edit this line) */
