@@ -231,7 +231,7 @@ void Expression() #void: {Token t1;} {
 void Expression2() #void: {Token t1;} {
     (<SQUARE_BRACE_OPEN> Expression() #INDEX <SQUARE_BRACE_CLOSE>) #ARRAY_ACESS(2) [ Expression2() ] 
     | <DOT> ( ( <LENGTH> {  jjtThis.type = "int"; } #LENGTH(1)  [ Expression2() ] ) 
-          	  | (  ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.type = "int"; }
+          	  | (  ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image;  }
                <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) (Expression() #PARAM)  (<COMMA> Expression() #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE> ) #FUNCTION (2)  [ Expression2()  ] ) )
     | Aritm() 
     

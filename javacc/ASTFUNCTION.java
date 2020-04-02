@@ -9,6 +9,36 @@ class ASTFUNCTION extends SimpleNode {
   public ASTFUNCTION(Jmm p, int id) {
     super(p, id);
   }
-
+  
+  
+  public boolean doSemanticAnalysis() {
+	  
+	  SimpleNode lhn  = (SimpleNode) this.children[0];
+		String obj;
+		if(lhn.name.equals("this"))
+			obj = "";
+		else{
+			if(this.simbolTable.isSimbolHere(lhn.name)) {
+				obj = this.simbolTable.getSimbol(lhn.name).getType().getName();
+			}else
+				obj = lhn.name;
+		}
+		if(this.functionTable.isFunctionHere( obj,this.name ) == false ) {
+			System.out.println("Function " + lhn.name + "." + this.name + " is not known.");
+			return false;
+		}else {
+			this.type = this.functionTable.getFunction(obj,this.name).getType();
+		}
+		
+		boolean result = true;
+		  
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  result = result && r;
+		  }
+	  }
+	  return result;
+  }
 }
 /* JavaCC - OriginalChecksum=ff7d338328dd91daef21bbda214f1c59 (do not edit this line) */

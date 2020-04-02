@@ -31,7 +31,8 @@ class ASTMETHOD extends SimpleNode {
 	  }
 	}
 	
-	if (this.functionTable.addFunction(this.type,this.descriptors.getDescriptor("this").name, this.name, this.simbolTable, this.is_static) == false) {
+	//if (this.functionTable.addFunction(this.type,this.descriptors.getDescriptor("this").name, this.name, this.simbolTable, this.is_static) == false) {
+	if (this.functionTable.addFunction(this.type,"", this.name, this.simbolTable, this.is_static) == false) {
 	    System.out.println("Error adding function" + this.type + " " + this.name);
 	    result = false;
 	  }

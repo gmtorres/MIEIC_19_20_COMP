@@ -35,17 +35,17 @@ public boolean createTable() {
 		  	this.descriptors.addDescriptor( ((SimpleNode) this.children[0]).name, this.simbolTable );
 	  }else if(this.jjtGetNumChildren() == 2) {
 		  SimpleNode rhs = (SimpleNode) this.children[1];
-		  int childrenNo = rhs.jjtGetNumChildren();
+		  SimpleNode params = (SimpleNode)rhs.children[0];
+		  int childrenNo = params.jjtGetNumChildren();
 
 		  for (int i = 0; i < childrenNo; i++) {
-			  Descriptor d = this.descriptors.getDescriptor(((SimpleNode) rhs.children[i]).type);
+			  Descriptor d = this.descriptors.getDescriptor(((SimpleNode) params.children[i]).type);
 			  if(d == null) {
 				  System.out.println("Could not find type " + this.type);
 				  result = false; 
 			  }else
 				  this.simbolTable.addSimbol(d, String.valueOf("a" + i));
 		  }
-
 		  this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable, this.is_static);
 	  }
 	  

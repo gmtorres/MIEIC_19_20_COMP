@@ -14,8 +14,8 @@ public class FunctionTable {
         this.parentClass = parentClass;
     }
 
-    boolean isFunctionHere(String name) {
-		return functions.get(name) != null;
+    boolean isFunctionHere(String object ,String name) {
+		return functions.get(object +"."+ name) != null;
     }
     
     boolean addFunction(String return_type, String object, String name, SimbolTable st) {
@@ -33,7 +33,7 @@ public class FunctionTable {
     }
 
     Function getFunction(String object ,String name) {
-        if (isFunctionHere(name)) {
+        if (isFunctionHere(object,name)) {
             return this.functions.get(object +"."+ name);
         }
         else return null;

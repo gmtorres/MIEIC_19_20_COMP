@@ -32,6 +32,8 @@ public boolean doSemanticAnalysis() {
 		  }else {
 			  lhn.type = this.simbolTable.getSimbol(lhn.name).getType().getName();
 		  }
+	  }else if(lhn.toString().equals("FUNCTION")) {
+		  
 	  }
 	  if(rhn.toString().equals("IDENTIFIER")) {
 		  if(this.simbolTable.isSimbolKnown(rhn.name) == false){
