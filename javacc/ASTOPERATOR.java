@@ -26,19 +26,27 @@ public boolean doSemanticAnalysis() {
 	  SimpleNode lhn  = (SimpleNode) this.children[0];
 	  SimpleNode rhn  = (SimpleNode) this.children[1];
 	  if(lhn.toString().equals("IDENTIFIER")) {
-		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
+		  Simbol s = this.simbolTable.getSimbol(lhn.name);
+		  if(s == null){
 			  System.out.println("Simbol " + lhn.name + " is not known.");
 			  return false;
+		  }else if(s.isInitialized == false){
+			  System.out.println("Simbol " + lhn.name + " has not been initiated.");
+			  return false;
 		  }else {
-			  lhn.type = this.simbolTable.getSimbol(lhn.name).getType().getName();
+			  lhn.type = s.getType().getName();
 		  }
 	  }
 	  if(rhn.toString().equals("IDENTIFIER")) {
-		  if(this.simbolTable.isSimbolKnown(rhn.name) == false){
-			  System.out.println("Simbol " + lhn.name + " is not known.");
+		  Simbol s = this.simbolTable.getSimbol(rhn.name);
+		  if(s == null){
+			  System.out.println("Simbol " + rhn.name + " is not known.");
+			  return false;
+		  }else if(s.isInitialized == false){
+			  System.out.println("Simbol " + rhn.name + " has not been initiated.");
 			  return false;
 		  }else {
-			  rhn.type = this.simbolTable.getSimbol(rhn.name).getType().getName();
+			  rhn.type = s.getType().getName();
 		  }
 	  }
 	  
@@ -48,7 +56,7 @@ public boolean doSemanticAnalysis() {
 	  //System.out.println(lhn.type + "  " + lhn.toString() + "  " + lhn.name);
 	  //System.out.println(rhn.type + "  " + rhn.toString() + "  " + rhn.name);
 	  if(!lhn.type.equals(rhn.type)) {
-		  System.out.println("Types incompatible.");
+		  System.out.println("Types incompatible " + lhn.type + " and " + rhn.type);
 		  result = false;
 	  }
 	  

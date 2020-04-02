@@ -35,7 +35,7 @@ class ASTARGUMENT extends SimpleNode {
 		  System.out.println("Could not find type " + this.type);
 		  result = false; 
 	  }else {
-		  if(this.simbolTable.addSimbol(d,this.name) == false) {
+		  if(this.simbolTable.addSimbol(d,this.name,true) == false) {
 			  System.out.println("Duplicate simbol " + this.name);
 			  result = false; 
 		  }
