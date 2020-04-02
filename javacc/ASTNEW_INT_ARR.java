@@ -9,6 +9,32 @@ class ASTNEW_INT_ARR extends SimpleNode {
   public ASTNEW_INT_ARR(Jmm p, int id) {
     super(p, id);
   }
+  
+  public boolean doSemanticAnalysis() {
+	  
+	  
+	  boolean result = true;
+	  
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  result = result && r;
+		  }
+	  }
+	  
+	  if(result == false)
+		  return false;
+	  
+	  SimpleNode lhn  = (SimpleNode) this.children[0];
+	  
+	  if(!lhn.type.equals("int")) {
+		  System.out.println("Size of array must be a int");
+		  return false;
+	  }
+	  this.type = "int[]";
+	  
+	  return result;
+  }
 
 }
 /* JavaCC - OriginalChecksum=ce4cf0d753328eefc3373506e1924bc3 (do not edit this line) */
