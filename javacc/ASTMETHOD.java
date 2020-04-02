@@ -60,5 +60,6 @@ class ASTMETHOD extends SimpleNode {
 	return result;
   }
 
+
 }
 /* JavaCC - OriginalChecksum=388f83dfa80f76895eee35b7c442ec5f (do not edit this line) */
