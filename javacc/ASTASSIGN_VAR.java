@@ -30,9 +30,14 @@ class ASTASSIGN_VAR extends SimpleNode {
 	  SimpleNode rhn  = (SimpleNode) this.children[1];
 	  
 	  if(!lhn.type.equals(rhn.type)) {
-		  //if(!this.descriptors.getDescriptor(rhn.type).doesExtends(lhn.type))
+		  Descriptor d = this.descriptors.getDescriptor(rhn.type);
+		  if(d == null || !d.doesExtends(lhn.type)) {
 			  System.out.println("Incompatible types  " + lhn.type + "  and  " + rhn.type);
+			  return false;
+		  }
 	  }
+	  
+	  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).isInitialized = true;
 	  
 	  return result;
   }

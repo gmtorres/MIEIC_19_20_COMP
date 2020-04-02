@@ -3,7 +3,7 @@ public class Simbol {
 
 	private Descriptor type; 
     private String identifier;
-    private boolean isInitialized;
+    public boolean isInitialized;
     
     Simbol(Descriptor tp , String id , boolean init){
     	this.type = tp;

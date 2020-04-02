@@ -20,6 +20,8 @@ public class Descriptor {
 	public String toString() {
 		if(content != null)
 			return name +  " -> " + content.toString();
+		if(extend != null)
+			return name +  " ext " + extend.toString();
 		return name;
 	}
 	
