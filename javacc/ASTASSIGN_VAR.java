@@ -32,7 +32,7 @@ class ASTASSIGN_VAR extends SimpleNode {
 	  if(!lhn.type.equals(rhn.type)) {
 		  Descriptor d = this.descriptors.getDescriptor(rhn.type);
 		  if(d == null || !d.doesExtends(lhn.type)) {
-			  System.out.println("Incompatible types  " + lhn.type + "  and  " + rhn.type);
+			  System.out.println("Assigning imcompatible type:  " + lhn.type + "  and  " + rhn.type);
 			  return false;
 		  }
 	  }

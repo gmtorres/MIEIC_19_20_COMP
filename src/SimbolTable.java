@@ -25,6 +25,12 @@ public class SimbolTable {
 		simbols.put(id,new Simbol(tp,id,false));
 		return true;
 	}
+	boolean addSimbol(Descriptor tp , String id, boolean init) {
+		if(isSimbolHere(id))
+			return false;
+		simbols.put(id,new Simbol(tp,id,init));
+		return true;
+	}
 	
 	boolean isSimbolKnown(String id) {
 		if(isSimbolHere(id))
