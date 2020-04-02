@@ -32,8 +32,6 @@ public boolean doSemanticAnalysis() {
 		  }else {
 			  lhn.type = this.simbolTable.getSimbol(lhn.name).getType().getName();
 		  }
-	  }else if(lhn.toString().equals("FUNCTION")) {
-		  
 	  }
 	  if(rhn.toString().equals("IDENTIFIER")) {
 		  if(this.simbolTable.isSimbolKnown(rhn.name) == false){
@@ -44,26 +42,27 @@ public boolean doSemanticAnalysis() {
 		  }
 	  }
 	  
-	  /*if(result = false)
+	  if(result == false)
 		  return false;
 	  
-	  System.out.println(lhn.type + "  " + lhn.toString());
-	  System.out.println(rhn.type + "  " + rhn.toString());
+	  //System.out.println(lhn.type + "  " + lhn.toString() + "  " + lhn.name);
+	  //System.out.println(rhn.type + "  " + rhn.toString() + "  " + rhn.name);
 	  if(!lhn.type.equals(rhn.type)) {
 		  System.out.println("Types incompatible.");
 		  result = false;
 	  }
 	  
 	  if(this.name.equals("&&")) {
-		  if(!lhn.type.equals("bool")) { System.out.println(lhn.name + " must be bool."); result = false; }
-		  else if(!lhn.type.equals("bool")) { System.out.println(rhn.name + " must be bool."); result = false; }
-		  else this.type = "bool";
+		  if(!lhn.type.equals("boolean")) { System.out.println(lhn.name + " must be boolean."); result = false; }
+		  else if(!lhn.type.equals("boolean")) { System.out.println(rhn.name + " must be boolean."); result = false; }
+		  else this.type = "boolean";
 	  }else {
 		  if(!lhn.type.equals("int")) { System.out.println(lhn.name + " must be int."); result = false; }
 		  else if(!lhn.type.equals("int")) { System.out.println(rhn.name + " must be int."); result = false; }
-		  else this.type = "int";
+		  else
+			  if(this.name.equals("<")) this.type = "boolean";
+			  else this.type = "int";
 	  }
-	  //this.type = "int";*/
 	  return result;
   }
 

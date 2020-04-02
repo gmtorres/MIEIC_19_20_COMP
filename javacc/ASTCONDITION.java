@@ -9,6 +9,28 @@ class ASTCONDITION extends SimpleNode {
   public ASTCONDITION(Jmm p, int id) {
     super(p, id);
   }
+  
+	public boolean doSemanticAnalysis() {
+		  
+		  
+		  boolean result = true;
+		  
+		  if(this.children != null) {
+			  for(Node node : this.children) {
+				  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+				  result = result && r;
+			  }
+		  }
+		  
+		  if(result == false)
+			  return false;
+		  
+		  if(((SimpleNode) this.children[0]).type != "boolean") {
+			  System.out.println("Condition must be boolean.");
+			  return false;
+		  }
+		  return result;
+	}
 
 }
 /* JavaCC - OriginalChecksum=b62e59fc6de0357b45a6442c843143e4 (do not edit this line) */
