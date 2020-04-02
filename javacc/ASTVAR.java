@@ -12,6 +12,11 @@ class ASTVAR extends SimpleNode {
   
   public boolean createTable() {
 	  
+	  if(this.parent != null) {
+		 this.functionTable = ((SimpleNode)this.parent).functionTable;
+		 this.descriptors = ((SimpleNode)this.parent).descriptors;
+	  }
+	  
 	  if(this.has_scope == false && this.parent != null) {
 			  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
 	  }
@@ -40,6 +45,50 @@ class ASTVAR extends SimpleNode {
 
 	  return result;
   }
+  
+public boolean doSemanticAnalysis() {
+	  
+	  
+	  boolean result = true;
+	  
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  result = result && r;
+		  }
+	  }
+	  
+	  if(result == false)
+		  return false;
+	  
+	  SimpleNode lhn  = (SimpleNode) this.children[0];
+	  if(lhn.toString().equals("IDENTIFIER")) {
+		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
+			  System.out.println("Simbol " + lhn.name + " is not known.");
+			  return false;
+		  }else {
+			  lhn.type = this.simbolTable.getSimbol(lhn.name).getType().getName();
+		  }
+		  this.type = lhn.type;
+	  }else return false;
+	  
+	  if(this.jjtGetNumChildren() == 2) {
+		  SimpleNode rhn  = (SimpleNode) this.children[1];
+		  if(!rhn.type.equals("int")) {
+			  System.out.println("Index must be int");
+			  return false;
+		  }
+		  this.type = this.descriptors.getDescriptor(lhn.type).content.getName();
+	  }
+	  
+	  //System.out.println("Type: " + this.type);
+	  
+	  return result;
+  }
+  
+  
+  
+  
   
 }
 /* JavaCC - OriginalChecksum=3d5ba3dbf45f9bb899864a825571601d (do not edit this line) */

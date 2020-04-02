@@ -9,6 +9,34 @@ class ASTNEW_IDENTIFIER extends SimpleNode {
   public ASTNEW_IDENTIFIER(Jmm p, int id) {
     super(p, id);
   }
+  
+  public boolean doSemanticAnalysis() {
+	  
+	  
+	  boolean result = true;
+	  
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  result = result && r;
+		  }
+	  }
+	  
+	  if(result == false)
+		  return false;
+	  
+	  SimpleNode lhn  = (SimpleNode) this.children[0];
+	  
+	  Descriptor d = this.descriptors.getDescriptor(lhn.name);
+	  
+	  if(d == null) {
+		  System.out.println(lhn.name + " is not known.");
+		  return false;
+	  }else
+		  this.type = d.getName();
+	  
+	  return result;
+  }
 
 }
 /* JavaCC - OriginalChecksum=7c73e3b97cb23875cadd21c58e42f93f (do not edit this line) */

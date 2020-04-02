@@ -4,6 +4,7 @@ public class Descriptor {
 	String name;
 	SimbolTable simbolTable;
 	Descriptor content = null;
+	Descriptor extend = null;
 	
 	public Descriptor(String nm, SimbolTable st){
 		this.name = nm;
@@ -20,6 +21,14 @@ public class Descriptor {
 		if(content != null)
 			return name +  " -> " + content.toString();
 		return name;
+	}
+	
+	public boolean doesExtends(String ext) {
+		if(extend == null)
+			return false;
+		if(extend.name.equals(ext))
+			return true;
+		else return extend.doesExtends(ext);
 	}
 	
 	public String getName() {

@@ -9,6 +9,34 @@ class ASTASSIGN_VAR extends SimpleNode {
   public ASTASSIGN_VAR(Jmm p, int id) {
     super(p, id);
   }
+  
+  
+  public boolean doSemanticAnalysis() {
+	  
+	  
+	  boolean result = true;
+	  
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  result = result && r;
+		  }
+	  }
+	  
+	  if(result == false)
+		  return false;
+	  
+	  SimpleNode lhn  = (SimpleNode) this.children[0];
+	  SimpleNode rhn  = (SimpleNode) this.children[1];
+	  
+	  if(!lhn.type.equals(rhn.type)) {
+		  //if(!this.descriptors.getDescriptor(rhn.type).doesExtends(lhn.type))
+			  System.out.println("Incompatible types  " + lhn.type + "  and  " + rhn.type);
+	  }
+	  
+	  return result;
+  }
+
 
 }
 /* JavaCC - OriginalChecksum=77313bfccbff1d88a81394b17431258c (do not edit this line) */

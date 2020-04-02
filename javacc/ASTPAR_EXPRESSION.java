@@ -10,6 +10,35 @@ class ASTPAR_EXPRESSION extends SimpleNode {
     super(p, id);
   }
   
+  public boolean doSemanticAnalysis() {
+	  
+	  
+	  boolean result = true;
+	  
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  result = result && r;
+		  }
+	  }
+	  
+	  if(result == false)
+		  return false;
+	  
+	  SimpleNode lhn  = (SimpleNode) this.children[0];
+	  if(lhn.toString().equals("IDENTIFIER")) {
+		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
+			  System.out.println("Simbol " + lhn.name + " is not known.");
+			  return false;
+		  }else {
+			  lhn.type = this.simbolTable.getSimbol(lhn.name).getType().getName();
+		  }
+	  }
+	  
+	  this.type = lhn.type;
+	  
+	  return result;
+  }
 
 }
 /* JavaCC - OriginalChecksum=7b409adf99ba57e0bbba4c1138748919 (do not edit this line) */
