@@ -9,6 +9,18 @@ class ASTINTEGERLITERAL extends SimpleNode {
   public ASTINTEGERLITERAL(Jmm p, int id) {
     super(p, id);
   }
+  
+public boolean doSemanticAnalysis() {	  
+	boolean result = true;
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  result = result && r;
+		  }
+	  }
+	  this.type = "int";
+	  return result;
+  }
 
 }
 /* JavaCC - OriginalChecksum=8b847b3aaf62bfc9dee66c9d67951a3b (do not edit this line) */
