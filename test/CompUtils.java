@@ -3,6 +3,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
+
+import static org.junit.Assert.*;
+
 
 public class CompUtils {
 
@@ -233,5 +237,54 @@ public class CompUtils {
 
         return success;
     }
+
+
+
+
+
+    public static void testParser(String jmmResource, boolean mustFail, String classWithMain) {
+        // Copy contents of resource to a temporary file
+        File tempFolder = CompUtils.getTempFolder("comp_jmm_test");
+        File testFile = CompUtils.resourceCopy(jmmResource, tempFolder);
+
+        boolean success = true;
+
+        try {
+
+            // Get class with main
+            Class<?> mainClass = Class.forName(classWithMain);
+
+            // It is expected that class has a main function
+            Method mainMethod = mainClass.getMethod("main", String[].class);
+
+            // Invoke main method with file as argument
+            String[] mainArgs = { testFile.getAbsolutePath() };
+            Object[] invokeArgs = { mainArgs };
+            mainMethod.invoke(null, invokeArgs);
+
+        } catch (Exception e) {
+            System.out.println("Test failed: " + e);
+            e.printStackTrace();
+            success = false;
+        } finally {
+            // Clean-up
+            testFile.delete();
+        }
+
+        // Flip result, in case failure is needed
+        if (mustFail) {
+            success = !success;
+        }
+
+        if (!success) {
+            if (mustFail) {
+                System.out.println("Expected parser to throw exception");
+            } else {
+                System.out.println("Expected parser to complete successfully");
+            }
+            fail();
+        }
+    }
+
 
 }
