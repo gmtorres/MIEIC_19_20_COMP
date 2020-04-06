@@ -36,6 +36,9 @@ class ASTASSIGN_VAR extends SimpleNode {
 			  return false;
 		  }
 		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(d);
+	  }else {
+		  Descriptor d = this.descriptors.getDescriptor(rhn.type);
+		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(d);
 	  }
 	  
 	  if(info.toString().split(" ")[0].equals("IF:") || info.toString().split(" ")[0].equals("ELSE:")) {

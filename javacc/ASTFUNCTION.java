@@ -32,19 +32,14 @@ class ASTFUNCTION extends SimpleNode {
 	    SimpleNode lhn  = (SimpleNode) this.children[0];
 	    SimpleNode rhn  = (SimpleNode) this.children[1];
 
-		String obj;
 		ArrayList<String> objs = new ArrayList<String>();
 		if(lhn.name.equals("this")) {
-			obj = "";
-			//objs.add(this.descriptors.getDescriptor("this").getName());
 			objs = this.descriptors.getDescriptor("this").getAllTypes();
 		}
 		else{
 			if(this.simbolTable.isSimbolHere(lhn.name)) {
-				obj = this.simbolTable.getSimbol(lhn.name).getType().getName();
 				objs = this.simbolTable.getSimbol(lhn.name).getAssignType().getAllTypes();
 			}else {
-				obj = lhn.name;
 				objs.add(lhn.name);
 			}
 		}
