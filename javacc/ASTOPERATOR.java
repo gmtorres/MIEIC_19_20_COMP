@@ -11,14 +11,14 @@ class ASTOPERATOR extends SimpleNode {
   }
   
   
-public boolean doSemanticAnalysis() {
+public boolean doSemanticAnalysis(StringBuilder info) {
 	  
 	  
 	  boolean result = true;
 	  
 	  if(this.children != null) {
 		  for(Node node : this.children) {
-			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis(info);
 			  result = result && r;
 		  }
 	  }
@@ -31,7 +31,10 @@ public boolean doSemanticAnalysis() {
 			  System.out.println("Simbol " + lhn.name + " is not known.");
 			  return false;
 		  }else if(s.isInitialized == false){
-			  System.out.println("Simbol " + lhn.name + " has not been initiated.");
+			  if(s.condInitialized) {
+				  System.out.println("Simbol " + lhn.name + " may not have been initiated.");
+			  }else
+				  System.out.println("Simbol " + lhn.name + " has not been initiated.");
 			  return false;
 		  }else {
 			  lhn.type = s.getType().getName();
@@ -43,7 +46,10 @@ public boolean doSemanticAnalysis() {
 			  System.out.println("Simbol " + rhn.name + " is not known.");
 			  return false;
 		  }else if(s.isInitialized == false){
-			  System.out.println("Simbol " + rhn.name + " has not been initiated.");
+			  if(s.condInitialized) {
+				  System.out.println("Simbol " + lhn.name + " may not have been initiated.");
+			  }else
+				  System.out.println("Simbol " + lhn.name + " has not been initiated.");
 			  return false;
 		  }else {
 			  rhn.type = s.getType().getName();

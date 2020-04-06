@@ -9,6 +9,34 @@ class ASTIF_STATEMENT extends SimpleNode {
   public ASTIF_STATEMENT(Jmm p, int id) {
     super(p, id);
   }
+  
+  public boolean doSemanticAnalysis(StringBuilder info) {
+	  
+	  boolean result = true;
+	  
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis(info);
+			  result = result && r;
+		  }
+	  }
+	  
+	  //System.out.println("dasf " + info.toString()+".") ;
+	  String [] vars = info.toString().split(" ");
+	  if(vars.length > 0) {
+		  int i = 0;
+		  if(vars[0].equals("IF:") || vars[0].equals("ELSE:")) i = 1;
+		  for(;i<vars.length;i++) {
+			  if(vars[i].equals("")) continue;
+			  //System.out.println("VAR:" + vars[i]);
+			  //this.simbolTable.getSimbol(vars[i]).ifInitialized = false;
+			  //this.simbolTable.getSimbol(vars[i]).elseInitialized = false;
+		  }
+	  }
+	  
+	  return result;
+	  
+  }
 
 }
 /* JavaCC - OriginalChecksum=33daf199c16435c0573e99d15ebae32e (do not edit this line) */

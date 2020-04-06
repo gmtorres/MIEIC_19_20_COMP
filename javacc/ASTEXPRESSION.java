@@ -10,14 +10,14 @@ class ASTEXPRESSION extends SimpleNode {
     super(p, id);
   }
 
-	public boolean doSemanticAnalysis() {
+	public boolean doSemanticAnalysis(StringBuilder info) {
 		  
 		  
 		  boolean result = true;
 		  
 		  if(this.children != null) {
 			  for(Node node : this.children) {
-				  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+				  boolean r = ((SimpleNode) node).doSemanticAnalysis(info);
 				  result = result && r;
 			  }
 		  }
@@ -31,7 +31,18 @@ class ASTEXPRESSION extends SimpleNode {
 				  System.out.println("Simbol " + lhn.name + " is not known.");
 				  return false;
 			  }else {
-				  lhn.type = this.simbolTable.getSimbol(lhn.name).getType().getName();
+				  Simbol s = this.simbolTable.getSimbol(lhn.name);
+				  if(s == null){
+					  System.out.println("Simbol " + lhn.name + " is not known.");
+					  return false;
+				  }else if(s.isInitialized == false){
+					  if(s.condInitialized) {
+						  System.out.println("Simbol " + lhn.name + " may not have been initiated.");
+					  }else
+						  System.out.println("Simbol " + lhn.name + " has not been initiated.");
+					  return false;
+				  }else
+					  lhn.type = s.getType().getName();
 			  }
 		  }
 		  

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Descriptor {
 	
@@ -36,5 +37,17 @@ public class Descriptor {
 	public String getName() {
 		return name;
 	}
+	
+	public ArrayList<String> getAllTypes(){
+		if(extend == null) {
+			ArrayList<String> l = new ArrayList<String>();
+			l.add(this.name);
+			return l;
+		}
+		ArrayList<String> l = extend.getAllTypes();
+		l.add(0,this.name);
+		return l;
+	}
+	
 	
 }

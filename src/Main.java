@@ -33,7 +33,7 @@ public class Main {
 	        	System.out.println("There are semantic errors while creating table.");
 	        }
 	        
-	        if(root.doSemanticAnalysis() == false) {
+	        if(root.doSemanticAnalysis(new StringBuilder("")) == false) {
 	        	System.out.println("There are semantic errors while analysing.");
 	        }
 

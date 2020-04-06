@@ -45,7 +45,7 @@ class ASTMETHOD extends SimpleNode {
 
 	
 	//if (this.functionTable.addFunction(this.type,this.descriptors.getDescriptor("this").name, this.name, this.simbolTable, this.is_static) == false) {
-	if (this.functionTable.addFunction(this.type,"", this.name, this.simbolTable, this.is_static, listDesc) == false) {
+	if (this.functionTable.addFunction(this.type,this.descriptors.getDescriptor("this").name, this.name, this.simbolTable, this.is_static, listDesc) == false) {
 	    System.out.println("Error adding function" + this.type + " " + this.name);
 	    result = false;
 	  }
@@ -59,6 +59,7 @@ class ASTMETHOD extends SimpleNode {
 	
 	return result;
   }
+
 
 }
 /* JavaCC - OriginalChecksum=388f83dfa80f76895eee35b7c442ec5f (do not edit this line) */

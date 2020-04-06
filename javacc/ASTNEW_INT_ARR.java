@@ -10,14 +10,14 @@ class ASTNEW_INT_ARR extends SimpleNode {
     super(p, id);
   }
   
-  public boolean doSemanticAnalysis() {
+  public boolean doSemanticAnalysis(StringBuilder info) {
 	  
 	  
 	  boolean result = true;
 	  
 	  if(this.children != null) {
 		  for(Node node : this.children) {
-			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis(info);
 			  result = result && r;
 		  }
 	  }

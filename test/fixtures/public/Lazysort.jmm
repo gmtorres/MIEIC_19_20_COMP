@@ -24,7 +24,7 @@ class Lazysort extends Quicksort {
         d = q.printL(L);
     }
 
-    public boolean quicksort(int[] L, boolean b) {
+    public boolean quicksort(int[] L) {
         boolean lazy;
         
         if ( MathUtils.random(0, 5) < 4 ) {

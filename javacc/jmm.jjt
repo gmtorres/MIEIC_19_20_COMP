@@ -178,9 +178,9 @@ void Statement() #void: {Token t1;} {
 
 void If() #IF_STATEMENT: {} {
 	<IF> <ROUND_BRACE_OPEN> Condition() <ROUND_BRACE_CLOSE> 
-	    Statement() #BODY 
+	    Statement() #IF_BODY 
 	 <ELSE>
-	 	Statement() #BODY
+	 	Statement() #ELSE_BODY
 }
 
 void Condition() #CONDITION: {} {

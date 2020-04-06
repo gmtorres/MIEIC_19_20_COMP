@@ -131,13 +131,13 @@ class SimpleNode implements Node {
 	  return result;
   }
   
-  public boolean doSemanticAnalysis() {
+  public boolean doSemanticAnalysis(StringBuilder info) {
 	  
 	  boolean result = true;
 	  
 	  if(this.children != null) {
 		  for(Node node : this.children) {
-			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis(info);
 			  result = result && r;
 		  }
 	  }

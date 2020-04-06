@@ -11,14 +11,14 @@ class ASTASSIGN_VAR extends SimpleNode {
   }
   
   
-  public boolean doSemanticAnalysis() {
+  public boolean doSemanticAnalysis(StringBuilder info) {
 	  
 	  
 	  boolean result = true;
 	  
 	  if(this.children != null) {
 		  for(Node node : this.children) {
-			  boolean r = ((SimpleNode) node).doSemanticAnalysis();
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis(info);
 			  result = result && r;
 		  }
 	  }
@@ -35,9 +35,16 @@ class ASTASSIGN_VAR extends SimpleNode {
 			  System.out.println("Assigning imcompatible type:  " + lhn.type + "  and  " + rhn.type);
 			  return false;
 		  }
+		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(d);
 	  }
 	  
-	  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).isInitialized = true;
+	  if(info.toString().split(" ")[0].equals("IF:") || info.toString().split(" ")[0].equals("ELSE:")) {
+		  info.append(" " + ((SimpleNode) lhn.children[0]).name);
+		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).condInitialized = true;
+		  if(info.toString().split(" ")[0].equals("IF:")) this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).ifInitialized = true;
+		  if(info.toString().split(" ")[0].equals("ELSE:")) this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).elseInitialized = true;
+	  }else
+		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).isInitialized = true;
 	  
 	  return result;
   }
