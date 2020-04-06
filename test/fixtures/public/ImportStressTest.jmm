@@ -1,0 +1,29 @@
+//key, value can be changed to other Types (e.g. boolean, int[], MyClass)
+import Map;
+import Map.put(int, int);
+import Map.get(int) int;
+import Map.clear();
+import Map.print();
+import Map.contains(int) boolean;
+import Map.remove(int) boolean;
+
+ 
+
+//content can be changed to other Types (e.g. boolean, int[], MyClass)
+import List;
+import List(int);
+import List.add(int);
+import List.add(int, int);
+import List.contains(int) boolean;
+import List.remove(int) boolean;
+import List.length() int;
+
+ 
+
+import static io.println(int) void;
+import static io.println(int,int) void;
+import static io.readln() int;
+
+class ImportStressTest {
+
+}
