@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Descriptor {
 	
@@ -6,6 +7,7 @@ public class Descriptor {
 	SimbolTable simbolTable;
 	Descriptor content = null;
 	Descriptor extend = null;
+	List<Descriptor> params = new ArrayList<>();
 	
 	public Descriptor(String nm, SimbolTable st){
 		this.name = nm;
@@ -47,6 +49,14 @@ public class Descriptor {
 		ArrayList<String> l = extend.getAllTypes();
 		l.add(0,this.name);
 		return l;
+	}
+	
+	public List<Descriptor> getParams(){
+		return this.params;
+	}
+	
+	public void setParams(List<Descriptor> p) {
+		this.params = p;
 	}
 	
 	

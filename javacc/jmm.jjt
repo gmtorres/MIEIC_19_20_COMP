@@ -101,17 +101,17 @@ ASTProgram Program(): {} {
     (ImportDeclaration() #IMPORT )* ClassDeclaration() <EOF>  {return jjtThis;}
 }
 
-void ImportDeclaration() #void: { Token t1;} {
+void ImportDeclaration() #void: { Token t1;String s1,s2;} {
     <IMPORT> 
     ( <STATIC> 
         t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.is_static = true; } #CLASS MethodImport()
-        | t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #CLASS [MethodImport() ])
+        | t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #CLASS [   <ROUND_BRACE_OPEN> [(s1 = Type() {  jjtThis.type =s1; } #PARAM) ("," (s2 = Type(){  jjtThis.type =s2; } #PARAM))*] #PARAMS <ROUND_BRACE_CLOSE>    |  MethodImport() ])
      <SEMICOLON> 
 }
 
 void MethodImport() #void: {Token t1,t2;String s1,s2,s3;} {
-    <DOT> ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.type = "void"; } 
-     <ROUND_BRACE_OPEN> [(s1 = Type() {  jjtThis.type =s1; } #PARAM) ("," (s2 = Type(){  jjtThis.type =s2; } #PARAM))*] #PARAMS <ROUND_BRACE_CLOSE> 
+    <DOT> ( ( t1 = <IDENTIFIER> | t1 = <LENGTH> ) {  jjtThis.name = t1.image; jjtThis.type = "void"; } 
+     <ROUND_BRACE_OPEN> [ (s1 = Type() {  jjtThis.type =s1; } #PARAM) ("," (s2 = Type(){  jjtThis.type =s2; } #PARAM))*] #PARAMS <ROUND_BRACE_CLOSE> 
     [ s3=Type() {  jjtThis.type =s3; } ] ) #METHOD_PROT
 }
 
@@ -212,7 +212,7 @@ void Expression() #void: {Token t1;} {
     | t1 = <FALSE> {  jjtThis.val = 0; jjtThis.type = "boolean"; } #BOOL
     | t1 =  <THIS> {  jjtThis.name = t1.image; } #THIS
     | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
-    |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #TYPE <ROUND_BRACE_OPEN> <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
+    |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #TYPE <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
 
     | <ROUND_BRACE_OPEN>
         try {

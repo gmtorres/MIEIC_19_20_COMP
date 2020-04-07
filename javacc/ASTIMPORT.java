@@ -39,7 +39,10 @@ public boolean createTable() {
 		  	this.descriptors.addDescriptor( ((SimpleNode) this.children[0]).name, this.simbolTable );
 	  }else if(this.jjtGetNumChildren() == 2) {
 		  SimpleNode rhs = (SimpleNode) this.children[1];
-		  SimpleNode params = (SimpleNode)rhs.children[0];
+		  SimpleNode params;
+		  if(rhs.toString().equals("METHOD_PROT"))
+			  params = (SimpleNode)rhs.children[0];
+		  else params = rhs;
 
 		  List<Descriptor> listDesc = new ArrayList<>();
 
@@ -54,7 +57,13 @@ public boolean createTable() {
 			  }else
 				  this.simbolTable.addSimbol(d, String.valueOf("a" + i));
 		  }
-		  this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable, this.is_static, listDesc);
+		  if(rhs.toString().equals("METHOD_PROT"))
+			  this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable, this.is_static, listDesc);
+		  else {
+			  this.descriptors.addDescriptor( ((SimpleNode) this.children[0]).name, this.simbolTable );
+			  Descriptor d = this.descriptors.getDescriptor(((SimpleNode) this.children[0]).name);
+			  d.setParams(listDesc);
+		  }
 	  }
 	  
 	  
