@@ -4,10 +4,12 @@ public
 class ASTCLASS_DECL extends SimpleNode {
   public ASTCLASS_DECL(int id) {
     super(id);
+    this.has_scope = true;
   }
 
   public ASTCLASS_DECL(Jmm p, int id) {
     super(p, id);
+    this.has_scope = true;
   }
   
   public boolean createTable() {
@@ -27,6 +29,7 @@ class ASTCLASS_DECL extends SimpleNode {
 			  this.simbolTable.setParent( ( (SimpleNode)this.parent ).simbolTable);
 		  }
 	  }
+	  this.simbolTable.setGlobal(true);
 	  
 	  this.descriptors.addDescriptor( "this", this.name, this.simbolTable);
 	  this.descriptors.addDescriptor( this.name, this.name, this.simbolTable);

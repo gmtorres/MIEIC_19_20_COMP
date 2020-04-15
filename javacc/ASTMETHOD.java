@@ -34,6 +34,7 @@ class ASTMETHOD extends SimpleNode {
 		  this.simbolTable.setParent( ( (SimpleNode)this.parent ).simbolTable);
 	  }
 	}
+	this.simbolTable.setParam(true);
 
 	List<Descriptor> listDesc = new ArrayList<>();
 

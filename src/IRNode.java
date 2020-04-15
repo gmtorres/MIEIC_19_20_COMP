@@ -1,13 +1,14 @@
 
 public class IRNode {
 	
+	IRNode parent;
 	IRNode [] children;
 	
 	private String inst;
 	
 	
-	public IRNode() {
-		
+	public IRNode(IRNode p) {
+		parent = p;
 	}
 	
 	public void addChild(IRNode n) {
@@ -54,7 +55,7 @@ public class IRNode {
 			if(node.toString().equals("IMPORT"))
 				continue;
 			
-			IRNode child = new IRNode();
+			IRNode child = new IRNode(this);
 			this.addChild(child, i);
 			
 			if(node.toString().equals("CLASS_DECL")) {
@@ -77,11 +78,11 @@ public class IRNode {
 		int i = 0;
 		
 		if(lhn.toString().equals("EXTENDS")) {
-			IRNode child = new IRNode();
+			IRNode child = new IRNode(this);
 			child.setInst(lhn.name);
 			this.addChild(child, i++);
 		}else {
-			IRNode child = new IRNode();
+			IRNode child = new IRNode(this);
 			child.setInst("Object");
 			this.addChild(child, i++);
 		}
@@ -89,7 +90,7 @@ public class IRNode {
 		for(; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
 			
-			IRNode child = new IRNode();
+			IRNode child = new IRNode(this);
 			this.addChild(child, i);
 			
 			if(node.toString().equals("METHOD")) {
@@ -105,41 +106,41 @@ public class IRNode {
 	
 	public void buildMethod(SimpleNode sn) {
 		
-		IRNode access_spec = new IRNode();
+		IRNode access_spec = new IRNode(this);
 		access_spec.setInst("access_spec");
 		this.addChild(access_spec);
 		
-		IRNode method_spec = new IRNode();
+		IRNode method_spec = new IRNode(this);
 		method_spec.setInst("method_spec");
 		this.addChild(method_spec);
 		
-		IRNode arguments_specs = new IRNode();
+		IRNode arguments_specs = new IRNode(this);
 		arguments_specs.setInst("arguments_specs");
 		this.addChild(arguments_specs);
 		
-		IRNode locals = new IRNode();
+		IRNode locals = new IRNode(this);
 		locals.setInst("locals");
 		this.addChild(locals);
 		
-		IRNode statements = new IRNode();
+		IRNode statements = new IRNode(this);
 		statements.setInst("statements");
 		this.addChild(statements);
 		
-		IRNode type = new IRNode();
+		IRNode type = new IRNode(this);
 		type.setInst(sn.type);
 		method_spec.addChild(type);
 		
-		IRNode pub = new IRNode();
+		IRNode pub = new IRNode(this);
 		pub.setInst("public");
 		access_spec.addChild(pub);
 		
 		if(sn.is_static) {
-			IRNode stat = new IRNode();
+			IRNode stat = new IRNode(this);
 			stat.setInst("static");
 			access_spec.addChild(stat);
 		}
 		
-		IRNode name = new IRNode();
+		IRNode name = new IRNode(this);
 		name.setInst(sn.name);
 		method_spec.addChild(name);
 		
@@ -153,7 +154,7 @@ public class IRNode {
 		for(int i = 0; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
 			
-			IRNode child = new IRNode();
+			IRNode child = new IRNode(this);
 			
 			if(node.toString().equals("ARGUMENT")) {	
 				arguments_specs.addChild(child); 
@@ -163,7 +164,7 @@ public class IRNode {
 				for(int a = 0; a < node.jjtGetNumChildren(); a++) {
 					SimpleNode node2 = (SimpleNode)node.jjtGetChild(a);
 					
-					IRNode child2 = new IRNode();
+					IRNode child2 = new IRNode(statements);
 					
 					if(node2.toString().equals("VAR_DEC")) {
 						locals.addChild(child2);
@@ -197,7 +198,7 @@ public class IRNode {
 		int n = sn.jjtGetNumChildren();
 		
 		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
-		IRNode var = new IRNode();
+		IRNode var = new IRNode(this);
 		if(lhn.jjtGetNumChildren() == 1) {
 			this.inst = "st";
 			var.setInst(((SimpleNode)lhn.jjtGetChild(0)).name);
@@ -210,7 +211,7 @@ public class IRNode {
 			for(int a = 0; a < index_exp.jjtGetNumChildren(); a++) {
 				SimpleNode node = (SimpleNode)index_exp.jjtGetChild(a);
 				
-				IRNode child = new IRNode();
+				IRNode child = new IRNode(this);
 				this.addChild(child);
 				
 				child.getBuild(node);
@@ -222,7 +223,7 @@ public class IRNode {
 		for(int a = 0; a < rhn.jjtGetNumChildren(); a++) {
 			SimpleNode node = (SimpleNode)rhn.jjtGetChild(a);
 			
-			IRNode child = new IRNode();
+			IRNode child = new IRNode(this);
 			this.addChild(child);
 			
 			child.getBuild(node);
@@ -237,7 +238,7 @@ public class IRNode {
 		for(int i = 0; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
 			
-			IRNode child = new IRNode();
+			IRNode child = new IRNode(this);
 			this.addChild(child);
 			
 			child.getBuild(node);
@@ -252,7 +253,7 @@ public class IRNode {
 		
 		for(int i = 0; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);	
-			IRNode child = new IRNode();
+			IRNode child = new IRNode(this);
 			this.addChild(child);
 			child.getBuild(node);
 		}
@@ -262,6 +263,9 @@ public class IRNode {
 		this.setInst(String.valueOf(sn.val));
 	}
 	
+	public void buildIdentifier(SimpleNode sn) {
+		this.setInst(sn.name);
+	}
 	
 	public void getBuild(SimpleNode sn) {
 		switch(sn.toString()) {
@@ -274,9 +278,20 @@ public class IRNode {
 		case "INTEGERLITERAL":
 			buildIntegerLiteral(sn);
 			break;
+		case "IDENTIFIER":
+			buildIdentifier(sn);
+			break;
 		case "OPERATOR":
 			buildOperator(sn);
 			break;
+		default:
+			int n = sn.jjtGetNumChildren();
+			for(int i = 0; i < n;i++) {
+				SimpleNode node = (SimpleNode)sn.jjtGetChild(i);	
+				IRNode child = new IRNode(this);
+				this.parent.addChild(child);
+				child.getBuild(node);
+			}
 		}
 	}
 	
