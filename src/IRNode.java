@@ -392,6 +392,19 @@ public class IRNode {
 		}
 	}
 	
+	public void buildReturn(SimpleNode sn) {
+		this.setInst("return");
+		
+		if(sn.jjtGetNumChildren() == 0)
+			return;
+		
+		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
+		IRNode child = new IRNode(this);
+		this.addChild(child);
+		child.getBuild(lhn);
+		
+	}
+	
 	
 	
 	public void getBuild(SimpleNode sn) {
@@ -417,7 +430,9 @@ public class IRNode {
 		case "IF_STATEMENT":
 			buildIf(sn);
 			break;
-
+		case "RETURN_EXPRESSION":
+			buildReturn(sn);
+			break;
 		default:
 			int n = sn.jjtGetNumChildren();
 			IRNode actual = this;
