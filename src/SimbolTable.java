@@ -5,10 +5,44 @@ public class SimbolTable {
 	
 	HashMap<String,Simbol> simbols;
 	SimbolTable parent;
+	private boolean global = false;
+	private boolean param = false;
+	private boolean local = false;
 	
 	SimbolTable(){
 		simbols = new HashMap<String,Simbol>();
 		parent = null;
+	}
+	
+	public void setGlobal(boolean b) {
+		this.global = b;
+	}
+	
+	public boolean getGlobal() {
+		return this.global;
+	}
+	
+	public void setParam(boolean b) {
+		this.param = b;
+	}
+	
+	public boolean getParam() {
+		return this.param;
+	}
+	
+	public void setLocal(boolean b) {
+		this.local = b;
+	}
+	
+	public boolean getLocal() {
+		return this.local;
+	}
+	
+	public String getScope() {
+		if(this.getLocal()) return "local";
+		else if(this.getParam()) return "param";
+		else if(this.getGlobal()) return "global";
+		return "";
 	}
 	
 	void setParent(SimbolTable p) {

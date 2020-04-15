@@ -11,6 +11,37 @@ class ASTMETHOD_BODY extends SimpleNode {
     super(p, id);
     this.has_scope = true;
   }
+  
+  public boolean createTable() {
+	  
+	  
+	  if(this.parent != null) {
+		 this.functionTable = ((SimpleNode)this.parent).functionTable;
+		 this.descriptors = ((SimpleNode)this.parent).descriptors;
+	  }
+	  
+	  if(this.has_scope == false && this.parent != null) {
+		  this.simbolTable = ((SimpleNode)this.parent).simbolTable;
+	  }
+	  else if(this.has_scope == true){
+		  this.simbolTable = new SimbolTable();
+		  if(this.parent != null){
+			  this.simbolTable.setParent( ( (SimpleNode)this.parent ).simbolTable);
+		  }
+	  }
+	  this.simbolTable.setLocal(true);
+	  
+	  boolean result = true;
+	   
+	  if(this.children != null) {
+		  for(Node node : this.children) {
+			  boolean r = ((SimpleNode) node).createTable();
+			  result = result && r;
+		  }
+	  }
+
+	  return result;
+  }
 
 }
 /* JavaCC - OriginalChecksum=b95b49084b42f7b5a26cb3a8ac505539 (do not edit this line) */

@@ -2,6 +2,7 @@ import static MathUtils.random(int,int) int; //lowerLimit,upperLimit
 import Quicksort;
 
 class Lazysort extends Quicksort {
+	int c;
     public static void main(String[] a) {
 		int i;
 		int [] b;
@@ -11,6 +12,7 @@ class Lazysort extends Quicksort {
 		while(1 < 12) 
 		i = 3 + 1;
 		
+
     }
 
 }
