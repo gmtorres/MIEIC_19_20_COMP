@@ -37,9 +37,12 @@ public class Main {
 	        	System.out.println("There are semantic errors while analysing.");
 	        }
 
-	        root.printTables();
+	       // root.printTables();
 	        
-	        root.descriptors.printTable();
+	        //root.descriptors.printTable();
+	        IRBuilder ir = new IRBuilder(root);
+	        System.out.println("--------------*****************-----------------	");
+	        ir.dump();
 	        
 
 
