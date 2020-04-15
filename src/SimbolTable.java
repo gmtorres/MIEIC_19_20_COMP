@@ -86,6 +86,19 @@ public class SimbolTable {
 		}
 	}
 	
+	public String getScope (String id) {
+		if(isSimbolHere(id)) {
+			if(this.getLocal()) return "local";
+			else if(this.getParam()) return "param";
+			else if(this.getGlobal()) return "global";
+			return "";
+		}else {
+			if(this.parent == null)
+				return "";
+			else return this.parent.getScope(id);
+		}
+	}
+	
 	void printTable() {
 		System.out.println("SimbolTable");
 		for (HashMap.Entry<String, Simbol> entry : simbols.entrySet()) {

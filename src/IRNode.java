@@ -37,6 +37,14 @@ public class IRNode {
 	    }
 	    children[i] = n;
 	  }
+	  
+	  public void removeLast() {
+		  int n = this.children.length-1;
+		  if(n < 0) return;
+		  IRNode c[] = new IRNode[n];
+		  System.arraycopy(children, 0, c, 0, n);
+	      children = c;
+	  }
 	
 	  public void setInst(String inst) {
 		  this.inst = inst;
@@ -168,12 +176,12 @@ public class IRNode {
 				for(int a = 0; a < node.jjtGetNumChildren(); a++) {
 					SimpleNode node2 = (SimpleNode)node.jjtGetChild(a);
 					
-					IRNode child2 = new IRNode(statements);
-					
 					if(node2.toString().equals("VAR_DEC")) {
+						IRNode child2 = new IRNode(locals);
 						locals.addChild(child2);
 						child2.buildVarDec(node2);
 					}else {
+						IRNode child2 = new IRNode(statements);
 						statements.addChild(child2);
 						child2.getBuild(node2);
 					}
@@ -204,8 +212,8 @@ public class IRNode {
 		
 		SimpleNode lhn = (SimpleNode)(sn.jjtGetChild(0)).jjtGetChild(0);
 		IRNode var = new IRNode(this);
-		this.addChild(var);
 		var.getBuild(lhn);
+		this.addChild(var);
 
 		
 		SimpleNode rhn = (SimpleNode)sn.jjtGetChild(1);
@@ -304,7 +312,22 @@ public class IRNode {
 	}
 	
 	public void buildIdentifier(SimpleNode sn) {
-		this.setInst(sn.name);
+		String load = sn.simbolTable.getScope(sn.name);
+		//this.setInst(sn.simbolTable.getScope(sn.name) + "  " +sn.name);
+		switch(load) {
+		case "local":
+			this.setInst("ldl");
+			break;
+		case "param":
+			this.setInst("ldp");
+			break;
+		case "global":
+			this.setInst("ldg");
+			break;
+		}
+		IRNode child = new IRNode(this);
+		child.setInst(sn.name);
+		this.addChild(child);
 	}
 	
 	public void buildIf(SimpleNode sn) {
@@ -394,12 +417,15 @@ public class IRNode {
 		case "IF_STATEMENT":
 			buildIf(sn);
 			break;
+
 		default:
 			int n = sn.jjtGetNumChildren();
+			IRNode actual = this;
+			this.parent.removeLast();
 			for(int i = 0; i < n;i++) {
 				SimpleNode node = (SimpleNode)sn.jjtGetChild(i);	
-				IRNode child = new IRNode(this);
-				this.parent.addChild(child);
+				IRNode child = new IRNode(actual.parent);
+				actual.parent.addChild(child);
 				child.getBuild(node);
 			}
 
