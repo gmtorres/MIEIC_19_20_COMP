@@ -35,6 +35,7 @@ public class IRNode {
 	  }
 	  
 	  public void removeLast() {
+		  if(this.children == null) return;
 		  int n = this.children.length-1;
 		  if(n < 0) return;
 		  IRNode c[] = new IRNode[n];
@@ -252,38 +253,45 @@ public class IRNode {
 			var.setInst(((SimpleNode)lhn.jjtGetChild(0)).name);
 			this.addChild(var);
 			SimpleNode index_exp = (SimpleNode)lhn.jjtGetChild(1);
-			for(int a = 0; a < index_exp.jjtGetNumChildren(); a++) {
+			IRNode exp = new IRNode(this);
+			this.addChild(exp);
+			exp.getBuild(index_exp);
+			/*for(int a = 0; a < index_exp.jjtGetNumChildren(); a++) {
 				SimpleNode node = (SimpleNode)index_exp.jjtGetChild(a);
 				
 				IRNode child = new IRNode(this);
 				this.addChild(child);
 				
 				child.getBuild(node);
-			}
+			}*/
 		}else
 			return;
 		
 		SimpleNode rhn = (SimpleNode)sn.jjtGetChild(1);
-		for(int a = 0; a < rhn.jjtGetNumChildren(); a++) {
+		IRNode exp = new IRNode(this);
+		this.addChild(exp);
+		exp.getBuild(rhn);
+		/*for(int a = 0; a < rhn.jjtGetNumChildren(); a++) {
 			SimpleNode node = (SimpleNode)rhn.jjtGetChild(a);
 			
 			IRNode child = new IRNode(this);
 			this.addChild(child);
 			
 			child.getBuild(node);
-		}
+		}*/
 	}
 	
 	public void buildExpression(SimpleNode sn) {
 		if(sn.jjtGetNumChildren() == 0)
 			return;
 		int n = sn.jjtGetNumChildren();
-		
+		IRNode parent = this.parent;
+		parent.removeLast();
 		for(int i = 0; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
 			
-			IRNode child = new IRNode(this);
-			this.addChild(child);
+			IRNode child = new IRNode(parent);
+			parent.addChild(child);
 			
 			child.getBuild(node);
 		}
@@ -329,6 +337,7 @@ public class IRNode {
 	
 	
 	public void getBuild(SimpleNode sn) {
+		System.out.println(sn.toString());
 		switch(sn.toString()) {
 		case "ASSIGN_VAR":
 			buildAssign(sn);
@@ -354,13 +363,14 @@ public class IRNode {
 			break;
 
 		default:
+			//System.out.println(sn.toString());
 			int n = sn.jjtGetNumChildren();
-			IRNode actual = this;
-			this.parent.removeLast();
+			IRNode parent = this.parent;
+			parent.removeLast();
 			for(int i = 0; i < n;i++) {
 				SimpleNode node = (SimpleNode)sn.jjtGetChild(i);	
-				IRNode child = new IRNode(actual.parent);
-				actual.parent.addChild(child);
+				IRNode child = new IRNode(parent);
+				parent.addChild(child);
 				child.getBuild(node);
 			}
 
