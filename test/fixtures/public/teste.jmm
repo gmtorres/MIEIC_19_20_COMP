@@ -8,9 +8,12 @@ class Lazysort extends Quicksort {
 		int [] b;
 		{
 			{
-				i = 10;
-				b[1-5*2] = 3+2 * c -  4 + 13;
+					{
+			{
+				i = 10 + i;
+				b[1-5*2] = 3+2 * i -  4 + 13;
 			}
+		}}
 		}
     }
 
