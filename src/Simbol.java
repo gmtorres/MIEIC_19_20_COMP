@@ -10,6 +10,8 @@ public class Simbol {
     public boolean condInitialized = false;
     public int init = 0;
     
+    
+    
     Simbol(Descriptor tp , String id , boolean init){
     	this.type = tp;
     	this.identifier = id;
