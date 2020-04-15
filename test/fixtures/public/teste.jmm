@@ -12,6 +12,13 @@ class Lazysort extends Quicksort {
 		while(1 < 12) 
 		i = 3 + 1;
 		
+		if(2<3) {
+		i = 4;
+		b[3] = 2;
+		}
+		
+		else i = 3;
+		
 
     }
 

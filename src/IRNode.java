@@ -11,6 +11,10 @@ public class IRNode {
 		parent = p;
 	}
 	
+	public IRNode getParent() {
+		return this.parent;
+	}
+	
 	public void addChild(IRNode n) {
 		 if (children == null) {
 			 children = new IRNode[1];
@@ -194,12 +198,12 @@ public class IRNode {
 	public void buildWhile(SimpleNode sn) {
 		this.setInst("while");
 		
-		if(sn.jjtGetNumChildren() == 0)
+		if(sn.jjtGetNumChildren() <2)
 			return;
 		int n = sn.jjtGetNumChildren();
 		
 		SimpleNode lhn = (SimpleNode)(sn.jjtGetChild(0)).jjtGetChild(0);
-		IRNode var = new IRNode();
+		IRNode var = new IRNode(this);
 		this.addChild(var);
 		var.getBuild(lhn);
 
@@ -220,7 +224,7 @@ public class IRNode {
 		
 		for(int a = 0; a < node.jjtGetNumChildren(); a++) {
 			SimpleNode node2 = (SimpleNode)node.jjtGetChild(a);
-			IRNode child2 = new IRNode();
+			IRNode child2 = new IRNode(this);
 			this.addChild(child2);
 			child2.getBuild(node2);
 		}
@@ -303,6 +307,68 @@ public class IRNode {
 		this.setInst(sn.name);
 	}
 	
+	public void buildIf(SimpleNode sn) {
+		
+		this.setInst("if");
+
+		if(sn.jjtGetNumChildren() != 3)
+			return;
+		
+		SimpleNode lhn = (SimpleNode)(sn.jjtGetChild(0)).jjtGetChild(0);
+		IRNode child = new IRNode(this);
+		this.addChild(child);
+		child.getBuild(lhn);
+		
+		IRNode if_statements = new IRNode(this);
+		if_statements.setInst("if_statements");
+		this.addChild(if_statements);
+		
+		IRNode else_statements = new IRNode(this);
+		else_statements.setInst("else_statements");
+		this.addChild(else_statements);
+				
+		
+		SimpleNode ifbody = (SimpleNode)sn.jjtGetChild(1);
+		SimpleNode node = ifbody;
+		
+		if (ifbody.toString().equals("IF_BODY")) {
+			SimpleNode ifbodyChild = (SimpleNode)ifbody.jjtGetChild(0);
+			if (ifbodyChild.toString().equals("CODE_BLOCK")) {
+				node = ifbodyChild;
+			}
+		}
+		else {
+			return;
+		}
+		
+		for(int a = 0; a < node.jjtGetNumChildren(); a++) {
+			SimpleNode node2 = (SimpleNode)node.jjtGetChild(a);
+			IRNode child2 = new IRNode(this);
+			if_statements.addChild(child2);
+			child2.getBuild(node2);
+		}
+		
+		SimpleNode elsebody = (SimpleNode)sn.jjtGetChild(2);
+		SimpleNode node3 = elsebody;
+		
+		if (elsebody.toString().equals("ELSE_BODY")) {
+			SimpleNode elsebodyChild = (SimpleNode)elsebody.jjtGetChild(0);
+			if (elsebodyChild.toString().equals("CODE_BLOCK")) {
+				node3 = elsebodyChild;
+			}
+		}
+		else {
+			return;
+		}
+		
+		for(int t = 0; t < node3.jjtGetNumChildren(); t++) {
+			SimpleNode node4 = (SimpleNode)node3.jjtGetChild(t);
+			IRNode child3 = new IRNode(this);
+			else_statements.addChild(child3);
+			child3.getBuild(node4);
+		}
+	}
+	
 	
 	
 	public void getBuild(SimpleNode sn) {
@@ -322,14 +388,12 @@ public class IRNode {
 		case "OPERATOR":
 			buildOperator(sn);
 			break;
-<<<<<<< HEAD
 		case "WHILE":
 			buildWhile(sn);
 			break;
-		case "IF":
+		case "IF_STATEMENT":
 			buildIf(sn);
 			break;
-=======
 		default:
 			int n = sn.jjtGetNumChildren();
 			for(int i = 0; i < n;i++) {
@@ -338,7 +402,7 @@ public class IRNode {
 				this.parent.addChild(child);
 				child.getBuild(node);
 			}
->>>>>>> 7ca38e5d5e6db3d7c33f94bbc742f0b170dc8352
+
 		}
 	}
 	
