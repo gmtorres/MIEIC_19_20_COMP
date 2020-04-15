@@ -190,6 +190,42 @@ public class IRNode {
 		//put offset in simboltable
 	}
 	
+	public void buildWhile(SimpleNode sn) {
+		this.setInst("while");
+		
+		if(sn.jjtGetNumChildren() == 0)
+			return;
+		int n = sn.jjtGetNumChildren();
+		
+		SimpleNode lhn = (SimpleNode)(sn.jjtGetChild(0)).jjtGetChild(0);
+		IRNode var = new IRNode();
+		this.addChild(var);
+		var.getBuild(lhn);
+
+		
+		SimpleNode rhn = (SimpleNode)sn.jjtGetChild(1);
+		SimpleNode node = rhn;
+		
+		if (rhn.toString().equals("BODY")) {
+			
+			SimpleNode rhnChild = (SimpleNode)rhn.jjtGetChild(0);
+			if (rhnChild.toString().equals("CODE_BLOCK")) {
+				node = rhnChild;
+			}
+		}
+		else {
+			return;
+		}
+		
+		for(int a = 0; a < node.jjtGetNumChildren(); a++) {
+			SimpleNode node2 = (SimpleNode)node.jjtGetChild(a);
+			IRNode child2 = new IRNode();
+			this.addChild(child2);
+			child2.getBuild(node2);
+		}
+		
+	}
+	
 	public void buildAssign(SimpleNode sn) {
 		if(sn.jjtGetNumChildren() == 0)
 			return;
@@ -263,6 +299,8 @@ public class IRNode {
 	}
 	
 	
+	
+	
 	public void getBuild(SimpleNode sn) {
 		switch(sn.toString()) {
 		case "ASSIGN_VAR":
@@ -276,6 +314,12 @@ public class IRNode {
 			break;
 		case "OPERATOR":
 			buildOperator(sn);
+			break;
+		case "WHILE":
+			buildWhile(sn);
+			break;
+		case "IF":
+			buildIf(sn);
 			break;
 		}
 	}
