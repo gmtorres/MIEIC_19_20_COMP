@@ -40,12 +40,12 @@ class ASTASSIGN_VAR extends SimpleNode {
 		  Descriptor d = this.descriptors.getDescriptor(rhn.type);
 		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(d);
 	  }
-	  
-	  if(info.toString().split(" ")[0].equals("IF:") || info.toString().split(" ")[0].equals("ELSE:")) {
+	  String context = info.toString().split(" ")[0];
+	  if(context.equals("IF:") || info.toString().split(" ")[0].equals("ELSE:")) {
 		  info.append(" " + ((SimpleNode) lhn.children[0]).name);
 		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).condInitialized = true;
-		  if(info.toString().split(" ")[0].equals("IF:")) this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).ifInitialized = true;
-		  if(info.toString().split(" ")[0].equals("ELSE:")) this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).elseInitialized = true;
+		  if(context.equals("IF:")) this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).ifInitialized = true;
+		  if(context.equals("ELSE:")) this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).elseInitialized = true;
 	  }else
 		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).isInitialized = true;
 	  

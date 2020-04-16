@@ -35,7 +35,9 @@ class ASTNOT_EXPRESSION extends SimpleNode {
 			  if(s == null){
 				  System.out.println("Simbol " + lhn.name + " is not known.");
 				  return false;
-			  }else if(s.isInitialized == false){
+			  }else if(s.isInitialized == false 
+					  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
+					  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
 				  if(s.condInitialized) {
 					  System.out.println("Simbol " + lhn.name + " may not have been initiated.");
 				  }else

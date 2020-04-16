@@ -47,12 +47,20 @@ public boolean createTable() {
 		  List<Descriptor> listDesc = new ArrayList<>();
 
 		  int childrenNo = params.jjtGetNumChildren();
+		  if(childrenNo != 0 && ((SimpleNode) params.children[0]).type.equals("void")) {
+			  if(childrenNo == 1) {
+				  childrenNo = 0;
+			  }else {
+				  return false;
+			  }
+		  }
 
 		  for (int i = 0; i < childrenNo; i++) {
-			  Descriptor d = this.descriptors.getDescriptor(((SimpleNode) params.children[i]).type);
+			  String type = ((SimpleNode) params.children[i]).type;
+			  Descriptor d = this.descriptors.getDescriptor(type);
 			  listDesc.add(d);
 			  if(d == null) {
-				  System.out.println("Could not find type " + this.type);
+				  System.out.println("Could not find type " + type);
 				  result = false; 
 			  }else
 				  this.simbolTable.addSimbol(d, String.valueOf("a" + i));

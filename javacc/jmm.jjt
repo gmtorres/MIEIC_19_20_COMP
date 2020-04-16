@@ -205,6 +205,7 @@ void While() #void: {} {
     
 }
 
+/*
 void Expression() #void: {Token t1;} {
     ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; }  #IDENTIFIER
     | t1 = <INTEGERLITERAL> {  jjtThis.val = Integer.parseInt(t1.image); jjtThis.type = "int"; }  #INTEGERLITERAL
@@ -244,7 +245,74 @@ void Aritm() #OPERATOR(2) : {Token t1;} {
     | t1 = <DIV> Expression() {  jjtThis.name = t1.image; } 
     | t1 = <MUL> Expression() {  jjtThis.name = t1.image; }
     | t1 = <LESS_THAN> Expression() {  jjtThis.name = t1.image; }
+}*/
+
+void Expression() #void: {} {
+	AndAritm()
 }
+
+void AndAritm() #void : {Token t1;} {
+    LOOKAHEAD(2)(LessAritm()
+    ( t1 =  <AND>  LessAritm()  {  jjtThis.name = t1.image; } #OPERATION(2) ) * )
+    |ParExpression()
+ }
+
+void LessAritm() #void : {Token t1;} {
+   LOOKAHEAD(2) (MulDivAritm() 
+   		[LOOKAHEAD(2) t1 =  <LESS_THAN> MulDivAritm() {  jjtThis.name = t1.image; } #OPERATION(2)   ])
+   	|ParExpression()
+    	
+}
+
+void MulDivAritm() #void : {Token t1;} {
+    LOOKAHEAD(2) (AddSubAritm() [
+    ( t1 =  <MUL>  AddSubAritm()  {  jjtThis.name = t1.image; } #OPERATION(2)
+    | t1 =  <DIV> AddSubAritm() {  jjtThis.name = t1.image; } #OPERATION(2) )  ])
+    
+    |ParExpression()
+    
+}
+
+void AddSubAritm() #void : {Token t1;} {
+    LOOKAHEAD(2) (ExpTerminal() [
+    ( t1 =  <ADD>  MulDivAritm()   {  jjtThis.name = t1.image; } #OPERATION(2)
+    | t1 =  <SUB>  MulDivAritm() {  jjtThis.name = t1.image; } #OPERATION(2) )  ])
+    
+    |ParExpression()
+}
+
+void ExpTerminal() #void : {Token t1;} {
+	( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; }  #IDENTIFIER
+    | t1 = <INTEGERLITERAL> {  jjtThis.val = Integer.parseInt(t1.image); jjtThis.type = "int"; }  #INTEGERLITERAL 
+    | t1 = <TRUE> {  jjtThis.val = 1; jjtThis.type = "boolean"; } #BOOL
+    | t1 = <FALSE> {  jjtThis.val = 0; jjtThis.type = "boolean"; } #BOOL
+    | t1 =  <THIS> {  jjtThis.name = t1.image; } #THIS
+    | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
+    |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #TYPE <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
+    )
+    [ extendTerminal() ]
+}
+
+void extendTerminal() #void: {Token t1;} {
+	(<SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE>) #ARRAY_ACESS(2) [ extendTerminal() ] 
+    | <DOT> ( ( <LENGTH> #LENGTH(1)  [ extendTerminal() ] ) 
+          	  | (  ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image;  }
+               <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE> ) #FUNCTION (2)  [ extendTerminal()  ] ) )
+}
+
+void ParExpression() #void : {} {	
+	<ROUND_BRACE_OPEN>
+        try {
+             Expression() #PAR_EXPRESSION <ROUND_BRACE_CLOSE> 
+        }
+        catch (ParseException e) {
+            //System.out.println("Exception on ROUND_BRACES caught.");
+            error_skipto(e, ROUND_BRACE_CLOSE);
+            throw e;
+        }
+}
+
+
 
 JAVACODE
 void error_skipto(ParseException e, int kind) {
