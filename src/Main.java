@@ -28,21 +28,31 @@ public class Main {
 	        if(myJmm.failed == true) {
 	        	throw new ParseException();
 	        }
-	        
+
 	        if(root.createTable() == false) {
 	        	System.out.println("There are semantic errors while creating table.");
 	        }
+	        
+        	System.out.println("\n\n");
+        	System.out.println("\n--SEMANTICS--\n");
 	        
 	        if(root.doSemanticAnalysis(new StringBuilder("")) == false) {
 	        	System.out.println("There are semantic errors while analysing.");
 	        }
 
+        	System.out.println("\n--SYMBOL TABLE--\n");
 	        root.printTables();
-	        
+        	System.out.println("\n");
+
+        	System.out.println("\n--DESCRIPTORS--\n");
 	        root.descriptors.printTable();
-	        
-
-
+        	System.out.println("\n");
+        	
+            root.writeJasminFile(args[0]);
+            
+            Jasmin jasmin = new Jasmin(root.getSimbolTable());
+        	System.out.println(jasmin.printJasmin(root));
+            
     }
 
 	
