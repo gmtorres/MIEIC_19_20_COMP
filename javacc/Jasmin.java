@@ -8,19 +8,16 @@ public class Jasmin {
 	  public Jasmin(SimbolTable st) {
 		  this.simbolTable=st;
 	  }
-	 private String getType(String type) {
+	 private String retType(String type) {
 		    switch (type) {
 		    case "void":
-		        return "V";
+		        return "v";
 		        
 		    case "int":
-		        return "I";
+		        return "i";
 		        
 		    case "boolean":
-		      return "Z";
-		      
-		    case "int[]":
-		      return "[I";
+		      return "b";
 
 		    default:
 		        return "";
@@ -29,39 +26,36 @@ public class Jasmin {
 	 
 	  public String printJasmin(SimpleNode root) {
 		    String func = "";
-//
-	          //    System.out.println(root.parent + " " + root.toString() + "\n");
 
-	          if (root.parent != null && root.toString().equals("IDENTIFIER")) {
-	        	  String parent = root.parent.toString();
-	              if (parent.equals("FUNCTION")) {
-	            	  System.out.println("FUN: " + root.name + "\n");
-	              }
-	              else if (parent.equals("ARGUMENT")) {
-	            	  System.out.println(root.name + "ARG\n");
-	              }
-	              }else if (root.toString().equals("ARGUMENT")) {
-	            	  jasmin += "("; 
-	              }
-	          System.out.println(jasmin);
-
-	          if (root.children != null) {
-	              for (Node child : root.children) {
-	                SimpleNode sN = (SimpleNode) child;
-	                jasmin += printJasmin(sN);
-	              }
-	          }else {System.out.println("NO CHILDS \n");}
-	          if (root.toString().equals("ARGUMENT")){
-	        	  jasmin +=  ")" + type(root.type);
+	          if (root.toString().equals("METHOD")) {
+	        	 jasmin += ".method " + root.name + "(" + argsFun(root)+ ")"+ type(root.type)  +  "\n";
 	          }
-              
-	          /*if (root.toString().equals("PARAMS")) {
-	        	  jasmin += ")type";
-	            */
+	          
+              if(root.toString().equals("EXPRESSION")) {
+            	  if(root.parent.toString().equals("RETURN_EXPRESSION")) {
+            		  System.out.println("RETURN EX\n");
+            	  jasmin += retType(root.type)  + "return" + "\n\n";
+              }}
 
-		    return jasmin;
+	              if (root.children != null) {
+		              for (Node child : root.children) {
+		                SimpleNode sN = (SimpleNode) child;
+		                printJasmin(sN);
+		              }
+		          }
+		    return "JASMIN: " + jasmin;
 }
-	  
+	  public String argsFun(SimpleNode root) {
+		  for (int i = 0; i < root.children.length;i++) {
+			  if(root.jjtGetChild(i).toString().equals("ARGUMENT")) {
+				  SimpleNode sN = (SimpleNode) root.jjtGetChild(i);
+				  return type(sN.type);
+			  }
+	          }
+    	  return "\n";
+
+	          }
+        
 	  private String type(String type) {
 		    switch (type) {
 		    case "boolean":
