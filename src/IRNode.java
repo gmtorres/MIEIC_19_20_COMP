@@ -513,7 +513,7 @@ public class IRNode {
 		case "IDENTIFIER":
 			buildIdentifier(sn);
 			break;
-		case "OPERATOR":
+		case "OPERATION":
 			buildOperator(sn);
 			break;
 		case "WHILE":
