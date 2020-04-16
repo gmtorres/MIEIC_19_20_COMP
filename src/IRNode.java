@@ -431,6 +431,17 @@ public class IRNode {
 		child.getBuild(lhn);
 		
 	}
+	public void buildNot(SimpleNode sn) {
+		this.setInst("not");
+		
+		if(sn.jjtGetNumChildren() == 0)
+			return;	
+		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
+		IRNode child = new IRNode(this);
+		this.addChild(child);
+		child.getBuild(lhn);
+		
+	}
 	
 	public void buildArr_access(SimpleNode sn) {
 		this.setInst("lda");
@@ -514,6 +525,9 @@ public class IRNode {
 			break;
 		case "FUNCTION":
 			buildFunction(sn);
+			break;
+		case "NOT":
+			buildNot(sn);
 			break;
 		case "ARRAY_ACESS":
 			buildArr_access(sn);
