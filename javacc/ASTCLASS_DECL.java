@@ -39,7 +39,7 @@ class ASTCLASS_DECL extends SimpleNode {
 		  if(lhn.toString().equals("EXTENDS")) {
 			  Descriptor d = this.descriptors.getDescriptor(lhn.name);
 			  if(d == null) {
-				  System.out.println(lhn.name + "is not known");
+				  System.out.println(lhn.name + " is not known");
 				  return false;
 			  }else {
 				  this.descriptors.getDescriptor("this").extend = d;

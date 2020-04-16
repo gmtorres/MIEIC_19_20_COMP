@@ -82,24 +82,29 @@ public class IRNode {
 	
 	public void buildClass(SimpleNode sn) {
 		
+		IRNode obj = new IRNode(this);
+		obj.setInst(sn.name);
+		this.addChild(obj);
+		
 		if(sn.jjtGetNumChildren() == 0)
 			return;
 		int n = sn.jjtGetNumChildren();
 		
 		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
 
-		
+		int i = 0;
 		if(lhn.toString().equals("EXTENDS")) {
 			IRNode child = new IRNode(this);
 			child.setInst(lhn.name);
 			this.addChild(child);
+			i = 1;
 		}else {
 			IRNode child = new IRNode(this);
 			child.setInst("Object");
 			this.addChild(child);
 		}
 		
-		for(int i = 0; i < n; i++) {
+		for(; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
 			
 			IRNode child = new IRNode(this);
@@ -203,6 +208,9 @@ public class IRNode {
 	public void buildVarDec(SimpleNode sn) {
 		this.setInst(sn.name);
 		//put offset in simboltable
+	}
+	public void buildBool(SimpleNode sn) {
+		this.setInst(String.valueOf(sn.val));
 	}
 	
 	public void buildWhile(SimpleNode sn) {
@@ -371,7 +379,7 @@ public class IRNode {
 		
 		for(int a = 0; a < node.jjtGetNumChildren(); a++) {
 			SimpleNode node2 = (SimpleNode)node.jjtGetChild(a);
-			IRNode child2 = new IRNode(this);
+			IRNode child2 = new IRNode(if_statements);
 			if_statements.addChild(child2);
 			child2.getBuild(node2);
 		}
@@ -391,7 +399,7 @@ public class IRNode {
 		
 		for(int t = 0; t < node3.jjtGetNumChildren(); t++) {
 			SimpleNode node4 = (SimpleNode)node3.jjtGetChild(t);
-			IRNode child3 = new IRNode(this);
+			IRNode child3 = new IRNode(else_statements);
 			else_statements.addChild(child3);
 			child3.getBuild(node4);
 		}
@@ -526,14 +534,17 @@ public class IRNode {
 		case "FUNCTION":
 			buildFunction(sn);
 			break;
-		case "NOT":
+		case "NOT_EXPRESSION":
 			buildNot(sn);
 			break;
 		case "ARRAY_ACESS":
 			buildArr_access(sn);
 			break;
+		case "BOOL":
+			buildBool(sn);
+			break;
 		default:
-			//System.out.println(sn.toString());
+			System.out.println(sn.toString());
 			int n = sn.jjtGetNumChildren();
 			IRNode parent = this.parent;
 			parent.removeLast();

@@ -31,10 +31,12 @@ public class Main {
 	        
 	        if(root.createTable() == false) {
 	        	System.out.println("There are semantic errors while creating table.");
+	        	return;
 	        }
 	        
 	        if(root.doSemanticAnalysis(new StringBuilder("")) == false) {
 	        	System.out.println("There are semantic errors while analysing.");
+	        	return;
 	        }
 
 	        //root.printTables();

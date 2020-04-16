@@ -63,6 +63,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  
 	  SimpleNode lhn  = (SimpleNode) this.children[0];
 	  if(lhn.toString().equals("IDENTIFIER")) {
+		  System.out.println(lhn.name);
 		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
 			  System.out.println("Simbol " + lhn.name + " is not known.");
 			  return false;
