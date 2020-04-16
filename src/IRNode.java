@@ -104,11 +104,13 @@ public class IRNode {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
 			
 			IRNode child = new IRNode(this);
-			this.addChild(child, i);
+			this.addChild(child);
 			
 			if(node.toString().equals("METHOD")) {
 				child.setInst("method");
 				child.buildMethod(node);
+			}else if(node.toString().equals("VAR_DEC")) {
+				child.buildVarDec(node);
 			}
 			else
 				child.build( node ); 
@@ -211,25 +213,22 @@ public class IRNode {
 			return;
 		int n = sn.jjtGetNumChildren();
 		
-		SimpleNode lhn = (SimpleNode)(sn.jjtGetChild(0)).jjtGetChild(0);
+		SimpleNode lhn = (SimpleNode)(sn.jjtGetChild(0)).jjtGetChild(0); //EXPRESSION
 		IRNode var = new IRNode(this);
-		var.getBuild(lhn);
 		this.addChild(var);
-
-		
+		var.getBuild(lhn);
+	
 		SimpleNode rhn = (SimpleNode)sn.jjtGetChild(1);
 		SimpleNode node = rhn;
 		
 		if (rhn.toString().equals("BODY")) {
-			
 			SimpleNode rhnChild = (SimpleNode)rhn.jjtGetChild(0);
 			if (rhnChild.toString().equals("CODE_BLOCK")) {
 				node = rhnChild;
 			}
 		}
-		else {
+		else
 			return;
-		}
 		
 		for(int a = 0; a < node.jjtGetNumChildren(); a++) {
 			SimpleNode node2 = (SimpleNode)node.jjtGetChild(a);
@@ -237,7 +236,6 @@ public class IRNode {
 			this.addChild(child2);
 			child2.getBuild(node2);
 		}
-		
 	}
 	
 	public void buildAssign(SimpleNode sn) {
@@ -416,7 +414,7 @@ public class IRNode {
 	
 	
 	public void getBuild(SimpleNode sn) {
-		System.out.println(sn.toString());
+		//System.out.println(sn.toString());
 		switch(sn.toString()) {
 		case "ASSIGN_VAR":
 			buildAssign(sn);
@@ -443,7 +441,7 @@ public class IRNode {
 			buildReturn(sn);
 			break;
 		default:
-			//System.out.println(sn.toString());
+			System.out.println(sn.toString());
 			int n = sn.jjtGetNumChildren();
 			IRNode parent = this.parent;
 			parent.removeLast();
