@@ -76,7 +76,7 @@ public class IRNode {
 				child.buildClass(node);
 			}
 			else
-				child.build( node ); 
+				child.build(node); 
 		}
 	}
 	
@@ -87,20 +87,19 @@ public class IRNode {
 		int n = sn.jjtGetNumChildren();
 		
 		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
-		
-		int i = 0;
+
 		
 		if(lhn.toString().equals("EXTENDS")) {
 			IRNode child = new IRNode(this);
 			child.setInst(lhn.name);
-			this.addChild(child, i++);
+			this.addChild(child);
 		}else {
 			IRNode child = new IRNode(this);
 			child.setInst("Object");
-			this.addChild(child, i++);
+			this.addChild(child);
 		}
 		
-		for(; i < n; i++) {
+		for(int i = 0; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
 			
 			IRNode child = new IRNode(this);
@@ -410,7 +409,74 @@ public class IRNode {
 		child.getBuild(lhn);
 		
 	}
+	public void buildNewIntArr(SimpleNode sn) {
+		this.setInst("new_int_arr");
+		
+		if(sn.jjtGetNumChildren() == 0)
+			return;	
+		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
+		IRNode child = new IRNode(this);
+		this.addChild(child);
+		child.getBuild(lhn);
+		
+	}
+	public void buildLength(SimpleNode sn) {
+		this.setInst("length");
+		
+		if(sn.jjtGetNumChildren() == 0)
+			return;	
+		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
+		IRNode child = new IRNode(this);
+		this.addChild(child);
+		child.getBuild(lhn);
+		
+	}
 	
+	public void buildArr_access(SimpleNode sn) {
+		this.setInst("lda");
+		
+		if(sn.jjtGetNumChildren() == 0)
+			return;	
+		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
+		IRNode childl = new IRNode(this);
+		this.addChild(childl);
+		childl.getBuild(lhn);
+		SimpleNode rhn = (SimpleNode)sn.jjtGetChild(1);
+		IRNode childr = new IRNode(this);
+		this.addChild(childr);
+		childr.getBuild(rhn);
+		
+	}
+	
+	
+	public void buildFunction(SimpleNode sn) {
+		this.setInst("invoke");
+		
+		if(sn.jjtGetNumChildren() == 0)
+			return;	
+		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
+		IRNode child = new IRNode(this);
+		this.addChild(child);
+		Descriptor d = sn.descriptors.getDescriptor(lhn.name);
+		String object;
+		if(d == null)
+			object = lhn.name;
+		else 
+			object = d.getName();
+		child.setInst(object);
+		
+		IRNode child2 = new IRNode(this);
+		this.addChild(child2);
+		child2.setInst(sn.name);
+		
+		SimpleNode rhn = (SimpleNode)sn.jjtGetChild(1);
+		for(int i = 0; i < rhn.jjtGetNumChildren(); ++i) {
+			SimpleNode node = (SimpleNode)rhn.jjtGetChild(i);
+			IRNode param = new IRNode(this);
+			this.addChild(param);
+			param.getBuild(node);
+		}
+	}
 	
 	
 	public void getBuild(SimpleNode sn) {
@@ -440,8 +506,20 @@ public class IRNode {
 		case "RETURN_EXPRESSION":
 			buildReturn(sn);
 			break;
+		case "NEW_INT_ARR":
+			buildNewIntArr(sn);
+			break;
+		case "LENGTH":
+			buildLength(sn);
+			break;
+		case "FUNCTION":
+			buildFunction(sn);
+			break;
+		case "ARRAY_ACESS":
+			buildArr_access(sn);
+			break;
 		default:
-			System.out.println(sn.toString());
+			//System.out.println(sn.toString());
 			int n = sn.jjtGetNumChildren();
 			IRNode parent = this.parent;
 			parent.removeLast();

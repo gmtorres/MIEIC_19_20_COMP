@@ -39,7 +39,7 @@ public class Main {
 
 	        //root.printTables();
 	        
-	        //root.descriptors.printTable();
+	        root.descriptors.printTable();
 	        
 	        IRBuilder ir = new IRBuilder(root);
 	        System.out.println("--------------*****************-----------------	");

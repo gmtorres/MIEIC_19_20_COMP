@@ -78,7 +78,14 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 			  System.out.println("Index must be int");
 			  return false;
 		  }
-		  this.type = this.descriptors.getDescriptor(lhn.type).content.getName();
+		  Descriptor d = this.descriptors.getDescriptor(lhn.type);
+		  if(d == null) return false;
+		  if(d.content == null) {
+			  //this.type = d.getName(); //error
+			  System.out.println("Simbol " + lhn.name + " must be an array.");
+			  result = false;
+		  }
+		  else this.type = d.content.getName();
 	  }
 	  
 	  //System.out.println("Type: " + this.type);
