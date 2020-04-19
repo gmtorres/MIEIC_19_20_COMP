@@ -17,7 +17,7 @@ class TicTacToe {
 		a = 2;
 		b = new int[10];
 		f = true;
-		return b.length < 4 && BoardBase.printWinner(a);
+		return f;
 	}
 	
 

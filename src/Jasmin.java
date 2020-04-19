@@ -69,13 +69,13 @@ public class Jasmin {
 		  toPrint += ((r.getChildren()[1]).getChildren()[1]).getInst();
 		  toPrint += "(";
 		  
-		  if((r.getChildren()[2]).getChildren() != null) {
-			  for (int i= 0; i < ((r.getChildren()[2]).getChildren().length); i++) {
-				  toPrint += retType(r.getChildren()[2].getChildren()[i].getInst());
-				  if(i != r.getChildren()[2].getChildren().length - 1)
-					  toPrint +=", ";
-			  }
+
+		  for (int i= 0; i < ((r.getChildren()[2]).getChildren().length); i++) {
+			  toPrint += retType(r.getChildren()[2].getChildren()[i].getInst());
+			  if(i != r.getChildren()[2].getChildren().length - 1)
+				  toPrint +=", ";
 		  }
+
 		  
 		  toPrint += ")";
 		  toPrint += retType(((r.getChildren()[1]).getChildren()[0]).getInst());
@@ -87,12 +87,13 @@ public class Jasmin {
 		  
 		  toPrint = "\t.limit locals ";
 		  
-		  if ((r.getChildren()[3]).getChildren() != null) {
-			  toPrint += (r.getChildren()[3]).getChildren().length;
-		  }
-		  else toPrint += 0;
-		  
+
+		  toPrint += (r.getChildren()[3]).getChildren().length;
+
+
 		  System.out.println(toPrint);
+		  
+		  
 		  
 		    
 	  }

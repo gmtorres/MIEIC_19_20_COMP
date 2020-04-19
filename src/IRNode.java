@@ -2,7 +2,7 @@
 public class IRNode {
 	
 	IRNode parent;
-	IRNode [] children;
+	IRNode [] children = new IRNode[0];
 	
 	private String inst = "";
 	
