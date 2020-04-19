@@ -28,11 +28,11 @@ class ASTASSIGN_VAR extends SimpleNode {
 	  
 	  SimpleNode lhn  = (SimpleNode) this.children[0];
 	  SimpleNode rhn  = (SimpleNode) this.children[1];
-	  
+	  this.lineNo = rhn.lineNo;
 	  if(!lhn.type.equals(rhn.type)) {
 		  Descriptor d = this.descriptors.getDescriptor(rhn.type);
 		  if(d == null || !d.doesExtends(lhn.type)) {
-			  System.out.println("Assigning imcompatible type:  " + lhn.type + "  and  " + rhn.type);
+			  System.out.println("Line " + this.lineNo + ": Assigning imcompatible type:  " + lhn.type + "  and  " + rhn.type);
 			  return false;
 		  }
 		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(d);

@@ -104,19 +104,19 @@ ASTProgram Program(): {} {
 void ImportDeclaration() #void: { Token t1;String s1,s2;} {
     <IMPORT> 
     ( <STATIC> 
-        t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.is_static = true; } #CLASS MethodImport()
-        | t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #CLASS [   <ROUND_BRACE_OPEN> [(s1 = Type() {  jjtThis.type =s1; } #PARAM) ("," (s2 = Type(){  jjtThis.type =s2; } #PARAM))*] #PARAMS <ROUND_BRACE_CLOSE>    |  MethodImport() ])
+        t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.is_static = true; jjtThis.lineNo = t1.beginLine; } #CLASS MethodImport()
+        | t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.lineNo = t1.beginLine; } #CLASS [   <ROUND_BRACE_OPEN> [(s1 = Type() {  jjtThis.type =s1; jjtThis.lineNo = t1.beginLine; } #PARAM) ("," (s2 = Type(){  jjtThis.type =s2; jjtThis.lineNo = t1.beginLine; } #PARAM))*] #PARAMS <ROUND_BRACE_CLOSE>    |  MethodImport() ])
      <SEMICOLON> 
 }
 
 void MethodImport() #void: {Token t1,t2;String s1,s2,s3;} {
-    <DOT> ( ( t1 = <IDENTIFIER> | t1 = <LENGTH> ) {  jjtThis.name = t1.image; jjtThis.type = "void"; } 
-     <ROUND_BRACE_OPEN> [ (s1 = Type() {  jjtThis.type =s1; } #PARAM) ("," (s2 = Type(){  jjtThis.type =s2; } #PARAM))*] #PARAMS <ROUND_BRACE_CLOSE> 
-    [ s3=Type() {  jjtThis.type =s3; } ] ) #METHOD_PROT
+    <DOT> ( ( t1 = <IDENTIFIER> | t1 = <LENGTH> ) {  jjtThis.name = t1.image; jjtThis.type = "void"; jjtThis.lineNo = t1.beginLine; } 
+     <ROUND_BRACE_OPEN> [ (s1 = Type() {  jjtThis.type =s1; jjtThis.lineNo = t1.beginLine; } #PARAM) ("," (s2 = Type(){  jjtThis.type =s2; jjtThis.lineNo = t1.beginLine; } #PARAM))*] #PARAMS <ROUND_BRACE_CLOSE> 
+    [ s3=Type() {  jjtThis.type =s3; jjtThis.lineNo = t1.beginLine; } ] ) #METHOD_PROT
 }
 
 void ClassDeclaration() #CLASS_DECL: {Token t1;} {
-    <CLASS> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } [ <EXTENDS> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #EXTENDS ] <CURLY_BRACE_OPEN>
+    <CLASS> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.lineNo = t1.beginLine; } [ <EXTENDS> t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.lineNo = t1.beginLine; } #EXTENDS ] <CURLY_BRACE_OPEN>
     ( VarDeclaration()  )* 
     ( MethodDeclaration()  )* 
     <CURLY_BRACE_CLOSE>
@@ -125,7 +125,7 @@ void ClassDeclaration() #CLASS_DECL: {Token t1;} {
 
 void MethodDeclaration() #METHOD: {Token t1,t2,t3;String s1;} {
     <PUBLIC>
-    (    s1 = Type() { jjtThis.type = s1;} t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } 
+    (    s1 = Type() { jjtThis.type = s1;} t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.lineNo = t1.beginLine; } 
             <ROUND_BRACE_OPEN> ( [ Argument() ( <COMMA> Argument() )* ] )  <ROUND_BRACE_CLOSE> 
             ( <CURLY_BRACE_OPEN> 
 	            MethodBody()
@@ -133,7 +133,7 @@ void MethodDeclaration() #METHOD: {Token t1,t2,t3;String s1;} {
         	<CURLY_BRACE_CLOSE> ) #METHOD_BODY
     | 
         <STATIC> <VOID> t1 = <MAIN> {  jjtThis.name = t1.image; jjtThis.type = "void"; }
-        	<ROUND_BRACE_OPEN> ( <STRING> <SQUARE_BRACE_OPEN> <SQUARE_BRACE_CLOSE> t1 = <IDENTIFIER> {  jjtThis.type = "String[]" ; jjtThis.name = t1.image; } ) #ARGUMENT <ROUND_BRACE_CLOSE> 
+        	<ROUND_BRACE_OPEN> ( <STRING> <SQUARE_BRACE_OPEN> <SQUARE_BRACE_CLOSE> t1 = <IDENTIFIER> {  jjtThis.type = "String[]" ; jjtThis.name = t1.image; jjtThis.lineNo = t1.beginLine; } ) #ARGUMENT <ROUND_BRACE_CLOSE> 
 			( <CURLY_BRACE_OPEN> 
             	MethodBody()
         	<CURLY_BRACE_CLOSE> ) #METHOD_BODY
@@ -142,7 +142,7 @@ void MethodDeclaration() #METHOD: {Token t1,t2,t3;String s1;} {
 }
 
 void Argument() #ARGUMENT: {Token t1; String s1;} {
-	s1 = Type() t1 = <IDENTIFIER> { jjtThis.type = s1; jjtThis.name = t1.image; }
+	s1 = Type() t1 = <IDENTIFIER> { jjtThis.type = s1; jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; }
 }
 
 void MethodBody() #void: {} {
@@ -151,7 +151,7 @@ void MethodBody() #void: {} {
 }
 
 void VarDeclaration() #VAR_DEC: {Token t1;String s1;} {
-    s1 = Type()  t1 = <IDENTIFIER>  { jjtThis.type = s1; jjtThis.name = t1.image; } <SEMICOLON>     
+    s1 = Type()  t1 = <IDENTIFIER>  { jjtThis.type = s1; jjtThis.name = t1.image; jjtThis.lineNo = t1.beginLine; } <SEMICOLON> 
 }
 
 String Type() #void: {Token t1; String s1 = "";} {
@@ -169,7 +169,7 @@ void Statement() #void: {Token t1;} {
     
     | While()
     
-    |  LOOKAHEAD(2)( t1 = <IDENTIFIER>  { jjtThis.name = t1.image; } #IDENTIFIER 
+    |  LOOKAHEAD(2)( t1 = <IDENTIFIER>  { jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #IDENTIFIER 
         [ <SQUARE_BRACE_OPEN> ( Expression() #EXPRESSION ) <SQUARE_BRACE_CLOSE> ] 
       ) #VAR
         <EQUALS> ( Expression() #EXPRESSION )  #ASSIGN_VAR(2) <SEMICOLON>
@@ -205,98 +205,51 @@ void While() #void: {} {
     
 }
 
-/*
-void Expression() #void: {Token t1;} {
-    ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; }  #IDENTIFIER
-    | t1 = <INTEGERLITERAL> {  jjtThis.val = Integer.parseInt(t1.image); jjtThis.type = "int"; }  #INTEGERLITERAL
-    | t1 = <TRUE> {  jjtThis.val = 1; jjtThis.type = "boolean"; } #BOOL
-    | t1 = <FALSE> {  jjtThis.val = 0; jjtThis.type = "boolean"; } #BOOL
-    | t1 =  <THIS> {  jjtThis.name = t1.image; } #THIS
-    | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
-    |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #TYPE <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
-
-    | <ROUND_BRACE_OPEN>
-        try {
-             Expression() #PAR_EXPRESSION <ROUND_BRACE_CLOSE> 
-        }
-        catch (ParseException e) {
-            //System.out.println("Exception on ROUND_BRACES caught.");
-            error_skipto(e, ROUND_BRACE_CLOSE);
-            throw e;
-        }
-     )
-    [ Expression2() ]
-    | ( <NOT> Expression() )  #NOT_EXPRESSION(1)
-}
-
-void Expression2() #void: {Token t1;} {
-    (<SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE>) #ARRAY_ACESS(2) [ Expression2() ] 
-    | <DOT> ( ( <LENGTH> #LENGTH(1)  [ Expression2() ] ) 
-          	  | (  ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image;  }
-               <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE> ) #FUNCTION (2)  [ Expression2()  ] ) )
-    | Aritm() 
-    
-}
-
-void Aritm() #OPERATOR(2) : {Token t1;} {
-    t1 = <AND> Expression() {  jjtThis.name = t1.image; }
-    | t1 = <ADD> Expression() {  jjtThis.name = t1.image; } 
-    | t1 = <SUB> Expression() {  jjtThis.name = t1.image; }
-    | t1 = <DIV> Expression() {  jjtThis.name = t1.image; } 
-    | t1 = <MUL> Expression() {  jjtThis.name = t1.image; }
-    | t1 = <LESS_THAN> Expression() {  jjtThis.name = t1.image; }
-}*/
 
 void Expression() #void: {} {
 	AndAritm()
 }
 
 void AndAritm() #void : {Token t1;} {
-    LOOKAHEAD(2)(LessAritm()
-    ( t1 =  <AND>  LessAritm()  {  jjtThis.name = t1.image; } #OPERATION(2) ) * )
-    |ParExpression()
+    LessAritm()
+   		(LOOKAHEAD(2) t1 = <AND> LessAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #OPERATOR(2) ) *
  }
 
 void LessAritm() #void : {Token t1;} {
-   LOOKAHEAD(2) (MulDivAritm() 
-   		[LOOKAHEAD(2) t1 =  <LESS_THAN> MulDivAritm() {  jjtThis.name = t1.image; } #OPERATION(2)   ])
-   	|ParExpression()
+	MulDivAritm() 
+   		[LOOKAHEAD(2) t1 =  <LESS_THAN> MulDivAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #OPERATOR(2) ]
     	
 }
 
 void MulDivAritm() #void : {Token t1;} {
-    LOOKAHEAD(2) (AddSubAritm() [
-    ( t1 =  <MUL>  AddSubAritm()  {  jjtThis.name = t1.image; } #OPERATION(2)
-    | t1 =  <DIV> AddSubAritm() {  jjtThis.name = t1.image; } #OPERATION(2) )  ])
-    
-    |ParExpression()
+    AddSubAritm() 
+    	[LOOKAHEAD(2)( t1 =  <MUL> | t1 =  <DIV> ) AddSubAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #OPERATOR(2)]
     
 }
 
 void AddSubAritm() #void : {Token t1;} {
-    LOOKAHEAD(2) (ExpTerminal() [
-    ( t1 =  <ADD>  MulDivAritm()   {  jjtThis.name = t1.image; } #OPERATION(2)
-    | t1 =  <SUB>  MulDivAritm() {  jjtThis.name = t1.image; } #OPERATION(2) )  ])
-    
-    |ParExpression()
+	ExpTerminal() 
+    	[LOOKAHEAD(2)( t1 =  <ADD> | t1 =  <SUB> ) MulDivAritm() { jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #OPERATOR(2) ]
 }
 
 void ExpTerminal() #void : {Token t1;} {
-	( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; }  #IDENTIFIER
-    | t1 = <INTEGERLITERAL> {  jjtThis.val = Integer.parseInt(t1.image); jjtThis.type = "int"; }  #INTEGERLITERAL 
-    | t1 = <TRUE> {  jjtThis.val = 1; jjtThis.type = "boolean"; } #BOOL
-    | t1 = <FALSE> {  jjtThis.val = 0; jjtThis.type = "boolean"; } #BOOL
-    | t1 =  <THIS> {  jjtThis.name = t1.image; } #THIS
+	( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.lineNo = t1.beginLine; }  #IDENTIFIER
+    | t1 = <INTEGERLITERAL> {  jjtThis.val = Integer.parseInt(t1.image); jjtThis.type = "int"; jjtThis.lineNo = t1.beginLine; }  #INTEGERLITERAL 
+    | t1 = <TRUE> {  jjtThis.val = 1; jjtThis.type = "boolean"; jjtThis.lineNo = t1.beginLine; } #BOOL
+    | t1 = <FALSE> {  jjtThis.val = 0; jjtThis.type = "boolean"; jjtThis.lineNo = t1.beginLine; } #BOOL
+    | t1 =  <THIS> {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #THIS
     | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
-    |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; } #TYPE <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
+    |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #TYPE <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
     )
     [ extendTerminal() ]
+    | ( <NOT> Expression() )  #NOT_EXPRESSION(1)
+    |ParExpression()
 }
 
 void extendTerminal() #void: {Token t1;} {
 	(<SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE>) #ARRAY_ACESS(2) [ extendTerminal() ] 
     | <DOT> ( ( <LENGTH> #LENGTH(1)  [ extendTerminal() ] ) 
-          	  | (  ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image;  }
+          	  | (  ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; }
                <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE> ) #FUNCTION (2)  [ extendTerminal()  ] ) )
 }
 

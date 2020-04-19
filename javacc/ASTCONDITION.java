@@ -26,7 +26,7 @@ class ASTCONDITION extends SimpleNode {
 			  return false;
 		  
 		  if(((SimpleNode) this.children[0]).type != "boolean") {
-			  System.out.println("Condition must be boolean.");
+			  System.out.println("Line " + this.lineNo + ": Condition must be boolean.");
 			  return false;
 		  }
 		  return result;

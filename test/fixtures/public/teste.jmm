@@ -1,11 +1,14 @@
 import static BoardBase.sameArray(int[]) boolean;
 import static BoardBase.sameArray(int[]) boolean;
 import static BoardBase.printBoard(int[],int[],int[]) void; 
-import static BoardBase.printWinner(int) boolean;
+import static BoardBase.printWinner(int) void;
+
+import static BoardBase.playerTurn(int) int[];
+import static BoardBase.wrongMove() void;
+import static BoardBase.placeTaken() void;
+
 
 class TicTacToe {
-
-	int d;
 
 	public boolean test(int A){
 		int a;
@@ -17,6 +20,5 @@ class TicTacToe {
 		return b.length < 4 && BoardBase.printWinner(a);
 	}
 	
-	
-	
+
 }

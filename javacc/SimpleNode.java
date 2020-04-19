@@ -17,6 +17,8 @@ class SimpleNode implements Node {
   public String type = null;
   public String name = null;
   
+  public int lineNo = 0;
+  
   public SimbolTable simbolTable = null;
   public FunctionTable functionTable = null;
   public DescriptorTable descriptors = null;
@@ -81,6 +83,7 @@ class SimpleNode implements Node {
 
   public void dump(String prefix) {
 	  String str = toString(prefix);
+	  //str+="  " + lineNo + "  ";
 	if(this.type != null) str+= "    " + this.type;
 	if(this.name != null) str +="    " + name;
 	if(this.val != null) str += "    " + val;

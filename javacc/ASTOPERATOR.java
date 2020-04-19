@@ -28,7 +28,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  if(lhn.toString().equals("IDENTIFIER")) {
 		  Simbol s = this.simbolTable.getSimbol(lhn.name);
 		  if(s == null){
-			  System.out.println("Simbol " + lhn.name + " is not known.");
+			  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " is not known.");
 			  return false;
 		  }else if(s.isInitialized == false 
 				  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
@@ -36,9 +36,9 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 			  	//System.out.println("info: " + info.toString() + " " + s.isInitialized + " " + s.ifInitialized + " " + s.elseInitialized + " " + s.condInitialized);
 				  
 			  if(s.condInitialized) {
-				  System.out.println("Simbol " + lhn.name + " may not have been initiated.");
+				  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
 			  }else
-				  System.out.println("Simbol " + lhn.name + " has not been initiated.");
+				  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
 			  return false;
 		  }else {
 			  lhn.type = s.getType().getName();
@@ -47,15 +47,15 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  if(rhn.toString().equals("IDENTIFIER")) {
 		  Simbol s = this.simbolTable.getSimbol(rhn.name);
 		  if(s == null){
-			  System.out.println("Simbol " + rhn.name + " is not known.");
+			  System.out.println("Line " + rhn.lineNo + ": Simbol " + rhn.name + " is not known.");
 			  return false;
 		  }else if(s.isInitialized == false 
 				  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
 				  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
 				  if(s.condInitialized) {
-					  System.out.println("Simbol " + rhn.name + " may not have been initiated.");
+					  System.out.println("Line " + rhn.lineNo + ": Simbol " + rhn.name + " may not have been initiated.");
 				  }else
-					  System.out.println("Simbol " + rhn.name + " has not been initiated.");
+					  System.out.println("Line " + rhn.lineNo + ": Simbol " + rhn.name + " has not been initiated.");
 				  return false;
 		  }else {
 			  rhn.type = s.getType().getName();
@@ -68,17 +68,17 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  //System.out.println(lhn.type + "  " + lhn.toString() + "  " + lhn.name);
 	  //System.out.println(rhn.type + "  " + rhn.toString() + "  " + rhn.name);
 	  if(!lhn.type.equals(rhn.type)) {
-		  System.out.println("Types incompatible " + lhn.type + " and " + rhn.type + " in " + lhn.name +  " " + this.name +" " + rhn.name + ".");
+		  System.out.println("Line " + this.lineNo + ": Types incompatible " + lhn.type + " and " + rhn.type + ".");
 		  result = false;
 	  }
 	  
 	  if(this.name.equals("&&")) {
-		  if(!lhn.type.equals("boolean")) { System.out.println(lhn.name + " must be boolean."); result = false; }
-		  else if(!lhn.type.equals("boolean")) { System.out.println(rhn.name + " must be boolean."); result = false; }
+		  if(!lhn.type.equals("boolean")) { System.out.println("Line " + this.lineNo + ": " +  lhn.type  + " operation must be boolean."); result = false; }
+		  else if(!lhn.type.equals("boolean")) { System.out.println("Line " + this.lineNo + ": " +  rhn.type  + " operation must be boolean."); result = false; }
 		  else this.type = "boolean";
 	  }else {
-		  if(!lhn.type.equals("int")) { System.out.println(lhn.name + " must be int."); result = false; }
-		  else if(!lhn.type.equals("int")) { System.out.println(rhn.name + " must be int."); result = false; }
+		  if(!lhn.type.equals("int")) { System.out.println("Line " + this.lineNo + ": " + lhn.type  + " operation must be int."); result = false; }
+		  else if(!lhn.type.equals("int")) { System.out.println("Line " + this.lineNo + ": " +  rhn.type  + " operation must be int."); result = false; }
 		  else
 			  if(this.name.equals("<")) this.type = "boolean";
 			  else this.type = "int";

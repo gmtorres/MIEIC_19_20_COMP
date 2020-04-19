@@ -26,14 +26,15 @@ class ASTEXPRESSION extends SimpleNode {
 			  return false;
 		  
 		  SimpleNode lhn  = (SimpleNode) this.children[0];
+		  this.lineNo = lhn.lineNo;
 		  if(lhn.toString().equals("IDENTIFIER")) {
 			  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
-				  System.out.println("Simbol " + lhn.name + " is not known.");
+				  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
 				  return false;
 			  }else {
 				  Simbol s = this.simbolTable.getSimbol(lhn.name);
 				  if(s == null){
-					  System.out.println("Simbol " + lhn.name + " is not known.");
+					  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
 					  return false;
 				  }else if(s.isInitialized == false 
 						  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
@@ -42,7 +43,7 @@ class ASTEXPRESSION extends SimpleNode {
 					  if(s.condInitialized) {
 						  //System.out.println("Simbol " + lhn.name + " may not have been initiated.");
 					  }else
-						  System.out.println("Simbol " + lhn.name + " has not been initiated.");
+						  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
 					  return false;
 				  }else
 					  lhn.type = s.getType().getName();

@@ -32,7 +32,7 @@ class ASTVAR extends SimpleNode {
 	  SimpleNode lhn  = (SimpleNode) this.children[0]; // IDENTIFIER to assing
 	  if( lhn.toString().equals("IDENTIFIER") && 
 			  this.simbolTable.isSimbolKnown(lhn.name) == false) {
-		  System.out.println("Simbol " + lhn.name + " is not known.");
+		  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
 		  result = false;
 	  }
 	   
@@ -65,7 +65,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  if(lhn.toString().equals("IDENTIFIER")) {
 		  //System.out.println(lhn.name);
 		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
-			  System.out.println("Simbol " + lhn.name + " is not known.");
+			  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
 			  return false;
 		  }else {
 			  lhn.type = this.simbolTable.getSimbol(lhn.name).getType().getName();
@@ -76,14 +76,14 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  if(this.jjtGetNumChildren() == 2) {
 		  SimpleNode rhn  = (SimpleNode) this.children[1];
 		  if(!rhn.type.equals("int")) {
-			  System.out.println("Index must be int");
+			  System.out.println("Line " + rhn.lineNo + ": Index must be int");
 			  return false;
 		  }
 		  Descriptor d = this.descriptors.getDescriptor(lhn.type);
 		  if(d == null) return false;
 		  if(d.content == null) {
 			  //this.type = d.getName(); //error
-			  System.out.println("Simbol " + lhn.name + " must be an array.");
+			  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " must be an array.");
 			  result = false;
 		  }
 		  else this.type = d.content.getName();
