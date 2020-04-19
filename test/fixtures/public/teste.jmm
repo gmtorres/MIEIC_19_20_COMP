@@ -5,7 +5,9 @@ import static BoardBase.printWinner(int) boolean;
 
 class TicTacToe {
 
-	public boolean test(){
+	int d;
+
+	public boolean test(int A){
 		int a;
 		int [] b;
 		boolean f;
@@ -14,5 +16,7 @@ class TicTacToe {
 		f = true;
 		return b.length < 4 && BoardBase.printWinner(a);
 	}
+	
+	
 	
 }

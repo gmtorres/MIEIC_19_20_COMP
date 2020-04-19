@@ -42,11 +42,14 @@ public class Main {
 	        //root.printTables();
 	        
 	        /*root.descriptors.printTable();
-	        
+	        */
 	        IRBuilder ir = new IRBuilder(root);
 	        System.out.println("--------------*****************-----------------	");
-	        ir.dump();*/
+	        ir.dump();
 	        
+	        System.out.println("--------------*****************-----------------	");
+
+	        ir.createJasmin();
 
 
     }

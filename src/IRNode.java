@@ -4,7 +4,7 @@ public class IRNode {
 	IRNode parent;
 	IRNode [] children;
 	
-	private String inst;
+	private String inst = "";
 	
 	
 	public IRNode(IRNode p) {
@@ -13,6 +13,10 @@ public class IRNode {
 	
 	public IRNode getParent() {
 		return this.parent;
+	}
+	
+	public IRNode[] getChildren() {
+		return this.children;
 	}
 	
 	public void addChild(IRNode n) {
@@ -65,11 +69,13 @@ public class IRNode {
 		for(int i = 0; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
 			
-			if(node.toString().equals("IMPORT"))
+			if(node.toString().equals("IMPORT")) {
 				continue;
+			}
+				
 			
 			IRNode child = new IRNode(this);
-			this.addChild(child, i);
+			this.addChild(child);
 			
 			if(node.toString().equals("CLASS_DECL")) {
 				child.setInst("class");
