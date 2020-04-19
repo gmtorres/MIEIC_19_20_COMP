@@ -1,6 +1,6 @@
 import static io.read() int;
 import static io.println() void;
-import static io.println(int) void;
+import static io.print(int) void;
 class Life {
 
     int UNDERPOP_LIM;
