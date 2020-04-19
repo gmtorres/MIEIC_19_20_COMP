@@ -18,6 +18,8 @@ class SimpleNode implements Node {
   public String type = null;
   public String name = null;
   
+  public int lineNo = 0;
+  
   public SimbolTable simbolTable = null;
   public FunctionTable functionTable = null;
   public DescriptorTable descriptors = null;

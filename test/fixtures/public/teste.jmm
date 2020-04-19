@@ -1,18 +1,29 @@
 import static BoardBase.sameArray(int[]) boolean;
 import static BoardBase.sameArray(int[]) boolean;
 import static BoardBase.printBoard(int[],int[],int[]) void; 
-import static BoardBase.printWinner(int) boolean;
+import static BoardBase.printWinner(int) void;
+
+import static BoardBase.playerTurn(int) int[];
+import static BoardBase.wrongMove() void;
+import static BoardBase.placeTaken() void;
+
 
 class TicTacToe {
 
-	public boolean test(){
-		int a;
-		int [] b;
-		boolean f;
-		a = 2;
-		b = new int[10];
-		f = true;
-		return b.length < 4 && BoardBase.printWinner(a);
-	}
-	
+  int[] row0;
+  int[] row1;
+  int[] row2;
+  int whoseturn;
+  int movesmade;
+  int[] pieces;
+
+  // Initializes a Tic Tac Toe object.
+  public boolean init() {
+    pieces[0] = 1;
+    pieces[1] = 2;
+    whoseturn = 0;
+    movesmade =  2 + 4;
+    return true && 3 < 4 && false;
+  }
+
 }

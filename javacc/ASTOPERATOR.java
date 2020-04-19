@@ -36,9 +36,9 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 			  	//System.out.println("info: " + info.toString() + " " + s.isInitialized + " " + s.ifInitialized + " " + s.elseInitialized + " " + s.condInitialized);
 				  
 			  if(s.condInitialized) {
-				  System.out.println("Simbol " + lhn.name + " may not have been initiated.");
+				  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
 			  }else
-				  System.out.println("Simbol " + lhn.name + " has not been initiated.");
+				  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
 			  return false;
 		  }else {
 			  lhn.type = s.getType().getName();
@@ -53,9 +53,9 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 				  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
 				  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
 				  if(s.condInitialized) {
-					  System.out.println("Simbol " + rhn.name + " may not have been initiated.");
+					  System.out.println("Line " + rhn.lineNo + ": Simbol " + rhn.name + " may not have been initiated.");
 				  }else
-					  System.out.println("Simbol " + rhn.name + " has not been initiated.");
+					  System.out.println("Line " + rhn.lineNo + ": Simbol " + rhn.name + " has not been initiated.");
 				  return false;
 		  }else {
 			  rhn.type = s.getType().getName();
@@ -68,7 +68,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  //System.out.println(lhn.type + "  " + lhn.toString() + "  " + lhn.name);
 	  //System.out.println(rhn.type + "  " + rhn.toString() + "  " + rhn.name);
 	  if(!lhn.type.equals(rhn.type)) {
-		  System.out.println("Types incompatible " + lhn.type + " and " + rhn.type + " in " + lhn.name +  " " + this.name +" " + rhn.name + ".");
+		  System.out.println("Line " + this.lineNo + ": Types incompatible " + lhn.type + " and " + rhn.type + " in " + lhn.name +  " " + this.name +" " + rhn.name + ".");
 		  result = false;
 	  }
 	  
