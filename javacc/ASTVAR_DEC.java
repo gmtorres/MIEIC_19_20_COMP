@@ -32,11 +32,11 @@ class ASTVAR_DEC extends SimpleNode {
 	  Descriptor d = this.descriptors.getDescriptor(this.type);
 	  
 	  if(d == null) {
-		  System.out.println("Could not find type " + this.type);
+		  System.out.println("Line " + this.lineNo + ": Could not find type " + this.type);
 		  result = false; 
 	  }else {
 		  if(this.simbolTable.addSimbol(d,this.name) == false) {
-			  System.out.println("Duplicate simbol " + this.name);
+			  System.out.println("Line " + this.lineNo + ": Duplicate simbol " + this.name);
 			  result = false; 
 		  }
 	  }

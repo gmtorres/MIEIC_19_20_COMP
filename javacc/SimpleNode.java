@@ -83,6 +83,7 @@ class SimpleNode implements Node {
 
   public void dump(String prefix) {
 	  String str = toString(prefix);
+	  //str+="  " + lineNo + "  ";
 	if(this.type != null) str+= "    " + this.type;
 	if(this.name != null) str +="    " + name;
 	if(this.val != null) str += "    " + val;

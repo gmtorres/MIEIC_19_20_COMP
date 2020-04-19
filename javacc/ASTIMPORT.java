@@ -60,7 +60,7 @@ public boolean createTable() {
 			  Descriptor d = this.descriptors.getDescriptor(type);
 			  listDesc.add(d);
 			  if(d == null) {
-				  System.out.println("Could not find type " + type);
+				  System.out.println("Line " + this.lineNo + ": Could not find type " + type);
 				  result = false; 
 			  }else
 				  this.simbolTable.addSimbol(d, String.valueOf("a" + i));

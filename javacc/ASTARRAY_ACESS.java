@@ -28,20 +28,20 @@ class ASTARRAY_ACESS extends SimpleNode {
 	  SimpleNode lhn  = (SimpleNode) this.children[0];
 	  if(lhn.toString().equals("IDENTIFIER")) {
 		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
-			  System.out.println("Simbol " + lhn.name + " is not known.");
+			  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
 			  return false;
 		  }else {
 			  Simbol s = this.simbolTable.getSimbol(lhn.name);
 			  if(s == null){
-				  System.out.println("Simbol " + lhn.name + " is not known.");
+				  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
 				  return false;
 			  }else if(s.isInitialized == false 
 					  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
 					  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
 				  if(s.condInitialized) {
-					  System.out.println("Simbol " + lhn.name + " may not have been initiated.");
+					  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
 				  }else
-					  System.out.println("Simbol " + lhn.name + " has not been initiated.");
+					  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
 				  return false;
 			  }else
 				  lhn.type = s.getType().getName();
@@ -52,7 +52,7 @@ class ASTARRAY_ACESS extends SimpleNode {
 	  if(this.jjtGetNumChildren() == 2) {
 		  SimpleNode rhn  = (SimpleNode) this.children[1];
 		  if(!rhn.type.equals("int")) {
-			  System.out.println("Index must be int");
+			  System.out.println("Line " + rhn.lineNo + ": Index must be int");
 			  return false;
 		  }
 		  this.type = this.descriptors.getDescriptor(lhn.type).content.getName();
