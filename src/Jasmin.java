@@ -23,7 +23,10 @@ public class Jasmin {
 		      
 		    case "int[]":
 		    	return "[I";
-		      
+		    case "String":
+		    	return "Ljava/lang/String";
+		    case "String[]":
+		    	return "[Ljava/lang/String";
 		    default:
 		        return "";
 		    }
