@@ -2,7 +2,7 @@ import static BoardBase.sameArray(int[]) boolean;
 import static BoardBase.sameArray(int[]) boolean;
 import static BoardBase.printBoard(int[],int[],int[]) void; 
 import static BoardBase.printWinner(int) void;
-import static BoardBase.playerTurn(int);
+import static BoardBase.playerTurn(int) int[];
 import static BoardBase.wrongMove();
 import static BoardBase.placeTaken();
 

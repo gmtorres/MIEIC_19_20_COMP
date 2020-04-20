@@ -16,7 +16,7 @@ import List.add(int);
 import List.add(int, int);
 import List.contains(int) boolean;
 import List.remove(int) boolean;
-import List.length() int;
+import List.size() int;
 
  
 
