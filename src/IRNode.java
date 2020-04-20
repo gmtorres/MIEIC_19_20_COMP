@@ -23,16 +23,22 @@ public class IRNode {
 	
 	//min number of registry to reach that node, available on operations
 	int num_reg = 0;
+	
 	//allocated registry
 	Integer reg = null;
+	
 	//local var index
 	Integer local_var = null;
 	
 	//stack of locals, available on method
 	Integer locals_stack = null;
+	
 	//stack of operands, available on method
 	Integer op_stack = null;
 	
+	//can be useful for the code generation
+	String type = null;
+	 
 	//intruction
 	private String inst = "";
 	
@@ -290,13 +296,16 @@ public class IRNode {
 		
 		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
 		IRNode var = new IRNode(this);
-		var.local_var = sn.simbolTable.getSimbol(((SimpleNode)lhn.jjtGetChild(0)).name).local_var;
+		Simbol s = sn.simbolTable.getSimbol(((SimpleNode)lhn.jjtGetChild(0)).name);
+		var.local_var = s.local_var;
 		if(lhn.jjtGetNumChildren() == 1) {
 			this.inst = "st";
+			this.type = s.getType().name;
 			var.setInst(((SimpleNode)lhn.jjtGetChild(0)).name);
 			this.addChild(var);
 		}else if(lhn.jjtGetNumChildren() == 2) {
 			this.inst = "sta";
+			this.type = s.getType().content.name;
 			var.setInst(((SimpleNode)lhn.jjtGetChild(0)).name);
 			this.addChild(var);
 			SimpleNode index_exp = (SimpleNode)lhn.jjtGetChild(1);

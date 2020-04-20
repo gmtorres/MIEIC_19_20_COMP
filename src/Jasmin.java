@@ -18,19 +18,29 @@ public class Jasmin {
 		    switch (type) {
 		    case "void":
 		        return "V";
-		        
 		    case "int":
-		        return "I";
-		        
+		        return "I";  
 		    case "boolean":
-		    	return "B";
-		      
+		    	return "B";	      
 		    case "int[]":
 		    	return "[I";
 		    case "String":
 		    	return "Ljava/lang/String";
 		    case "String[]":
 		    	return "[Ljava/lang/String";
+		    default:
+		        return "";
+		    }
+	  }
+	  
+	  private String getType(String type) {
+		  switch (type) {  
+		    case "boolean":
+		    	//return "b";
+		    case "int":
+		        return "i";
+		    case "int[]":
+		        return "a";
 		    default:
 		        return "";
 		    }
@@ -51,6 +61,9 @@ public class Jasmin {
 		  	case "st":
 		  		printStore(r);
 		  		break;
+		  	case "sta":
+		  		printStoreArray(r);
+		  		break;
 		  	case "ldc":
 		  	case "ldl":
 		  	case "ldp":
@@ -62,6 +75,9 @@ public class Jasmin {
 		  	case "/":
 		  	case "-":
 		  		printOperation(r);
+		  		break;
+		  	case "new_int_arr":
+		  		printNewIntArr(r);
 		  		break;
 		  	case "return":
 		  		printReturn(r);
@@ -76,7 +92,6 @@ public class Jasmin {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  
 		  if(node.getInst().equals("+")) {
 			  os.println("iadd");
 		  }
@@ -94,7 +109,11 @@ public class Jasmin {
 	  
 	  private void printLoad(IRNode node) {
 		  if(node.getInst().equals("ldc")) {
-			  os.println("bipush " + node.children[0].getInst());
+			  Integer value = Integer.parseInt(node.children[0].getInst());
+			  if(value < 4)
+				  os.println("iconst_"+value);
+			  else
+				  os.println("bipush " + value);
 		  }
 		  if(node.getInst().equals("ldl")) {
 			  os.println("iload " + node.children[0].local_var);
@@ -104,12 +123,39 @@ public class Jasmin {
 		  }
 	  }
 	  
+	  private void printNewIntArr(IRNode node) {
+		  for(int i = 0; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
+		  }
+		  os.println("newarray int");
+	  }
+	  
 	  private void printStore(IRNode node) {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
 		  IRNode lhn = node.children[0];
-		  os.println("istore " + lhn.local_var);
+		  Integer local_var = lhn.local_var;
+		  if(local_var < 4)
+			  os.println(this.getType(node.type) + "store_" + local_var);
+		  else
+			  os.println(this.getType(node.type) + "store " + local_var);
+		  
+	  }
+	  
+	  private void printStoreArray(IRNode node) {
+		  IRNode lhn = node.children[0];
+		  Integer local_var = lhn.local_var;
+		  if(local_var < 4)
+			  os.println("aload_" + local_var);
+		  else
+			  os.println("aload " + local_var);
+		  
+		  for(int i = 0; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
+		  }
+		  os.println(this.getType(node.type) + "astore");
+
 		  
 	  }
 	  
@@ -179,6 +225,7 @@ public class Jasmin {
 		  
 		  for (int k = 0; k < (r.getChildren()[4]).getChildren().length; k++) {
 			  printJasmin((r.getChildren()[4]).getChildren()[k]);
+			  os.println("");
 		  }
 		  
 		  

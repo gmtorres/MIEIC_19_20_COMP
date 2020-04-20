@@ -10,11 +10,11 @@ import static BoardBase.placeTaken() void;
 
 class TicTacToe {
 
-	public int f(int a) {
-		int b;
-		b = a * a - 4 * 5;
-		return b;
-
+	public int f() {
+		int[] A;
+		A = new int[10];
+		A[3] = 20;
+		return 5;
 	}
 
 	
