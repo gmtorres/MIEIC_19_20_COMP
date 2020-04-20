@@ -13,10 +13,6 @@ public class IRBuilder {
 		this.root.dump(" ");
 	}
 	
-	public void createJasmin() {
-		Jasmin j = new Jasmin(this.root);
-	}
-	
 	
 	
 }

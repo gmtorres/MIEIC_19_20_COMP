@@ -211,6 +211,7 @@ public class IRNode {
 			if(node.toString().equals("ARGUMENT")) {	
 				arguments_specs.addChild(child); 
 				child.local_var =arguments_specs.children.length;
+				sn.simbolTable.getSimbol(node.name).local_var = child.local_var;
 				child.buildArgument(node);
 			}else if(node.toString().equals("METHOD_BODY")) {
 				//child.buildMethodBody( node ); 
@@ -287,6 +288,7 @@ public class IRNode {
 		
 		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
 		IRNode var = new IRNode(this);
+		var.local_var = sn.simbolTable.getSimbol(((SimpleNode)lhn.jjtGetChild(0)).name).local_var;
 		if(lhn.jjtGetNumChildren() == 1) {
 			this.inst = "st";
 			var.setInst(((SimpleNode)lhn.jjtGetChild(0)).name);

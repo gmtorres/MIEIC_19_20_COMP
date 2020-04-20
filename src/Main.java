@@ -49,7 +49,7 @@ public class Main {
 	        
 	        System.out.println("--------------*****************-----------------	");
 
-	        ir.createJasmin();
+	        Jasmin j = new Jasmin(ir.root,System.out);
 
 
     }

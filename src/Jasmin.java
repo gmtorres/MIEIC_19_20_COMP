@@ -1,11 +1,15 @@
 import java.lang.reflect.Array; 
+import java.io.PrintStream;
 
 public class Jasmin {
 
 	  IRNode root;
 	  
-	  public Jasmin(IRNode r) {
+	  PrintStream os;
+	  
+	  public Jasmin(IRNode r,PrintStream ps) {
 		  this.root=r;
+		  this.os = ps;
 		  printClass(this.root);
 	  }
 	  
@@ -38,16 +42,60 @@ public class Jasmin {
 		  		printInvoke(r);
 		  		break;
 		  	//TER CASE VARIAVEL .FIELD
+		  	case "st":
+		  		printStore(r);
+		  		break;
+		  	case "ldc":
+		  	case "ldl":
+		  	case "ldp":
+		  	/*case "ldg":*/
+		  		printLoad(r);
+		  		break;
+		  	case "+":
+		  		printOperation(r);
+		  		break;
 		  }	
 		  
 		 
+	  }
+	  
+	  private void printOperation(IRNode node) {
+		  for(int i = 0; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
+		  }
+		  
+		  if(node.getInst().equals("+")) {
+			  os.println("iadd");
+		  }
+		  
+	  }
+	  
+	  private void printLoad(IRNode node) {
+		  if(node.getInst().equals("ldc")) {
+			  os.println("bipush " + node.children[0].getInst());
+		  }
+		  if(node.getInst().equals("ldl")) {
+			  os.println("iload " + node.children[0].local_var);
+		  }
+		  if(node.getInst().equals("ldp")) {
+			  os.println("iload " + node.children[0].local_var);
+		  }
+	  }
+	  
+	  private void printStore(IRNode node) {
+		  for(int i = 0; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
+		  }
+		  IRNode lhn = node.children[0];
+		  os.println("istore " + lhn.local_var);
+		  
 	  }
 	  
 	  private void printClass(IRNode root) {
 		  IRNode r = root.getChildren()[0];
 		  String toPrint = ".class public ";
 		  toPrint += r.getChildren()[0].getInst();
-		  System.out.println(toPrint);
+		  os.println(toPrint);
 		  
 		  toPrint = ".super ";
 		  if (r.getChildren()[1].getInst().equals("Object")) {
@@ -56,8 +104,8 @@ public class Jasmin {
 		  else {
 			  toPrint += r.getChildren()[1].getInst();
 		  }
-		  System.out.println(toPrint);
-		  System.out.print("\n");
+		  os.println(toPrint);
+		  os.print("\n");
 		  
 		  for(int i = 2; i < r.getChildren().length; i++) {
 			  printJasmin(r.getChildren()[i]);
@@ -83,18 +131,18 @@ public class Jasmin {
 		  toPrint += ")";
 		  toPrint += retType(((r.getChildren()[1]).getChildren()[0]).getInst());
 		  
-		  System.out.println(toPrint);
+		  os.println(toPrint);
 		  
 		  toPrint = "\t.limit stack " + r.op_stack; //TODO: implementar na IR
-		  System.out.println(toPrint);
+		  os.println(toPrint);
 		  
 		  toPrint = "\t.limit locals ";
 		  
 		  toPrint += r.locals_stack;
 
 
-		  System.out.println(toPrint);
-		  System.out.print("\n");
+		  os.println(toPrint);
+		  os.print("\n");
 		  
 		  for (int k = 0; k < (r.getChildren()[4]).getChildren().length; k++) {
 			  printJasmin((r.getChildren()[4]).getChildren()[k]);
@@ -103,12 +151,12 @@ public class Jasmin {
 		  
 		  if(((r.getChildren()[1]).getChildren()[0]).getInst().equals("void")) {
 			  toPrint = "\treturn";
-			  System.out.println(toPrint);
+			  os.println(toPrint);
 		  }
 		  
 		  toPrint = ".end method";
 		  
-		  System.out.println(toPrint);
+		  os.println(toPrint);
 		  
 	  }
 	  
@@ -120,15 +168,15 @@ public class Jasmin {
 			  toPrint +="return";
 		  }
 		  
-		  System.out.println(toPrint);
+		  os.println(toPrint);
 	  }
 	  
 	  private void printInvoke(IRNode r) {
 		  String toPrint = "\tinvoke"; //TODO: verificar static ou virtual
-		  System.out.println(toPrint);
+		  os.println(toPrint);
 		  
 		  toPrint = "\t\t" + r.getChildren()[0].getInst() + "." + r.getChildren()[1].getInst() + "()"; //TODO: colocar params
-		  System.out.println(toPrint);
+		  os.println(toPrint);
 		  
 		  
 	  }
@@ -142,7 +190,7 @@ public class Jasmin {
 	          
               if(root.toString().equals("EXPRESSION")) {
             	  if(root.parent.toString().equals("RETURN_EXPRESSION")) {
-            		  System.out.println("RETURN EX\n");
+            		  os.println("RETURN EX\n");
             	  jasmin += retType(root.type)  + "return" + "\n\n";
               }}
 
