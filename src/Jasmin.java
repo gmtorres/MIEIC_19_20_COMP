@@ -79,9 +79,10 @@ public class Jasmin {
 		  	case "ldc":
 		  	case "ldl":
 		  	case "ldp":
-		  	/*case "ldg":*/
 		  		printLoad(r);
 		  		break;
+		  	case "ldg":
+		  		printLoadGlobal(r);
 		  	case "lda":
 		  		printLoadArray(r);
 		  		break;
@@ -162,6 +163,11 @@ public class Jasmin {
 			  }
 		  }
 	  }
+	  
+	  private void printLoadGlobal(IRNode node) {
+			os.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + node.getChildren()[0].getInst() + " " + retType(node.type) + "\n");
+	  }
+	  
 	  private void printLoadArray(IRNode node) {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
@@ -193,6 +199,7 @@ public class Jasmin {
 		//   putfield <field-spec> <descriptor>
 		  os.println("putfield " + root.getClassName() + "/"  + node.getChildren()[0].getInst() + " " + retType(node.type));
 	  }
+	  
 	  private void printStoreArray(IRNode node) {
 		  IRNode lhn = node.children[0];
 		  Integer local_var = lhn.local_var;
