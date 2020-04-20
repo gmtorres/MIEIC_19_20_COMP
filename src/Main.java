@@ -25,7 +25,7 @@ public class Main {
         	ASTProgram root = myJmm.Program();
 	        root.dump("");
 	        
-	        if(myJmm.failed == true) {
+	        /*if(myJmm.failed == true) {
 	        	throw new ParseException();
 	        }
 	        
@@ -49,7 +49,7 @@ public class Main {
 	        
 	        System.out.println("--------------*****************-----------------	");
 
-	        Jasmin j = new Jasmin(ir.root,System.out);
+	        Jasmin j = new Jasmin(ir.root,System.out);*/
 
 
     }

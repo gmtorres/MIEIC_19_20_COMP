@@ -242,7 +242,7 @@ void ExpTerminal() #void : {Token t1;} {
     |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #TYPE <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
     )
     [ extendTerminal() ]
-    | ( <NOT> Expression() )  #NOT_EXPRESSION(1)
+    | ( <NOT> ExpTerminal() )  #NOT_EXPRESSION(1)
     |ParExpression()
 }
 

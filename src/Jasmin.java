@@ -9,6 +9,9 @@ public class Jasmin {
 	  
 	  Integer loop_count = 0;
 	  
+	  String current_loop;
+	  
+	  boolean not = false;
 	  
 	  public Jasmin(IRNode r,PrintStream ps) {
 		  this.root=r;
@@ -83,7 +86,10 @@ public class Jasmin {
 		  		printOperation(r);
 		  		break;
 		  	case "<":
-		  		printComp(r);
+		  		printLessThan(r);
+		  		break;
+		  	case "&&":
+		  		printAnd(r);
 		  		break;
 		  	case "new_int_arr":
 		  		printNewIntArr(r);
@@ -188,30 +194,38 @@ public class Jasmin {
 			  os.println("ireturn");
 		  
 	  }
-	  private void printComp(IRNode node) {
+	  private void printLessThan(IRNode node) {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
+		  os.println("if_icmpge end_" + this.current_loop);
+	  }
+	  private void printAnd(IRNode node) {
+		  for(int i = 0; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
+		  }
+		  //os.println("if_icmpge end_" + this.current_loop);
 	  }
 	  
 	  private void printWhile(IRNode node) {
 		  
-		  Integer loop = this.loop_count++;
+		  String loop = "loop"+ ++this.loop_count;
+		  this.current_loop = loop;
 		  
-		  os.println("loop" + loop + ":");
+		  os.println(loop + ":");
 		  
 		  IRNode condition = node.children[0];
-		  
+		  this.current_loop = loop;
 		  printJasmin(condition);
 		  
-		  os.println("if_icmpge end_loop" + loop);
+		  //os.println("if_icmpge end_" + loop);
 		  os.println("");
 		  for(int i = 1; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 			  os.println("");
 		  }
-		  os.println("goto loop" + loop);
-		  os.println("end_loop" + loop + ":");
+		  os.println("goto " + loop);
+		  os.println("end_"+ loop + ":");
 	  }
 	  
 	  private void printClass(IRNode root) {
