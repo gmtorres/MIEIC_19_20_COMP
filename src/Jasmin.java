@@ -29,10 +29,12 @@ public class Jasmin {
 		    case "boolean":
 		    	return "B";	      
 		    case "int[]":
+		    case "int[] -> int":
 		    	return "[I";
 		    case "String":
 		    	return "Ljava/lang/String";
 		    case "String[]":
+		    case "String[] -> String":
 		    	return "[Ljava/lang/String";
 		    default:
 		        return "";
@@ -304,21 +306,23 @@ public class Jasmin {
 	  
 	  
 	  private void printInvoke(IRNode r) {
-		  String toPrint = "\tinvoke"; //TODO: verificar static ou virtual
+		  
+		  for (int t = 4; t < r.getChildren().length; t++) {
+			  printJasmin(r.getChildren()[t]);
+		  }
+		  
+		  String toPrint = "invoke"; //TODO: verificar static ou virtual
 		  os.println(toPrint);
 		  
 
-		  toPrint = "\t\t" + r.getChildren()[0].getInst() + "." + r.getChildren()[1].getInst() + "()"; //TODO: colocar params
-		  os.println(toPrint);
-
-		  toPrint = "\t\t" + r.getChildren()[2].getInst() + "." + r.getChildren()[3].getInst() + "(";
+		  toPrint = "\t" + r.getChildren()[2].getInst() + "." + r.getChildren()[3].getInst() + "(";
 		  
 		  for (int i= 0; i < ((r.getChildren()[0]).getChildren().length); i++) {
 			  toPrint += retType(r.getChildren()[0].getChildren()[i].getInst());
 			  if(i != r.getChildren()[0].getChildren().length - 1)
 				  toPrint +=", ";
 		  }			  
-		  toPrint += ")" + retType((r.getChildren()[1]).getChildren()[0].getInst()); //TODO: colocar params
+		  toPrint += ")" + retType((r.getChildren()[1]).getChildren()[0].getInst());
 		  os.println(toPrint);
 
 		  

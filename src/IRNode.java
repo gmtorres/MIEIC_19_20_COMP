@@ -555,7 +555,7 @@ public class IRNode {
 			object = d.getName();
 		
 		child.setInst(object);
-		
+	
 		IRNode child2 = new IRNode(this);
 		this.addChild(child2);
 		child2.setInst(sn.name);
