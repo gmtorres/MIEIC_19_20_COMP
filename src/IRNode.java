@@ -95,6 +95,14 @@ public class IRNode {
 		return this.inst;
 	}
 	
+	public String getIRType() {
+		return this.type;
+	}
+	
+	public void setIRType(String type) {
+		this.type = type;
+	}
+	
 	public void build(SimpleNode sn) {
 		//System.out.println(sn.toString());
 		
@@ -259,6 +267,7 @@ public class IRNode {
 	public void buildVarDec(SimpleNode sn) {
 		this.setInst(sn.name);
 		sn.simbolTable.getSimbol(sn.name).local_var = this.local_var;
+		this.setIRType(sn.type);
 	}
 	
 	public void buildWhile(SimpleNode sn) {
