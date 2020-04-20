@@ -23,7 +23,7 @@ class TicTacToe {
 		A[3] = 20;
 		c = A[i];
 		
-		while( !( 3<i && i<5) && !true ){
+		while( true ){
 			i = i + 1;
 		}
 		

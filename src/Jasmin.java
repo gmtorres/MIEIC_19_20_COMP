@@ -11,7 +11,9 @@ public class Jasmin {
 	  
 	  String current_loop;
 	  
+	  boolean in_condition = false;
 	  boolean not = false;
+	  Integer not_count = 0;
 	  
 	  public Jasmin(IRNode r,PrintStream ps) {
 		  this.root=r;
@@ -98,6 +100,9 @@ public class Jasmin {
 		  	case "while":
 		  		printWhile(r);
 		  		break;
+		  	case "not":
+		  		printNot(r);
+		  		break;
 		  	case "fields":
 		  		os.print("\n");
 		  		printFields(r);
@@ -144,6 +149,9 @@ public class Jasmin {
 				  os.println( this.getType(node.type) + "load_" + node.children[0].local_var);
 			  else
 				  os.println( this.getType(node.type) + "load " + node.children[0].local_var);
+		  }
+		  if(this.in_condition) {
+			  os.println("ifeq end_" + this.current_loop);
 		  }
 	  }
 	  private void printLoadArray(IRNode node) {
@@ -203,7 +211,20 @@ public class Jasmin {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  os.println("if_icmpge end_" + this.current_loop);
+		  if(this.not == false)
+			  os.println("if_icmpge end_" + this.current_loop);
+		  else
+			  os.println("if_icmpge not_" + this.not_count);
+	  }
+	  private void printNot(IRNode node) {
+		  this.not = !this.not;
+		  this.not_count++;
+		  for(int i = 0; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
+		  }
+		  os.println("goto end_" + this.current_loop);
+		  os.println("not_" + this.not_count + ":");
+		  this.not = !this.not;
 	  }
 	  private void printAnd(IRNode node) {
 		  for(int i = 0; i < node.getChildren().length; i++) {
@@ -221,7 +242,9 @@ public class Jasmin {
 		  
 		  IRNode condition = node.children[0];
 		  this.current_loop = loop;
+		  this.in_condition = true;
 		  printJasmin(condition);
+		  this.in_condition = false;
 		  
 		  //os.println("if_icmpge end_" + loop);
 		  os.println("");
