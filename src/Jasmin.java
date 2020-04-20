@@ -138,7 +138,7 @@ public class Jasmin {
 		  String prefix = "";
 		  if(node.getInst().equals("ldc")) {
 			  Integer value = Integer.parseInt(node.children[0].getInst());
-			  if(value < 5)
+			  if(value <= 5)
 				  os.println("iconst_"+value);
 			  else
 				  os.println("bipush " + value);
@@ -149,8 +149,14 @@ public class Jasmin {
 			  else
 				  os.println( this.getType(node.type) + "load " + node.children[0].local_var);
 		  }
-		  if(this.in_condition) {
-			  os.println("ifeq end_" + this.current_loop);
+		  
+		  if( this.in_condition && node.type != null && node.type.equals("boolean") ) {
+			  if(this.not) {
+				  //os.println("ifeq not_" + this.not_count); 
+				  os.println("ifne end_" + this.current_loop);
+			  }else {
+				  os.println("ifeq end_" + this.current_loop);
+			  }
 		  }
 	  }
 	  private void printLoadArray(IRNode node) {
@@ -212,8 +218,13 @@ public class Jasmin {
 		  }
 		  if(this.not == false)
 			  os.println("if_icmpge end_" + this.current_loop);
-		  else
-			  os.println("if_icmpge not_" + this.not_count);
+		  else {
+			  //se for o ultimo filho
+			  if(node == node.parent.getChildren()[node.parent.getChildren().length - 1]) {
+				  os.println("if_icmplt end_" + this.current_loop);
+			  }else
+				  os.println("if_icmpge not_" + this.not_count);
+		  }
 	  }
 	  private void printNot(IRNode node) {
 		  this.not = !this.not;
@@ -221,7 +232,7 @@ public class Jasmin {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  os.println("goto end_" + this.current_loop);
+		  //os.println("goto end_" + this.current_loop);
 		  os.println("not_" + this.not_count + ":");
 		  this.not = !this.not;
 	  }

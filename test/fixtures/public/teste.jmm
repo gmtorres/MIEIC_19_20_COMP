@@ -3,7 +3,7 @@ import static BoardBase.sameArray(int[]) boolean;
 import static BoardBase.printBoard(int[],int[],int[]) void; 
 import static BoardBase.printWinner(int) void;
 
-import static BoardBase.playerTurn(int,int) int[];
+import static BoardBase.playerTurn(int,int,boolean) int[];
 import static BoardBase.wrongMove() void;
 import static BoardBase.placeTaken() void;
 
@@ -14,17 +14,18 @@ class TicTacToe {
 	int g;
 	
 	public int f() {
-		int[] A;
-		int c;
+	
 		int i;
-		i = 0;
-		d = 3;
-		A = new int[10];
-		A[3] = 20;
-		c = A[i];
+		boolean b;
+		
+		i = 0;	
+		b = true;
+		
+		while( !( 5 < i && b) && i<4 ){
+			i = i + 1;
+		}
 		
 		return 5;
-
 	}
 
 	
