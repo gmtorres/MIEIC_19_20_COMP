@@ -7,6 +7,9 @@ public class Jasmin {
 	  
 	  PrintStream os;
 	  
+	  Integer loop_count = 0;
+	  
+	  
 	  public Jasmin(IRNode r,PrintStream ps) {
 		  this.root=r;
 		  this.os = ps;
@@ -79,8 +82,14 @@ public class Jasmin {
 		  	case "-":
 		  		printOperation(r);
 		  		break;
+		  	case "<":
+		  		printComp(r);
+		  		break;
 		  	case "new_int_arr":
 		  		printNewIntArr(r);
+		  		break;
+		  	case "while":
+		  		printWhile(r);
 		  		break;
 		  	case "return":
 		  		printReturn(r);
@@ -178,6 +187,31 @@ public class Jasmin {
 		  else
 			  os.println("ireturn");
 		  
+	  }
+	  private void printComp(IRNode node) {
+		  for(int i = 0; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
+		  }
+	  }
+	  
+	  private void printWhile(IRNode node) {
+		  
+		  Integer loop = this.loop_count++;
+		  
+		  os.println("loop" + loop + ":");
+		  
+		  IRNode condition = node.children[0];
+		  
+		  printJasmin(condition);
+		  
+		  os.println("if_icmpge end_loop" + loop);
+		  os.println("");
+		  for(int i = 1; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
+			  os.println("");
+		  }
+		  os.println("goto loop" + loop);
+		  os.println("end_loop" + loop + ":");
 	  }
 	  
 	  private void printClass(IRNode root) {

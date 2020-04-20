@@ -146,16 +146,21 @@ public class IRNode {
 			this.addChild(child);
 		}
 		
+		IRNode fields = new IRNode(this);
+		fields.setInst("fields");
+		this.addChild(fields);
+		
 		for(; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
 			
 			IRNode child = new IRNode(this);
-			this.addChild(child);
 			
 			if(node.toString().equals("METHOD")) {
+				this.addChild(child);
 				child.setInst("method");
 				child.buildMethod(node);
 			}else if(node.toString().equals("VAR_DEC")) {
+				fields.addChild(child);
 				child.buildVarDec(node);
 			}
 			else
