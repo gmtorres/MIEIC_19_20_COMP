@@ -382,7 +382,9 @@ public class IRNode {
 		}
 		IRNode child = new IRNode(this);
 		child.setInst(sn.name);
-		child.local_var = sn.simbolTable.getSimbol(sn.name).local_var;
+		Simbol s = sn.simbolTable.getSimbol(sn.name);
+		child.local_var = s.local_var;
+		this.type = s.getType().name;
 		this.addChild(child);
 	}
 	

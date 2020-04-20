@@ -70,6 +70,9 @@ public class Jasmin {
 		  	/*case "ldg":*/
 		  		printLoad(r);
 		  		break;
+		  	case "lda":
+		  		printLoadArray(r);
+		  		break;
 		  	case "+":
 		  	case "*":
 		  	case "/":
@@ -108,19 +111,26 @@ public class Jasmin {
 	  }
 	  
 	  private void printLoad(IRNode node) {
+		  String prefix = "";
 		  if(node.getInst().equals("ldc")) {
 			  Integer value = Integer.parseInt(node.children[0].getInst());
 			  if(value < 4)
 				  os.println("iconst_"+value);
 			  else
 				  os.println("bipush " + value);
+		  }else if(node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
+			  Integer local_var = node.children[0].local_var;
+			  if(local_var < 4)
+				  os.println( this.getType(node.type) + "load_" + node.children[0].local_var);
+			  else
+				  os.println( this.getType(node.type) + "load " + node.children[0].local_var);
 		  }
-		  if(node.getInst().equals("ldl")) {
-			  os.println("iload " + node.children[0].local_var);
+	  }
+	  private void printLoadArray(IRNode node) {
+		  for(int i = 0; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
 		  }
-		  if(node.getInst().equals("ldp")) {
-			  os.println("iload " + node.children[0].local_var);
-		  }
+		  os.println("iaload");
 	  }
 	  
 	  private void printNewIntArr(IRNode node) {
