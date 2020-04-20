@@ -120,17 +120,16 @@ public class Jasmin {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  if(node.getInst().equals("+")) {
-			  os.println("iadd");
-		  }
-		  if(node.getInst().equals("*")) {
-			  os.println("imul");
-		  }
-		  if(node.getInst().equals("/")) {
-			  os.println("idiv");
-		  }
-		  if(node.getInst().equals("-")) {
-			  os.println("isub");
+
+		  switch(node.getInst()) {
+		  case "+": os.println("iadd");
+			  break;
+		  case "-": os.println("isub");
+			  break;
+		  case "*": os.println("imul");
+			  break;
+		  case "/": os.println("idiv");
+			  break;
 		  }
 		  
 	  }
@@ -139,7 +138,7 @@ public class Jasmin {
 		  String prefix = "";
 		  if(node.getInst().equals("ldc")) {
 			  Integer value = Integer.parseInt(node.children[0].getInst());
-			  if(value < 4)
+			  if(value < 5)
 				  os.println("iconst_"+value);
 			  else
 				  os.println("bipush " + value);
@@ -327,21 +326,24 @@ public class Jasmin {
 	  
 	  
 	  private void printInvoke(IRNode r) {
-		  String toPrint = "\tinvoke"; //TODO: verificar static ou virtual
+		  
+		  for (int t = 4; t < r.getChildren().length; t++) {
+			  printJasmin(r.getChildren()[t]);
+		  }
+		  
+		  String toPrint = "invoke"; //TODO: verificar static ou virtual
 		  os.println(toPrint);
 		  
 
-		  toPrint = "\t\t" + r.getChildren()[0].getInst() + "." + r.getChildren()[1].getInst() + "()"; //TODO: colocar params
-		  os.println(toPrint);
-
-		  toPrint = "\t\t" + r.getChildren()[2].getInst() + "." + r.getChildren()[3].getInst() + "(";
-		  
-		  for (int i= 0; i < ((r.getChildren()[0]).getChildren().length); i++) {
-			  toPrint += retType(r.getChildren()[0].getChildren()[i].getInst());
-			  if(i != r.getChildren()[0].getChildren().length - 1)
+		  toPrint = "\t" + r.getChildren()[2].getInst() + "." + r.getChildren()[3].getInst() + "(";
+		  IRNode [] params = (r.getChildren()[0]).getChildren();
+		  for (int i= 0; i < params.length; i++) {
+			  toPrint += retType(params[i].getInst());
+			  if(i != params.length - 1)
 				  toPrint +=", ";
 		  }			  
-		  toPrint += ")" + retType((r.getChildren()[1]).getChildren()[0].getInst()); //TODO: colocar params
+		  //System.out.println("   dsfd " + (r.getChildren()[1]).getChildren()[0].getInst());
+		  toPrint += ")" + retType((r.getChildren()[1]).getChildren()[0].getInst());
 		  os.println(toPrint);
 
 		  

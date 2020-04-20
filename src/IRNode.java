@@ -555,7 +555,7 @@ public class IRNode {
 			object = d.getName();
 		
 		child.setInst(object);
-		
+	
 		IRNode child2 = new IRNode(this);
 		this.addChild(child2);
 		child2.setInst(sn.name);
@@ -576,7 +576,7 @@ public class IRNode {
 			for (int i = 0; i < args.size(); i++) {
 				IRNode funcParamType = new IRNode(this);
 				funcParams.addChild(funcParamType);
-				funcParamType.setInst(String.valueOf(args.get(i)));
+				funcParamType.setInst(args.get(i).getName());
 			}
 		}
 		
