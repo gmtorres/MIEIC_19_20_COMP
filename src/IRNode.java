@@ -2,8 +2,12 @@ import java.util.Stack;
 
 public class IRNode {
 	
+	// max of reg available
+	//TODO:: if reg are not enough use local vars
 	static final Integer maxReg = 31;
+	//stack of reg allocated
 	static Stack<Integer> reg_allocated = new Stack<Integer>();
+	//max satck needed for function
 	static Integer max_op_stack = 0;
 	
 	static {
@@ -15,13 +19,19 @@ public class IRNode {
 	IRNode parent;
 	IRNode [] children = new IRNode[0];
 	
+	//min number of registry to reach that node, available on operations
 	int num_reg = 0;
+	//allocated registry
 	Integer reg = null;
+	//local var index
 	Integer local_var = null;
 	
+	//stack of locals, available on method
 	Integer locals_stack = null;
+	//stack of operands, available on method
 	Integer op_stack = null;
 	
+	//intruction
 	private String inst = "";
 	
 	
