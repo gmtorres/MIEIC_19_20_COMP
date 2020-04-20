@@ -168,6 +168,10 @@ class SimpleNode implements Node {
 	public SimbolTable getSimbolTable() {
 		return simbolTable;
 	}
+	
+	public FunctionTable getFunctionTable() {
+		return functionTable;
+	}
    
   
 }

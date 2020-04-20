@@ -23,7 +23,10 @@ public class Jasmin {
 		        return "I";
 		        
 		    case "boolean":
-		      return "B";
+		    	return "B";
+		      
+		    case "int[]":
+		    	return "[I";
 		      
 		    default:
 		        return "";
@@ -52,12 +55,19 @@ public class Jasmin {
 		  		printLoad(r);
 		  		break;
 		  	case "+":
+		  	case "*":
+		  	case "/":
+		  	case "-":
 		  		printOperation(r);
+		  		break;
+		  	case "return":
+		  		printReturn(r);
 		  		break;
 		  }	
 		  
 		 
 	  }
+	  
 	  
 	  private void printOperation(IRNode node) {
 		  for(int i = 0; i < node.getChildren().length; i++) {
@@ -66,6 +76,15 @@ public class Jasmin {
 		  
 		  if(node.getInst().equals("+")) {
 			  os.println("iadd");
+		  }
+		  if(node.getInst().equals("*")) {
+			  os.println("imul");
+		  }
+		  if(node.getInst().equals("/")) {
+			  os.println("idiv");
+		  }
+		  if(node.getInst().equals("-")) {
+			  os.println("isub");
 		  }
 		  
 	  }
@@ -88,6 +107,17 @@ public class Jasmin {
 		  }
 		  IRNode lhn = node.children[0];
 		  os.println("istore " + lhn.local_var);
+		  
+	  }
+	  
+	  private void printReturn(IRNode node) {
+		  for(int i = 0; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
+		  }
+		  if(node.getChildren().length == 0)
+			  os.println("return");
+		  else
+			  os.println("ireturn");
 		  
 	  }
 	  
@@ -161,22 +191,24 @@ public class Jasmin {
 	  }
 	  
 	  
-	  private void printReturn(IRNode r) {
-		  String toPrint =".";
-		  //TODO: outro tipo de returns, este só cobre o void;
-		  if(r.getChildren().length == 0) {
-			  toPrint +="return";
-		  }
-		  
-		  os.println(toPrint);
-	  }
-	  
 	  private void printInvoke(IRNode r) {
 		  String toPrint = "\tinvoke"; //TODO: verificar static ou virtual
 		  os.println(toPrint);
 		  
+
 		  toPrint = "\t\t" + r.getChildren()[0].getInst() + "." + r.getChildren()[1].getInst() + "()"; //TODO: colocar params
 		  os.println(toPrint);
+
+		  toPrint = "\t\t" + r.getChildren()[2].getInst() + "." + r.getChildren()[3].getInst() + "(";
+		  
+		  for (int i= 0; i < ((r.getChildren()[0]).getChildren().length); i++) {
+			  toPrint += retType(r.getChildren()[0].getChildren()[i].getInst());
+			  if(i != r.getChildren()[0].getChildren().length - 1)
+				  toPrint +=", ";
+		  }			  
+		  toPrint += ")" + retType((r.getChildren()[1]).getChildren()[0].getInst()); //TODO: colocar params
+		  os.println(toPrint);
+
 		  
 		  
 	  }

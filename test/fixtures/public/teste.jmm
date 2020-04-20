@@ -9,12 +9,12 @@ import static BoardBase.placeTaken() void;
 
 
 class TicTacToe {
-	
-	public int aa(int b) {
-		int a;
-		a = 4;
-		a = b + 5;
-		return 2;
+
+	public int f(int a) {
+		int b;
+		b = a * a - 4 * 5;
+		return b;
+
 	}
 
 	

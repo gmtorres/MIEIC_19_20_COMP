@@ -1,4 +1,6 @@
 import java.util.Stack;
+import java.util.List;
+
 
 public class IRNode {
 	
@@ -503,6 +505,14 @@ public class IRNode {
 	public void buildFunction(SimpleNode sn) {
 		this.setInst("invoke");
 		
+		IRNode funcParams = new IRNode(this);
+		funcParams.setInst("funcParams");
+		this.addChild(funcParams);
+		
+		IRNode funcReturn = new IRNode(this);
+		funcReturn.setInst("funcReturn");
+		this.addChild(funcReturn);
+		
 		if(sn.jjtGetNumChildren() == 0)
 			return;	
 		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
@@ -514,11 +524,33 @@ public class IRNode {
 			object = lhn.name;
 		else 
 			object = d.getName();
+		
 		child.setInst(object);
 		
 		IRNode child2 = new IRNode(this);
 		this.addChild(child2);
 		child2.setInst(sn.name);
+		
+		FunctionTable fT = sn.getFunctionTable();
+		
+		Function invoked = fT.getFunction(object, sn.name);
+		
+		if (invoked != null) {
+			List<Descriptor> args = invoked.getDescriptors();
+			String retType = invoked.getType();
+			
+			
+			IRNode retNode = new IRNode(this);
+			funcReturn.addChild(retNode);
+			retNode.setInst(retType);
+			
+			for (int i = 0; i < args.size(); i++) {
+				IRNode funcParamType = new IRNode(this);
+				funcParams.addChild(funcParamType);
+				funcParamType.setInst(String.valueOf(args.get(i)));
+			}
+		}
+		
 		
 		SimpleNode rhn = (SimpleNode)sn.jjtGetChild(1);
 		for(int i = 0; i < rhn.jjtGetNumChildren(); ++i) {
