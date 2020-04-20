@@ -12,11 +12,21 @@ class TicTacToe {
 
 	public boolean test(int A){
 		int a;
-		int [] b;
+		int b;
+		int c;
+		int x;
+		int y;
 		boolean f;
-		a = 2;
-		b = new int[10];
+		int[] arr;
+		a = 1;
+		a = 1;
+		b = 2;
+		c = 3 + 3;
+		x = 4;
+		y = a*x*x + b*c + c;
 		f = true;
+		arr = new int[2];
+		arr[a+x] = 3+5;
 		return f;
 	}
 	

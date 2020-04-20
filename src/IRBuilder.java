@@ -6,6 +6,7 @@ public class IRBuilder {
 	public IRBuilder(SimpleNode sn) {
 		root = new IRNode(null);
 		root.build(sn);
+		root.setRegisters();
 	}
 	
 	public void dump() {

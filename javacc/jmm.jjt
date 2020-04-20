@@ -216,20 +216,20 @@ void AndAritm() #void : {Token t1;} {
  }
 
 void LessAritm() #void : {Token t1;} {
-	MulDivAritm() 
-   		[LOOKAHEAD(2) t1 =  <LESS_THAN> MulDivAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #OPERATOR(2) ]
+	AddSubAritm() 
+   		[LOOKAHEAD(2) t1 = <LESS_THAN> AddSubAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #OPERATOR(2) ]
     	
 }
 
-void MulDivAritm() #void : {Token t1;} {
-    AddSubAritm() 
-    	[LOOKAHEAD(2)( t1 =  <MUL> | t1 =  <DIV> ) AddSubAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #OPERATOR(2)]
+void AddSubAritm() #void : {Token t1;} {
+    MulDivAritm() 
+    	(LOOKAHEAD(2)( t1 = <ADD> | t1 = <SUB> ) AddSubAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #OPERATOR(2))*
     
 }
 
-void AddSubAritm() #void : {Token t1;} {
+void MulDivAritm() #void : {Token t1;} {
 	ExpTerminal() 
-    	[LOOKAHEAD(2)( t1 =  <ADD> | t1 =  <SUB> ) MulDivAritm() { jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #OPERATOR(2) ]
+    	(LOOKAHEAD(2)( t1 = <MUL> | t1 = <DIV> ) MulDivAritm() { jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; } #OPERATOR(2) )*
 }
 
 void ExpTerminal() #void : {Token t1;} {

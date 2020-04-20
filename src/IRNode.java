@@ -1,8 +1,21 @@
+import java.util.Stack;
 
 public class IRNode {
 	
+	static Stack<Integer> reg_allocated = new Stack<Integer>();
+	
+	static {
+		for(int i = 31; i > 0; i--) {
+			reg_allocated.push(i);
+		}
+	}
+	
 	IRNode parent;
 	IRNode [] children = new IRNode[0];
+	
+	int num_reg = 0;
+	Integer reg = null;
+	
 	
 	private String inst = "";
 	
@@ -215,9 +228,6 @@ public class IRNode {
 		this.setInst(sn.name);
 		//put offset in simboltable
 	}
-	public void buildBool(SimpleNode sn) {
-		this.setInst(String.valueOf(sn.val));
-	}
 	
 	public void buildWhile(SimpleNode sn) {
 		this.setInst("while");
@@ -327,7 +337,16 @@ public class IRNode {
 	}
 	
 	public void buildIntegerLiteral(SimpleNode sn) {
-		this.setInst(String.valueOf(sn.val));
+		this.setInst("ldc");
+		IRNode child = new IRNode(this);
+		child.setInst(String.valueOf(sn.val));
+		this.addChild(child);
+	}
+	public void buildBool(SimpleNode sn) {
+		this.setInst("ldc");
+		IRNode child = new IRNode(this);
+		child.setInst(String.valueOf(sn.val));
+		this.addChild(child);
 	}
 	
 	public void buildIdentifier(SimpleNode sn) {
@@ -563,14 +582,12 @@ public class IRNode {
 
 		}
 	}
-	
-	
-	
-	
+
 	
 	public void dump(String prefix) {
 		String str = prefix;
-		if(this.getInst() != null) str +=this.getInst();
+		if(this.getInst() != null) str +=this.getInst() + "  ";
+		if(this.reg != null) str += "reg_alocated: " + this.reg + "  ";
 		System.out.print(str + "\n");
 	  if (children != null) {
 	    for (int i = 0; i < children.length; ++i) {
@@ -578,9 +595,57 @@ public class IRNode {
 	      if (n != null) {
 	       n.dump(prefix + " ");
 		  }
-		  }
-		}
+	    }
 	  }
+	}
+	
+	
+	
+	public void setRegisters() {
+		int n = this.children.length;
+		for(int i = 0; i < n; i++) {
+			this.children[i].setRegisters();
+		}
+		
+		if(this.inst.equals("ldl")
+			|| this.inst.equals("ldp")
+			|| this.inst.equals("ldg")
+			|| this.inst.equals("ldc")) {
+			this.num_reg = 1;
+			
+			this.reg = this.reg_allocated.pop();
+		}
+		else if(this.inst.equals("+")
+			|| this.inst.equals("-")
+			|| this.inst.equals("/")
+			|| this.inst.equals("*")) {
+			int lhn = this.children[0].num_reg;
+			int rhn = this.children[1].num_reg;
+			if(lhn == rhn) this.num_reg = lhn + 1;
+			else this.num_reg = (rhn > lhn) ? rhn : lhn;
+			//System.out.println(this.children[0].inst + this.inst + this.children[1].inst+ " : " + lhn + "  " + rhn + " -> " +  this.num_reg);
+			
+			this.reg_allocated.push(this.children[1].reg);
+			this.reg_allocated.push(this.children[0].reg);
+			this.reg = this.reg_allocated.pop();
+		}
+		else if(this.inst.equals("st")) {
+			int rhn = this.children[1].num_reg;
+			this.reg_allocated.push(this.children[1].reg);
+			System.out.println(rhn);
+		}else if(this.inst.equals("sta")) {
+			int rhn = this.children[2].num_reg;
+			this.reg_allocated.push(this.children[2].reg);
+			this.reg_allocated.push(this.children[1].reg);
+			System.out.println(rhn);
+		}
+		else if(this.inst.equals("new_int_arr")) {
+			int rhn = this.children[0].num_reg;
+			this.reg = this.children[0].reg;
+			System.out.println(rhn);
+		}
+		
+	}
 	
 	
 }
