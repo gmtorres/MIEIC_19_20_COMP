@@ -299,7 +299,11 @@ public class IRNode {
 		Simbol s = sn.simbolTable.getSimbol(((SimpleNode)lhn.jjtGetChild(0)).name);
 		var.local_var = s.local_var;
 		if(lhn.jjtGetNumChildren() == 1) {
-			this.inst = "st";
+			String scope = sn.simbolTable.getScope(((SimpleNode)lhn.jjtGetChild(0)).name);
+			if(scope.equals("global"))
+				this.inst = "stg";
+			else
+				this.inst = "st";
 			this.type = s.getType().name;
 			var.setInst(((SimpleNode)lhn.jjtGetChild(0)).name);
 			this.addChild(var);
@@ -368,7 +372,7 @@ public class IRNode {
 	
 	public void buildIdentifier(SimpleNode sn) {
 		String load = sn.simbolTable.getScope(sn.name);
-		//this.setInst(sn.simbolTable.getScope(sn.name) + "  " +sn.name);
+
 		switch(load) {
 		case "local":
 			this.setInst("ldl");
@@ -692,7 +696,7 @@ public class IRNode {
 			this.reg_allocated.push(this.children[0].reg);
 			this.reg = this.reg_allocated.pop();
 		}
-		else if(this.inst.equals("st")) {
+		else if(this.inst.equals("st") || this.inst.equals("stg")) {
 			int rhn = this.children[1].num_reg;
 			this.reg_allocated.push(this.children[1].reg);
 			//System.out.println(rhn);

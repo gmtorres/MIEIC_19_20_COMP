@@ -9,12 +9,15 @@ import static BoardBase.placeTaken() void;
 
 
 class TicTacToe {
-
+	
+	int d;
+	
 	public int f() {
 		int[] A;
 		int c;
 		int i;
 		i = 0;
+		d = 3;
 		A = new int[10];
 		A[3] = 20;
 		c = A[i];
