@@ -85,13 +85,12 @@ public class Jasmin {
 		  
 		  System.out.println(toPrint);
 		  
-		  toPrint = "\t.limit stack 10"; //TODO: implementar na IR
+		  toPrint = "\t.limit stack " + r.op_stack; //TODO: implementar na IR
 		  System.out.println(toPrint);
 		  
 		  toPrint = "\t.limit locals ";
 		  
-
-		  toPrint += (r.getChildren()[3]).getChildren().length;
+		  toPrint += r.locals_stack;
 
 
 		  System.out.println(toPrint);

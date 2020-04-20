@@ -17,7 +17,7 @@ class TicTacToe {
 		return 5 + glob;
 	}
 
-	public void test(int A){
+	public int test(int A, boolean B){
 		int a;
 		int b;
 		int c;
@@ -26,17 +26,20 @@ class TicTacToe {
 		boolean f;
 		int[] arr;
 		glob = 3;
-		a = 1;
-		a = 1;
-		b = 2;
-		c = 3 + 3;
-		x = glob;
-		y = a*x*x + b*c + c;
-		f = true;
+		a = 4;
 		arr = new int[2];
-		arr[a+x] = 3+5;
-		BoardBase.playerTurn(3+5, 4*x+3,true);
-		return f;
+		arr[a+1] = 3+5;
+		
+		return a;
+	}
+	
+	public int square(int a) {
+		return a*a;
+	}
+	public int f(int a) {
+		int b;
+		b = this.square(a);
+		return b;
 	}
 	
 

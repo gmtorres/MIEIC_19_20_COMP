@@ -2,10 +2,12 @@ import java.util.Stack;
 
 public class IRNode {
 	
+	static final Integer maxReg = 31;
 	static Stack<Integer> reg_allocated = new Stack<Integer>();
+	static Integer max_op_stack = 0;
 	
 	static {
-		for(int i = 31; i > 0; i--) {
+		for(int i = maxReg; i > 0; i--) {
 			reg_allocated.push(i);
 		}
 	}
@@ -16,6 +18,9 @@ public class IRNode {
 	int num_reg = 0;
 	Integer reg = null;
 	Integer local_var = null;
+	
+	Integer locals_stack = null;
+	Integer op_stack = null;
 	
 	private String inst = "";
 	
@@ -188,7 +193,6 @@ public class IRNode {
 		
 		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
 
-		
 		for(int i = 0; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
 			
@@ -196,6 +200,7 @@ public class IRNode {
 			
 			if(node.toString().equals("ARGUMENT")) {	
 				arguments_specs.addChild(child); 
+				child.local_var =arguments_specs.children.length;
 				child.buildArgument(node);
 			}else if(node.toString().equals("METHOD_BODY")) {
 				//child.buildMethodBody( node ); 
@@ -205,7 +210,7 @@ public class IRNode {
 					if(node2.toString().equals("VAR_DEC")) {
 						IRNode child2 = new IRNode(locals);
 						locals.addChild(child2);
-						child2.local_var =locals.children.length;
+						child2.local_var =arguments_specs.children.length + locals.children.length;
 						child2.buildVarDec(node2);
 					}else {
 						IRNode child2 = new IRNode(statements);
@@ -219,6 +224,8 @@ public class IRNode {
 				child.build( node ); 
 			}
 		}
+		//System.out.println(arguments_specs.children.length + "  " + locals.children.length);
+		this.locals_stack = arguments_specs.children.length + locals.children.length;
 	}
 	
 	public void buildArgument(SimpleNode sn) {
@@ -577,6 +584,8 @@ public class IRNode {
 		if(this.getInst() != null) str +=this.getInst() + "  ";
 		if(this.local_var != null) str += "(" + this.local_var + ")  ";
 		if(this.reg != null) str += "reg_alloc: " + this.reg + "  ";
+		if(this.op_stack != null) str += "stack: " + this.op_stack + "  ";
+		if(this.locals_stack != null) str += "locals: " + this.locals_stack + "  ";
 		System.out.print(str + "\n");
 	  if (children != null) {
 	    for (int i = 0; i < children.length; ++i) {
@@ -588,21 +597,31 @@ public class IRNode {
 	  }
 	}
 	
-	
+	private int max(int a, int b) {
+		return (a >= b) ? a : b;
+	}
 	
 	public void setRegisters() {
+		
+		if(this.inst.equals("method")) {
+			this.max_op_stack = 0;
+		}
+		
 		int n = this.children.length;
 		for(int i = 0; i < n; i++) {
 			this.children[i].setRegisters();
 		}
 		
-		if(this.inst.equals("ldl")
+		if(this.inst.equals("method")) {
+			this.op_stack = this.max_op_stack;
+		}
+		else if(this.inst.equals("ldl")
 			|| this.inst.equals("ldp")
 			|| this.inst.equals("ldg")
 			|| this.inst.equals("ldc")) {
 			this.num_reg = 1;
-			
 			this.reg = this.reg_allocated.pop();
+			this.max_op_stack = max(this.max_op_stack,this.maxReg - this.reg_allocated.size());
 		}
 		else if(this.inst.equals("+")
 			|| this.inst.equals("-")
@@ -621,21 +640,21 @@ public class IRNode {
 		else if(this.inst.equals("st")) {
 			int rhn = this.children[1].num_reg;
 			this.reg_allocated.push(this.children[1].reg);
-			System.out.println(rhn);
+			//System.out.println(rhn);
 		}else if(this.inst.equals("sta")) {
 			int rhn = this.children[2].num_reg;
 			this.reg_allocated.push(this.children[2].reg);
 			this.reg_allocated.push(this.children[1].reg);
-			System.out.println(rhn);
+			//System.out.println(rhn);
 		}
 		else if(this.inst.equals("new_int_arr")) {
 			int rhn = this.children[0].num_reg;
 			this.reg = this.children[0].reg;
-			System.out.println(rhn);
+			//System.out.println(rhn);
 		}else if(this.inst.equals("return")) {
 			int rhn = this.children[0].num_reg;
 			this.reg_allocated.push(this.children[0].reg);
-			System.out.println(rhn);
+			//System.out.println(rhn);
 		}else if(this.inst.equals("invoke")) {
 			for(int i = this.children.length-1; i >=2 ;i--)
 				this.reg_allocated.push(this.children[i].reg);
