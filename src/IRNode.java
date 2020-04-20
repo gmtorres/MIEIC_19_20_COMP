@@ -643,6 +643,13 @@ public class IRNode {
 			int rhn = this.children[0].num_reg;
 			this.reg = this.children[0].reg;
 			System.out.println(rhn);
+		}else if(this.inst.equals("return")) {
+			int rhn = this.children[0].num_reg;
+			this.reg_allocated.push(this.children[0].reg);
+			System.out.println(rhn);
+		}else if(this.inst.equals("invoke")) {
+			for(int i = this.children.length-1; i >=2 ;i--)
+				this.reg_allocated.push(this.children[i].reg);
 		}
 		
 	}

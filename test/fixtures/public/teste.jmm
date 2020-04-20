@@ -3,14 +3,18 @@ import static BoardBase.sameArray(int[]) boolean;
 import static BoardBase.printBoard(int[],int[],int[]) void; 
 import static BoardBase.printWinner(int) void;
 
-import static BoardBase.playerTurn(int) int[];
+import static BoardBase.playerTurn(int,int,boolean) int[];
 import static BoardBase.wrongMove() void;
 import static BoardBase.placeTaken() void;
 
 
 class TicTacToe {
 
-	public boolean test(int A){
+	public int aa() {
+		return 5;
+	}
+
+	public void test(int A){
 		int a;
 		int b;
 		int c;
@@ -27,6 +31,7 @@ class TicTacToe {
 		f = true;
 		arr = new int[2];
 		arr[a+x] = 3+5;
+		BoardBase.playerTurn(3+5, 4*x+3,true);
 		return f;
 	}
 	

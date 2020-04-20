@@ -34,6 +34,9 @@ public class Jasmin {
 		  	case "method":
 		  		printMethod(r);
 		  		break;
+		  	case "invoke":
+		  		printInvoke(r);
+		  		break;
 		  	//TER CASE VARIAVEL .FIELD
 		  }	
 		  
@@ -92,12 +95,44 @@ public class Jasmin {
 
 
 		  System.out.println(toPrint);
+		  System.out.print("\n");
+		  
+		  for (int k = 0; k < (r.getChildren()[4]).getChildren().length; k++) {
+			  printJasmin((r.getChildren()[4]).getChildren()[k]);
+		  }
 		  
 		  
+		  if(((r.getChildren()[1]).getChildren()[0]).getInst().equals("void")) {
+			  toPrint = "\treturn";
+			  System.out.println(toPrint);
+		  }
 		  
-		    
+		  toPrint = ".end method";
+		  
+		  System.out.println(toPrint);
+		  
 	  }
 	  
+	  
+	  private void printReturn(IRNode r) {
+		  String toPrint =".";
+		  //TODO: outro tipo de returns, este só cobre o void;
+		  if(r.getChildren().length == 0) {
+			  toPrint +="return";
+		  }
+		  
+		  System.out.println(toPrint);
+	  }
+	  
+	  private void printInvoke(IRNode r) {
+		  String toPrint = "\tinvoke"; //TODO: verificar static ou virtual
+		  System.out.println(toPrint);
+		  
+		  toPrint = "\t\t" + r.getChildren()[0].getInst() + "." + r.getChildren()[1].getInst() + "()"; //TODO: colocar params
+		  System.out.println(toPrint);
+		  
+		  
+	  }
 	 /*
 	  public String printJasmin(IRNode node) {
 		    String func = "";
