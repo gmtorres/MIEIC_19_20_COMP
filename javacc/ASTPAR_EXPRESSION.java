@@ -36,12 +36,13 @@ class ASTPAR_EXPRESSION extends SimpleNode {
 				  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
 				  return false;
 			  }else if(s.isInitialized == false){
-				  if(s.condInitialized) {
+				  if(s.condInitialized || this.simbolTable.getScope(lhn.name).equals("global")) {
 					  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
-				  }else
+				  }else {
 					  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
-				  return false;
-			  }else
+					  return false;
+				  }
+			  }
 				  lhn.type = s.getType().getName();
 		  }
 	  }

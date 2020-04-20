@@ -9,9 +9,12 @@ import static BoardBase.placeTaken() void;
 
 
 class TicTacToe {
-
+	
+	int glob;
+	
 	public int aa() {
-		return 5;
+		
+		return 5 + glob;
 	}
 
 	public void test(int A){
@@ -22,11 +25,12 @@ class TicTacToe {
 		int y;
 		boolean f;
 		int[] arr;
+		glob = 3;
 		a = 1;
 		a = 1;
 		b = 2;
 		c = 3 + 3;
-		x = 4;
+		x = glob;
 		y = a*x*x + b*c + c;
 		f = true;
 		arr = new int[2];

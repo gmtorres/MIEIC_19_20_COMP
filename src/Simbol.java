@@ -10,6 +10,7 @@ public class Simbol {
     public boolean condInitialized = false;
     public int init = 0;
     
+    public Integer local_var = null;;
     
     
     Simbol(Descriptor tp , String id , boolean init){

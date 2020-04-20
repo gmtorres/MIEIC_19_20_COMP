@@ -15,7 +15,7 @@ public class IRNode {
 	
 	int num_reg = 0;
 	Integer reg = null;
-	
+	Integer local_var = null;
 	
 	private String inst = "";
 	
@@ -205,6 +205,7 @@ public class IRNode {
 					if(node2.toString().equals("VAR_DEC")) {
 						IRNode child2 = new IRNode(locals);
 						locals.addChild(child2);
+						child2.local_var =locals.children.length;
 						child2.buildVarDec(node2);
 					}else {
 						IRNode child2 = new IRNode(statements);
@@ -226,7 +227,7 @@ public class IRNode {
 	
 	public void buildVarDec(SimpleNode sn) {
 		this.setInst(sn.name);
-		//put offset in simboltable
+		sn.simbolTable.getSimbol(sn.name).local_var = this.local_var;
 	}
 	
 	public void buildWhile(SimpleNode sn) {
@@ -281,14 +282,7 @@ public class IRNode {
 			IRNode exp = new IRNode(this);
 			this.addChild(exp);
 			exp.getBuild(index_exp);
-			/*for(int a = 0; a < index_exp.jjtGetNumChildren(); a++) {
-				SimpleNode node = (SimpleNode)index_exp.jjtGetChild(a);
-				
-				IRNode child = new IRNode(this);
-				this.addChild(child);
-				
-				child.getBuild(node);
-			}*/
+
 		}else
 			return;
 		
@@ -296,14 +290,7 @@ public class IRNode {
 		IRNode exp = new IRNode(this);
 		this.addChild(exp);
 		exp.getBuild(rhn);
-		/*for(int a = 0; a < rhn.jjtGetNumChildren(); a++) {
-			SimpleNode node = (SimpleNode)rhn.jjtGetChild(a);
-			
-			IRNode child = new IRNode(this);
-			this.addChild(child);
-			
-			child.getBuild(node);
-		}*/
+
 	}
 	
 	public void buildExpression(SimpleNode sn) {
@@ -365,6 +352,7 @@ public class IRNode {
 		}
 		IRNode child = new IRNode(this);
 		child.setInst(sn.name);
+		child.local_var = sn.simbolTable.getSimbol(sn.name).local_var;
 		this.addChild(child);
 	}
 	
@@ -587,7 +575,8 @@ public class IRNode {
 	public void dump(String prefix) {
 		String str = prefix;
 		if(this.getInst() != null) str +=this.getInst() + "  ";
-		if(this.reg != null) str += "reg_alocated: " + this.reg + "  ";
+		if(this.local_var != null) str += "(" + this.local_var + ")  ";
+		if(this.reg != null) str += "reg_alloc: " + this.reg + "  ";
 		System.out.print(str + "\n");
 	  if (children != null) {
 	    for (int i = 0; i < children.length; ++i) {

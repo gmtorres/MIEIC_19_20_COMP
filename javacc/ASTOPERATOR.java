@@ -35,14 +35,14 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 				  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
 			  	//System.out.println("info: " + info.toString() + " " + s.isInitialized + " " + s.ifInitialized + " " + s.elseInitialized + " " + s.condInitialized);
 				  
-			  if(s.condInitialized) {
+			  if(s.condInitialized || this.simbolTable.getScope(lhn.name).equals("global")) {
 				  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
-			  }else
+			  }else {
 				  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
-			  return false;
-		  }else {
-			  lhn.type = s.getType().getName();
+				  return false;
+				 }
 		  }
+			  lhn.type = s.getType().getName();
 	  }
 	  if(rhn.toString().equals("IDENTIFIER")) {
 		  Simbol s = this.simbolTable.getSimbol(rhn.name);
@@ -52,14 +52,15 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 		  }else if(s.isInitialized == false 
 				  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
 				  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
-				  if(s.condInitialized) {
+				  if(s.condInitialized || this.simbolTable.getScope(rhn.name).equals("global")) {
 					  System.out.println("Line " + rhn.lineNo + ": Simbol " + rhn.name + " may not have been initiated.");
-				  }else
+				  }else {
 					  System.out.println("Line " + rhn.lineNo + ": Simbol " + rhn.name + " has not been initiated.");
-				  return false;
-		  }else {
-			  rhn.type = s.getType().getName();
+					  return false;
+				  }
 		  }
+			  rhn.type = s.getType().getName();
+		  
 	  }
 	  
 	  if(result == false)

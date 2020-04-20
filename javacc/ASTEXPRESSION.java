@@ -40,12 +40,13 @@ class ASTEXPRESSION extends SimpleNode {
 						  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
 						  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
 					  System.out.println("info: " + info.toString());
-					  if(s.condInitialized) {
-						  //System.out.println("Simbol " + lhn.name + " may not have been initiated.");
-					  }else
+					  if(s.condInitialized || this.simbolTable.getScope(lhn.name).equals("global")) {
+						  System.out.println("Simbol " + lhn.name + " may not have been initiated.");
+					  }else {
 						  System.out.println("Line " + this.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
-					  return false;
-				  }else
+					  	return false;
+					  }
+				  }
 					  lhn.type = s.getType().getName();
 			  }
 		  }
