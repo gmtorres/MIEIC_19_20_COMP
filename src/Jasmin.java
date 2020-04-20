@@ -19,7 +19,10 @@ public class Jasmin {
 		        return "I";
 		        
 		    case "boolean":
-		      return "B";
+		    	return "B";
+		      
+		    case "int[]":
+		    	return "[I";
 		      
 		    default:
 		        return "";
@@ -127,7 +130,14 @@ public class Jasmin {
 		  String toPrint = "\tinvoke"; //TODO: verificar static ou virtual
 		  System.out.println(toPrint);
 		  
-		  toPrint = "\t\t" + r.getChildren()[0].getInst() + "." + r.getChildren()[1].getInst() + "()"; //TODO: colocar params
+		  toPrint = "\t\t" + r.getChildren()[2].getInst() + "." + r.getChildren()[3].getInst() + "(";
+		  
+		  for (int i= 0; i < ((r.getChildren()[0]).getChildren().length); i++) {
+			  toPrint += retType(r.getChildren()[0].getChildren()[i].getInst());
+			  if(i != r.getChildren()[0].getChildren().length - 1)
+				  toPrint +=", ";
+		  }			  
+		  toPrint += ")" + retType((r.getChildren()[1]).getChildren()[0].getInst()); //TODO: colocar params
 		  System.out.println(toPrint);
 		  
 		  
