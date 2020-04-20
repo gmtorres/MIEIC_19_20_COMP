@@ -10,13 +10,19 @@ import static BoardBase.placeTaken() void;
 
 class TicTacToe {
 
-	public boolean test(int A){
+	public int aa() {
+		return 5;
+	}
+
+	public void test(int A){
 		int a;
 		int [] b;
 		boolean f;
 		a = 2;
 		b = new int[10];
 		f = true;
+		BoardBase.printWinner(a);
+		this.aa();
 		return f;
 	}
 	
