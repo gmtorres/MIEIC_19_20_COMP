@@ -58,6 +58,7 @@ public class Jasmin {
 		  
 		  switch(r.getInst()) {
 		  	case "method":
+		  		os.print("\n");
 		  		printMethod(r);
 		  		break;
 		  	case "invoke":
@@ -96,6 +97,10 @@ public class Jasmin {
 		  		break;
 		  	case "while":
 		  		printWhile(r);
+		  		break;
+		  	case "fields":
+		  		os.print("\n");
+		  		printFields(r);
 		  		break;
 		  	case "return":
 		  		printReturn(r);
@@ -242,7 +247,6 @@ public class Jasmin {
 			  toPrint += r.getChildren()[1].getInst();
 		  }
 		  os.println(toPrint);
-		  os.print("\n");
 		  
 		  for(int i = 2; i < r.getChildren().length; i++) {
 			  printJasmin(r.getChildren()[i]);
@@ -319,6 +323,16 @@ public class Jasmin {
 
 		  
 		  
+	  }
+	  
+	  private void printFields(IRNode r) {
+		  
+		  for (int i = 0; i < r.getChildren().length; i++) {
+			  String toPrint =".field ";
+			  toPrint += r.getChildren()[i].getInst() + " " + retType(r.getChildren()[i].getIRType());
+			  os.println(toPrint);
+		  }
+				  
 	  }
 	 /*
 	  public String printJasmin(IRNode node) {
