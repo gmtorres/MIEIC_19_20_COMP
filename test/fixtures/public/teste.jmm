@@ -10,7 +10,6 @@ import static A.b(boolean);
 
 class TicTacToe {
 
-<<<<<<< HEAD
   int[] row0;
   int[] row1;
   int[] row2;
