@@ -108,6 +108,9 @@ public class Jasmin {
 		  	case "new_int_arr":
 		  		printNewIntArr(r);
 		  		break;
+			case "length":
+				printLength(r);
+				break;
 		  	case "while":
 		  		printWhile(r);
 		  		break;
@@ -190,6 +193,13 @@ public class Jasmin {
 		  }
 		  this.println("newarray int");
 	  }
+
+	  private void printLength(IRNode node) {
+		  for(int i = 0; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
+		  }
+		  this.println("arraylength");
+	  }
 	  
 	  private void printStore(IRNode node) {
 		  for(int i = 0; i < node.getChildren().length; i++) {
@@ -215,7 +225,7 @@ public class Jasmin {
 	  private void printStoreArray(IRNode node) {
 		  IRNode lhn = node.children[0];
 		  Integer local_var = lhn.local_var;
-		  //TODO:: Não sei se é preciso	
+		  //TODO:: Nï¿½o sei se ï¿½ preciso	
 		  this.println("aload_0"); 
 		  if(local_var!=null) {
 			  if(local_var < 4)
