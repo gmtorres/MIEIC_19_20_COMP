@@ -6,6 +6,7 @@ class exemplo {
 	  int whoseturn;
 	  int movesmade;
 	  int[] pieces;
+	  exemplo e;
 	  
 	  public  exemplo(int t) {
 		  whoseturn = t;
@@ -15,7 +16,7 @@ class exemplo {
 	  public boolean init() {
 	  	int[] g;
 	  	int i;
-	  	exemplo e = new exemplo(2);
+	  	e = new exemplo(2);
 	    row0 = new int[3];
 	    row1 = new int[3];
 	    row2 = new int[3];

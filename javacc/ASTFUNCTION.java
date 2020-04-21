@@ -37,7 +37,7 @@ class ASTFUNCTION extends SimpleNode {
 			objs = this.descriptors.getDescriptor("this").getAllTypes();
 		}
 		else{
-			if(this.simbolTable.isSimbolHere(lhn.name)) {
+			if(this.simbolTable.isSimbolKnown(lhn.name)) {
 				Simbol s = this.simbolTable.getSimbol(lhn.name);
 				if(s.getAssignType() == null) {
 					  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " has not been initiated.");

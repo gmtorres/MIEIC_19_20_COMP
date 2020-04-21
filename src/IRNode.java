@@ -582,7 +582,7 @@ public class IRNode {
 			objs = sn.descriptors.getDescriptor("this").getAllTypes();
 			this.setInst("invoke_virtual");
 		}else{
-			if(sn.simbolTable.isSimbolHere(lhn.name)) {
+			if(sn.simbolTable.isSimbolKnown(lhn.name)) {
 				objs = sn.simbolTable.getSimbol(lhn.name).getAssignType().getAllTypes();
 				this.setInst("invoke_virtual");
 			}else {

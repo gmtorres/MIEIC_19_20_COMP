@@ -9,18 +9,24 @@ import static BoardBase.placeTaken();
 import static A.b(boolean);
 
 class TicTacToe {
-
+	
+	TicTacToe e;
   
   public int g(){
   	int i;
   	boolean b;
+  	e = new TicTacToe();
   	while(true)
   		i = 4 + 5; 
   	b = 4 < i;
   	
   	A.b(4<5);
-  	
+  	e.a();
   	return 4;
+  }
+  
+  public int a(){
+  	return 2;
   }
   
 }
