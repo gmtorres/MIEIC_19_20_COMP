@@ -32,7 +32,7 @@ class TicTacToe {
     movesmade = 0;
     p = 1;
     
-    this.getRow1(p);
+    this.getRow1();
     
     return true;
   }
@@ -41,8 +41,7 @@ class TicTacToe {
     return row0;
   }
 
-  public int[] getRow1(int s){
-  	s = s + 1;
+  public int[] getRow1(){
     return row1;
   }
   public int[] getRow2(){
