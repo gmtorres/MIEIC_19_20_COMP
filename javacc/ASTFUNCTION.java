@@ -46,8 +46,11 @@ class ASTFUNCTION extends SimpleNode {
 				objs = this.simbolTable.getSimbol(lhn.name).getAssignType().getAllTypes();
 			}else {
 				Descriptor d = this.descriptors.getDescriptor(lhn.name);
+				System.out.println(lhn.name + "  " + d);
 				if(d != null)
 					objs = d.getAllTypes();
+				else
+					objs.add(lhn.name);
 			}
 		}
 		ArrayList<Function> f = new ArrayList<Function>();
@@ -83,7 +86,13 @@ class ASTFUNCTION extends SimpleNode {
 		}
 		if(i == f.size()) {
 			result = false;
-			System.out.println("Line " + this.lineNo + ": Function " + lhn.name + "." + this.name + " is not known.");
+			String toPrint = "Line " + this.lineNo + ": Function " + lhn.name + "." + this.name+"(";
+			for(int a = 0; a < rhn.jjtGetNumChildren(); a++ ) {
+				SimpleNode rhnc = (SimpleNode) rhn.children[a];
+				toPrint+= ((SimpleNode)rhnc.children[0]).type;
+				if(a != rhn.jjtGetNumChildren() - 1 ) toPrint+=", ";
+			}
+			System.out.println(toPrint + ") is not known.");
 		}
 	
 	  return result;

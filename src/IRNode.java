@@ -585,7 +585,10 @@ public class IRNode {
 				this.setInst("invoke_virtual");
 			}else {
 				Descriptor d = sn.descriptors.getDescriptor(lhn.name);
-				objs = d.getAllTypes();
+				if(d != null)
+					objs = d.getAllTypes();
+				else
+					objs.add(lhn.name);
 				this.setInst("invoke_static");
 			}
 		}
@@ -760,6 +763,91 @@ public class IRNode {
 			this.num_reg = 1;
 			this.reg = this.reg_allocated.pop();
 			this.max_op_stack = max(this.max_op_stack,this.maxReg - this.reg_allocated.size());
+		}
+		else if(this.inst.equals("lda")) {
+			int lhn = this.children[0].num_reg;
+			int rhn = this.children[1].num_reg;
+			if(lhn == rhn) this.num_reg = lhn + 1;
+			else this.num_reg = (rhn > lhn) ? rhn : lhn;
+			this.reg_allocated.push(this.children[1].reg);
+			this.reg_allocated.push(this.children[0].reg);
+			this.reg = this.reg_allocated.pop();
+		}
+		else if(this.inst.equals("new_object")) {
+			IRNode rhn = this.children[1];
+			for(int i = rhn.children.length-1; i >= 0 ;i--) {
+				this.reg_allocated.push(rhn.children[i].reg);
+			}
+			this.reg = this.reg_allocated.pop();
+			this.max_op_stack = max(this.max_op_stack,this.maxReg - this.reg_allocated.size());
+		}
+		else if(this.inst.equals("+")
+			|| this.inst.equals("-")
+			|| this.inst.equals("/")
+			|| this.inst.equals("*")) {
+			int lhn = this.children[0].num_reg;
+			int rhn = this.children[1].num_reg;
+			if(lhn == rhn) this.num_reg = lhn + 1;
+			else this.num_reg = (rhn > lhn) ? rhn : lhn;
+
+			this.reg_allocated.push(this.children[1].reg);
+			this.reg_allocated.push(this.children[0].reg);
+			this.reg = this.reg_allocated.pop();
+		}
+		else if(this.inst.equals("st") || this.inst.equals("stg")) {
+			int rhn = this.children[1].num_reg;
+			this.reg_allocated.push(this.children[1].reg);
+		}
+		else if(this.inst.equals("sta")) {
+			int rhn = this.children[2].num_reg;
+			this.reg_allocated.push(this.children[2].reg);
+			this.reg_allocated.push(this.children[1].reg);
+		}
+		else if(this.inst.equals("<")
+			|| this.inst.equals("&&")) {
+			Integer reg1 = this.children[1].reg;
+			Integer reg0 = this.children[0].reg;
+			if(reg1 != null ) this.reg_allocated.push(this.children[1].reg);
+			if(reg0 != null ) this.reg_allocated.push(this.children[0].reg);
+		}
+		else if(this.inst.equals("new_int_arr")) {
+			int rhn = this.children[0].num_reg;
+			this.reg = this.children[0].reg;
+		}
+		else if(this.inst.equals("invoke_static")) {
+			for(int i = this.children.length-1; i >=4 ;i--) {
+				if(this.children[i].reg != null) this.reg_allocated.push(this.children[i].reg);
+			}
+			if(!this.children[1].children[0].getInst().equals("void")) // se o return type é diferente de void
+				this.reg = this.reg_allocated.pop();
+		}
+		else if(this.inst.equals("invoke_virtual")) {
+			for(int i = this.children.length-1; i >=5 ;i--) {
+				if(this.children[i].reg != null) this.reg_allocated.push(this.children[i].reg);
+			}
+			if(!this.children[1].children[0].getInst().equals("void")) // se o return type é diferente de void
+				this.reg = this.reg_allocated.pop();
+		}
+		else if(this.inst.equals("return")) {
+			int rhn = this.children[0].num_reg;
+			this.reg_allocated.push(this.children[0].reg);
+			//System.out.println(rhn);
+		}else if(this.inst.equals("not")) { //TODO NOT
+			Integer reg = this.children[0].reg;
+			if(reg != null)
+				this.reg_allocated.push(reg);
+		}
+		
+		/*if(this.inst.equals("method")) {
+			this.op_stack = this.max_op_stack;
+		}
+		else if(this.inst.equals("ldl")
+			|| this.inst.equals("ldp")
+			|| this.inst.equals("ldg")
+			|| this.inst.equals("ldc")) {
+			this.num_reg = 1;
+			this.reg = this.reg_allocated.pop();
+			this.max_op_stack = max(this.max_op_stack,this.maxReg - this.reg_allocated.size());
 		}else if(this.inst.equals("lda")) {
 			int lhn = this.children[0].num_reg;
 			int rhn = this.children[1].num_reg;
@@ -817,9 +905,9 @@ public class IRNode {
 				System.out.println("push of " + this.children[i].reg);
 				this.reg_allocated.push(this.children[i].reg);
 			}
-			//if(!this.children[0].children[0].getInst().equals("void")) // se o return type é diferente de void
+			if(!this.children[0].children[0].getInst().equals("void")) // se o return type é diferente de void
 				this.reg = this.reg_allocated.pop();
-		}
+		}*/
 		
 	}
 	
