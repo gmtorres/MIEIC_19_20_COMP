@@ -6,9 +6,11 @@ import static BoardBase.playerTurn(int) int[];
 import static BoardBase.wrongMove();
 import static BoardBase.placeTaken();
 
+import static A.b(boolean);
 
 class TicTacToe {
 
+<<<<<<< HEAD
   int[] row0;
   int[] row1;
   int[] row2;
@@ -210,7 +212,14 @@ class TicTacToe {
   }
   
   public int g(){
-  	movesmade = 4 + 5;
+  	int i;
+  	boolean b;
+  	while(true)
+  		i = 4 + 5; 
+  	b = 4 < i;
+  	
+  	A.b(4<5);
+  	
   	return 4;
   }
   

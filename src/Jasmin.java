@@ -187,12 +187,15 @@ public class Jasmin {
 				  this.println( this.getType(node.type) + "load " + node.children[0].local_var);
 		  }
 		  
-		  if( this.in_while_condition && node.type != null && node.type.equals("boolean") ) {
+		  if((this.in_while_condition || this.in_if_condition) && node.type != null && node.type.equals("boolean") ) {
+			  String tag = "";
+			  if(this.in_while_condition) tag = "end_" + this.current_loop;
+			  else if(this.in_if_condition) tag = "else_" + this.current_if;
 			  if(this.not) {
 				  //this.println("ifeq not_" + this.not_count); 
-				  this.println("ifne end_" + this.current_loop);
+				  this.println("ifne " + tag);
 			  }else {
-				  this.println("ifeq end_" + this.current_loop);
+				  this.println("ifeq " + tag);
 			  }
 		  }
 	  }
@@ -277,39 +280,52 @@ public class Jasmin {
 		  
 	  }
 	  private void printLessThan(IRNode node) {
-		  for(int i = 0; i < node.getChildren().length; i++) {
-			  printJasmin(node.getChildren()[i]);
-		  }
-		  if(this.not == false) {
-			  if(this.in_while_condition)
-				  this.println("if_icmpge end_" + this.current_loop);
-			  else if(this.in_if_condition)
-				  this.println("if_icmpge else_" + this.current_if);
-		  }else {
-			  //se for o ultimo filho
-			  if(node == node.parent.getChildren()[node.parent.getChildren().length - 1]) {
+		  if(this.in_if_condition || this.in_while_condition) {
+			  for(int i = 0; i < node.getChildren().length; i++) {
+				  printJasmin(node.getChildren()[i]);
+			  }
+			  if(this.not == false) {
 				  if(this.in_while_condition)
-					  this.println("if_icmplt end_" + this.current_loop);
+					  this.println("if_icmpge end_" + this.current_loop);
 				  else if(this.in_if_condition)
-					  this.println("if_icmplt else_" + this.current_if);
-			  }else
-				  this.println("if_icmpge not_" + this.not_count);
+					  this.println("if_icmpge else_" + this.current_if);
+			  }else {
+				  //se for o ultimo filho
+				  if(node == node.parent.getChildren()[node.parent.getChildren().length - 1]) {
+					  if(this.in_while_condition)
+						  this.println("if_icmplt end_" + this.current_loop);
+					  else if(this.in_if_condition)
+						  this.println("if_icmplt else_" + this.current_if);
+				  }else
+					  this.println("if_icmpge not_" + this.not_count);
+			  }
+		  }else {
+			  this.printboolExpression(node);
 		  }
 	  }
 	  private void printNot(IRNode node) {
-		  this.not = !this.not;
-		  this.not_count++;
-		  for(int i = 0; i < node.getChildren().length; i++) {
-			  printJasmin(node.getChildren()[i]);
+		  if(this.in_if_condition || this.in_while_condition) {
+			  this.not = !this.not;
+			  this.not_count++;
+			  for(int i = 0; i < node.getChildren().length; i++) {
+				  printJasmin(node.getChildren()[i]);
+			  }
+			  //this.println("goto end_" + this.current_loop);
+			  this.println("not_" + this.not_count + ":");
+			  this.not = !this.not;
+		  }else {
+			  this.printboolExpression(node);
 		  }
-		  //this.println("goto end_" + this.current_loop);
-		  this.println("not_" + this.not_count + ":");
-		  this.not = !this.not;
 	  }
 	  
 	  private void printAnd(IRNode node) {
-		  for(int i = 0; i < node.getChildren().length; i++) {
-			  printJasmin(node.getChildren()[i]);
+		  if(this.in_if_condition || this.in_while_condition) {
+			  for(int i = 0; i < node.getChildren().length; i++) {
+				  printJasmin(node.getChildren()[i]);
+			  }
+		  }
+		  else {
+			  this.printboolExpression(node);
 		  }
 		  //this.println("if_icmpge end_" + this.current_loop);
 	  }
@@ -358,6 +374,29 @@ public class Jasmin {
 			  printJasmin(node.children[2].getChildren()[i]);
 			  this.println("");
 		  }
+		  this.println("end_"+ c_if + ":");
+	  }
+	  
+	  private void printboolExpression(IRNode node) { //similar to if, called directly
+		  
+		  String c_if = "if"+ ++this.if_count;
+		  
+		  IRNode condition = node;
+		  this.current_if = c_if;
+		  this.in_if_condition = true;
+		  printJasmin(condition);
+		  this.in_if_condition = false;
+		  
+		  //this.println("if_icmpge end_" + loop);
+		  this.println("");
+		  this.println("iconst_1");
+		  this.println("");
+		  
+		  this.println("goto end_" + c_if );
+		  this.println("");
+		  this.println("else_"+c_if + ":");
+		  this.println("iconst_0");
+		  this.println("");
 		  this.println("end_"+ c_if + ":");
 	  }
 	  
