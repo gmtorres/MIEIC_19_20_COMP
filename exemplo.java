@@ -6,17 +6,16 @@ class exemplo {
 	  int whoseturn;
 	  int movesmade;
 	  int[] pieces;
+	  exemplo pach;
 
-	// Initializes a Tic Tac Toe object.
+	// Initializes a Tic Tac Toe object
+	  
+	  public exemplo(int i) {
+	  }
+	  
 	  public boolean init() {
-	    row0 = new int[3];
-	    row1 = new int[3];
-	    row2 = new int[3];
-	    pieces = new int[2];
-	    pieces[0] = 1+3;
-	    pieces[1] = 2;
-	    whoseturn = 0;
-	    movesmade = 0;
+	    pach = new exemplo(1);
+	    this.getRow1(1);
 	    return true;
 	  }
 
@@ -24,7 +23,7 @@ class exemplo {
 	    return row0;
 	  }
 
-	  public int[] getRow1(){
+	  public int[] getRow1(int i){
 	    return row1;
 	  }
 	  public int[] getRow2(){
