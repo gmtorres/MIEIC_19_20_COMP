@@ -83,6 +83,7 @@ public class Jasmin {
 		  		break;
 		  	case "ldg":
 		  		printLoadGlobal(r);
+		  		break;
 		  	case "lda":
 		  		printLoadArray(r);
 		  		break;
@@ -165,7 +166,7 @@ public class Jasmin {
 	  }
 	  
 	  private void printLoadGlobal(IRNode node) {
-			os.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + node.getChildren()[0].getInst() + " " + retType(node.type) + "\n");
+			os.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + node.getChildren()[0].getInst() + " " + retType(node.type) );
 	  }
 	  
 	  private void printLoadArray(IRNode node) {
@@ -196,6 +197,9 @@ public class Jasmin {
 	  }
 	  
 	  private void printStoreGlobal(IRNode node) {
+			for(int i = 0; i < node.getChildren().length; i++) {
+				printJasmin(node.getChildren()[i]);
+			}
 		//   putfield <field-spec> <descriptor>
 		  os.println("putfield " + root.getClassName() + "/"  + node.getChildren()[0].getInst() + " " + retType(node.type));
 	  }
@@ -203,16 +207,21 @@ public class Jasmin {
 	  private void printStoreArray(IRNode node) {
 		  IRNode lhn = node.children[0];
 		  Integer local_var = lhn.local_var;
-		  if(local_var < 4)
-			  os.println("aload_" + local_var);
-		  else
-			  os.println("aload " + local_var);
+		  //TODO:: Não sei se é preciso	
+		  //os.println("aload_" + local_var); 
+		  if(local_var!=null) {
+			  if(local_var < 4)
+				  os.println("aload_" + local_var);
+			  else
+				  os.println("aload " + local_var);
+		  }else {
+			  os.println("getfield " + root.getClassName() + "/"  + node.getChildren()[0].getInst() + " [" + retType(node.type));
+		  }
 		  
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
 		  os.println(this.getType(node.type) + "astore");
-
 		  
 	  }
 	  
@@ -222,8 +231,9 @@ public class Jasmin {
 		  }
 		  if(node.getChildren().length == 0)
 			  os.println("return");
-		  else
-			  os.println("ireturn");
+		  else {
+			  os.println( getType(node.children[0].type) + "return");
+		  }
 		  
 	  }
 	  private void printLessThan(IRNode node) {

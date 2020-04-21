@@ -379,12 +379,14 @@ public class IRNode {
 		IRNode child = new IRNode(this);
 		child.setInst(String.valueOf(sn.val));
 		this.addChild(child);
+		this.type = "int";
 	}
 	public void buildBool(SimpleNode sn) {
 		this.setInst("ldc");
 		IRNode child = new IRNode(this);
 		child.setInst(String.valueOf(sn.val));
 		this.addChild(child);
+		this.type = "boolean";
 	}
 	
 	public void buildIdentifier(SimpleNode sn) {
