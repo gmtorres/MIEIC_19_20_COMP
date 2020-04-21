@@ -41,7 +41,7 @@ public class Main {
 
 	        //root.printTables();
 	        
-	        root.descriptors.printTable();
+	        //root.descriptors.printTable();
 
 	        IRBuilder ir = new IRBuilder(root);
 	        System.out.println("--------------*****************-----------------	");
@@ -49,7 +49,7 @@ public class Main {
 	        
 	        System.out.println("--------------*****************-----------------	");
 
-	        Jasmin j = new Jasmin(ir.root,System.out);
+	        //Jasmin j = new Jasmin(ir.root,System.out);
 
 
     }

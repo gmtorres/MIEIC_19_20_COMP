@@ -33,14 +33,13 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 		  }else if(s.isInitialized == false 
 				  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
 				  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
-			  	//System.out.println("info: " + info.toString() + " " + s.isInitialized + " " + s.ifInitialized + " " + s.elseInitialized + " " + s.condInitialized);
-				  
+			  	
 			  if(s.condInitialized || this.simbolTable.getScope(lhn.name).equals("global")) {
 				  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
 			  }else {
 				  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
 				  return false;
-				 }
+			  }
 		  }
 			  lhn.type = s.getType().getName();
 	  }

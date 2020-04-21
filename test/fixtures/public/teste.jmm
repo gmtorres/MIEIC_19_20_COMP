@@ -7,25 +7,25 @@ import static BoardBase.playerTurn(int,int,boolean) int[];
 import static BoardBase.wrongMove() void;
 import static BoardBase.placeTaken() void;
 
+import Game;
 
-class TicTacToe {
+import static Game.g();
+
+class TicTacToe extends Game {
 	
 	int d;
 	int g;
 	
 	public int f() {
+		TicTacToe mygame;
+		mygame = new TicTacToe();
+		mygame.g(true);
+		TicTacToe.g();
+		return 3;
+	}
 	
-		int i;
-		boolean b;
-		
-		i = 0;	
-		b = true;
-		
-		while( !( 5 < i && b) && i<4 ){
-			i = i + 1;
-		}
-		
-		return 5;
+	public int g(boolean d){
+		return 4;
 	}
 
 	

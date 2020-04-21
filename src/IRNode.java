@@ -1,12 +1,13 @@
 import java.util.Stack;
 import java.util.List;
+import java.util.ArrayList;
 
 
 public class IRNode {
 	
 	// max of reg available
 	//TODO:: if reg are not enough use local vars
-	static final Integer maxReg = 31;
+	static final Integer maxReg = 301;
 	//stack of reg allocated
 	static Stack<Integer> reg_allocated = new Stack<Integer>();
 	//max satck needed for function
@@ -491,6 +492,26 @@ public class IRNode {
 		child.getBuild(lhn);
 		
 	}
+	
+	public void buildNewIdentifier(SimpleNode sn) {
+		this.setInst("new_object");
+		if(sn.jjtGetNumChildren() == 0)
+			return;	
+		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
+		IRNode type = new IRNode(this);
+		type.setInst(lhn.name);
+		this.addChild(type);
+		IRNode params = new IRNode(this);
+		params.setInst("params");
+		this.addChild(params);
+		for(int i = 1; i < sn.jjtGetNumChildren(); i++) {
+			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
+			IRNode child2 = new IRNode(params);
+			params.addChild(child2);
+			child2.getBuild(node);
+		}
+	}
+	
 	public void buildLength(SimpleNode sn) {
 		this.setInst("length");
 		
@@ -531,6 +552,7 @@ public class IRNode {
 	}
 	
 	
+	
 	public void buildFunction(SimpleNode sn) {
 		this.setInst("invoke");
 		
@@ -544,50 +566,88 @@ public class IRNode {
 		
 		if(sn.jjtGetNumChildren() == 0)
 			return;	
+		
 		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
+		SimpleNode rhn = (SimpleNode)sn.jjtGetChild(1);
+		
 		IRNode child = new IRNode(this);
 		this.addChild(child);
-		Descriptor d = sn.descriptors.getDescriptor(lhn.name);
-		String object;
-		if(d == null)
-			object = lhn.name;
-		else 
-			object = d.getName();
+
+		ArrayList<String> objs = new ArrayList<String>();
+		if(lhn.name.equals("this")) {
+			objs = sn.descriptors.getDescriptor("this").getAllTypes();
+			this.setInst("invoke_virtual");
+		}else{
+			if(sn.simbolTable.isSimbolHere(lhn.name)) {
+				objs = sn.simbolTable.getSimbol(lhn.name).getAssignType().getAllTypes();
+				this.setInst("invoke_virtual");
+			}else {
+				Descriptor d = sn.descriptors.getDescriptor(lhn.name);
+				objs = d.getAllTypes();
+				this.setInst("invoke_static");
+			}
+		}
+		ArrayList<Function> f = new ArrayList<Function>();
+		ArrayList<String> o = new ArrayList<String>();
+		for(int i = 0; i < objs.size();i++)
+			if(sn.functionTable.isFunctionHere(objs.get(i),sn.name)) {
+				f.add(sn.functionTable.getFunction(objs.get(i),sn.name));
+				o.add(objs.get(i));
+			}
 		
-		child.setInst(object);
-	
+		int i = 0;
+		Function invoked;
+		
+		for(;i<f.size();i++) {
+			List<Descriptor> listDesc = f.get(i).getDescriptors();
+			if (listDesc.size() != rhn.jjtGetNumChildren()) {
+				continue;
+			}else {
+				int ii = 0;
+				for (; ii < rhn.jjtGetNumChildren(); ii++) {
+					SimpleNode rhnc = (SimpleNode) rhn.children[ii];
+					if(!(listDesc.get(ii).getName().equals(((SimpleNode)rhnc.children[0]).type)))
+						break;
+				}
+				if(ii != rhn.jjtGetNumChildren())
+					continue;
+				else
+					break;
+			}
+		}
+		invoked = f.get(i);
+		
+		if(this.getInst().equals("invoke_virtual")) {
+			IRNode var = new IRNode(this);
+			this.addChild(var);
+			var.setInst(lhn.name);
+		}
+		
+		child.setInst(o.get(i));
+		
 		IRNode child2 = new IRNode(this);
 		this.addChild(child2);
 		child2.setInst(sn.name);
 		
-		FunctionTable fT = sn.getFunctionTable();
+		List<Descriptor> args = invoked.getDescriptors();
+		String retType = invoked.getType();
 		
-		Function invoked = fT.getFunction(object, sn.name);
-		
-		if (invoked != null) {
-			List<Descriptor> args = invoked.getDescriptors();
-			String retType = invoked.getType();
-			
-			
-			IRNode retNode = new IRNode(this);
-			funcReturn.addChild(retNode);
-			retNode.setInst(retType);
-			
-			for (int i = 0; i < args.size(); i++) {
-				IRNode funcParamType = new IRNode(this);
-				funcParams.addChild(funcParamType);
-				funcParamType.setInst(args.get(i).getName());
-			}
+		IRNode retNode = new IRNode(this);
+		funcReturn.addChild(retNode);
+		retNode.setInst(retType);
+		for (i = 0; i < args.size(); i++) {
+			IRNode funcParamType = new IRNode(this);
+			funcParams.addChild(funcParamType);
+			funcParamType.setInst(args.get(i).getName());
 		}
-		
-		
-		SimpleNode rhn = (SimpleNode)sn.jjtGetChild(1);
-		for(int i = 0; i < rhn.jjtGetNumChildren(); ++i) {
+		for(i = 0; i < rhn.jjtGetNumChildren(); ++i) {
 			SimpleNode node = (SimpleNode)rhn.jjtGetChild(i);
+			System.out.println(node.toString());
 			IRNode param = new IRNode(this);
 			this.addChild(param);
 			param.getBuild(node);
 		}
+
 	}
 	
 	
@@ -621,6 +681,9 @@ public class IRNode {
 		case "NEW_INT_ARR":
 			buildNewIntArr(sn);
 			break;
+		case "NEW_IDENTIFIER":
+			buildNewIdentifier(sn);
+			break;
 		case "LENGTH":
 			buildLength(sn);
 			break;
@@ -637,7 +700,7 @@ public class IRNode {
 			buildBool(sn);
 			break;
 		default:
-			System.out.println(sn.toString());
+			//System.out.println(sn.toString());
 			int n = sn.jjtGetNumChildren();
 			IRNode parent = this.parent;
 			parent.removeLast();
@@ -695,7 +758,15 @@ public class IRNode {
 			this.num_reg = 1;
 			this.reg = this.reg_allocated.pop();
 			this.max_op_stack = max(this.max_op_stack,this.maxReg - this.reg_allocated.size());
-		}
+		}else if(this.inst.equals("lda")) {
+			int lhn = this.children[0].num_reg;
+			int rhn = this.children[1].num_reg;
+			if(lhn == rhn) this.num_reg = lhn + 1;
+			else this.num_reg = (rhn > lhn) ? rhn : lhn;
+			this.reg_allocated.push(this.children[1].reg);
+			this.reg_allocated.push(this.children[0].reg);
+			this.reg = this.reg_allocated.pop();
+			}
 		else if(this.inst.equals("+")
 			|| this.inst.equals("-")
 			|| this.inst.equals("/")
@@ -704,13 +775,24 @@ public class IRNode {
 			int rhn = this.children[1].num_reg;
 			if(lhn == rhn) this.num_reg = lhn + 1;
 			else this.num_reg = (rhn > lhn) ? rhn : lhn;
-			//System.out.println(this.children[0].inst + this.inst + this.children[1].inst+ " : " + lhn + "  " + rhn + " -> " +  this.num_reg);
-			
+
 			this.reg_allocated.push(this.children[1].reg);
 			this.reg_allocated.push(this.children[0].reg);
 			this.reg = this.reg_allocated.pop();
+		}else if(this.inst.equals("<")
+			|| this.inst.equals("&&")) {
+			Integer reg1 = this.children[1].reg;
+			Integer reg0 = this.children[0].reg;
+			if(reg1 != null ) this.reg_allocated.push(this.children[1].reg);
+			if(reg0 != null ) this.reg_allocated.push(this.children[0].reg);
+		}
+		else if(this.inst.equals("not")) {
+			Integer reg = this.children[0].reg;
+			if(reg != null)
+				this.reg_allocated.push(reg);
 		}
 		else if(this.inst.equals("st") || this.inst.equals("stg")) {
+			
 			int rhn = this.children[1].num_reg;
 			this.reg_allocated.push(this.children[1].reg);
 			//System.out.println(rhn);
@@ -729,8 +811,12 @@ public class IRNode {
 			this.reg_allocated.push(this.children[0].reg);
 			//System.out.println(rhn);
 		}else if(this.inst.equals("invoke")) {
-			for(int i = this.children.length-1; i >=2 ;i--)
+			for(int i = this.children.length-1; i >=4 ;i--) {
+				System.out.println("push of " + this.children[i].reg);
 				this.reg_allocated.push(this.children[i].reg);
+			}
+			//if(!this.children[0].children[0].getInst().equals("void")) // se o return type é diferente de void
+				this.reg = this.reg_allocated.pop();
 		}
 		
 	}

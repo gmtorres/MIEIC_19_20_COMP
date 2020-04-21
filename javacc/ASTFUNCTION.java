@@ -38,9 +38,16 @@ class ASTFUNCTION extends SimpleNode {
 		}
 		else{
 			if(this.simbolTable.isSimbolHere(lhn.name)) {
+				Simbol s = this.simbolTable.getSimbol(lhn.name);
+				if(s.getAssignType() == null) {
+					  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
+					  return false;
+				  }
 				objs = this.simbolTable.getSimbol(lhn.name).getAssignType().getAllTypes();
 			}else {
-				objs.add(lhn.name);
+				Descriptor d = this.descriptors.getDescriptor(lhn.name);
+				if(d != null)
+					objs = d.getAllTypes();
 			}
 		}
 		ArrayList<Function> f = new ArrayList<Function>();
