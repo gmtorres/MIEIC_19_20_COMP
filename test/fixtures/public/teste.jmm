@@ -39,5 +39,19 @@ class TicTacToe {
   public int[] getRow2(){
     return row2;
   }
+  
+  public boolean inbounds(int row, int column) {
+    boolean in;
+    if (row < 0)
+      in =  false;
+    else if (column < 0)
+      in =  false;
+    else if (2 < row) 
+      in =  false;
+    else if (2 < column) 
+      in = false;
+    else in = true;
+    return in;
+  }
 
 }

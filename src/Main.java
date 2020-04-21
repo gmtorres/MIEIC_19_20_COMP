@@ -44,12 +44,12 @@ public class Main {
 	        //root.descriptors.printTable();
 
 	        IRBuilder ir = new IRBuilder(root);
-	        System.out.println("--------------*****************-----------------	");
+	        System.out.println("\n--------------*****************-----------------	\n\n");
 	        ir.dump();
 	        
-	        System.out.println("--------------*****************-----------------	");
+	        System.out.println("\n--------------*****************-----------------	\n");
 
-	        Jasmin j = new Jasmin(ir.root,System.out);
+	        Jasmin j = new Jasmin(ir.root,System.out,false);
 
 
     }

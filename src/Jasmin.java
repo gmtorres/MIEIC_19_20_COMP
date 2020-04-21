@@ -4,21 +4,28 @@ import java.io.PrintStream;
 public class Jasmin {
 
 	  IRNode root;
-	  
 	  PrintStream os;
+	  boolean debugMode;
 	  
 	  Integer loop_count = 0;
+	  Integer if_count = 0;
 	  
 	  String current_loop;
+	  String current_if;
 	  
-	  boolean in_condition = false;
+	  boolean in_while_condition = false;
+	  boolean in_if_condition = false;
 	  boolean not = false;
 	  Integer not_count = 0;
 	  
-	  public Jasmin(IRNode r,PrintStream ps) {
+	  public Jasmin(IRNode r,PrintStream ps, boolean dg) {
 		  this.root=r;
 		  this.os = ps;
+		  this.debugMode = dg;
 		  printClass(this.root);
+	  }
+	  public Jasmin(IRNode r,PrintStream ps) {
+		  this(r, ps,false);
 	  }
 	  
 	  
@@ -60,7 +67,6 @@ public class Jasmin {
 		  
 		  switch(r.getInst()) {
 		  	case "method":
-		  		os.print("\n");
 		  		printMethod(r);
 		  		break;
 		  	case "invoke":
@@ -105,11 +111,13 @@ public class Jasmin {
 		  	case "while":
 		  		printWhile(r);
 		  		break;
+		  	case "if":
+		  		printIf(r);
+		  		break;
 		  	case "not":
 		  		printNot(r);
 		  		break;
 		  	case "fields":
-		  		os.print("\n");
 		  		printFields(r);
 		  		break;
 		  	case "return":
@@ -127,13 +135,13 @@ public class Jasmin {
 		  }
 
 		  switch(node.getInst()) {
-		  case "+": os.println("iadd");
+		  case "+": this.println("iadd");
 			  break;
-		  case "-": os.println("isub");
+		  case "-": this.println("isub");
 			  break;
-		  case "*": os.println("imul");
+		  case "*": this.println("imul");
 			  break;
-		  case "/": os.println("idiv");
+		  case "/": this.println("idiv");
 			  break;
 		  }
 		  
@@ -144,43 +152,43 @@ public class Jasmin {
 		  if(node.getInst().equals("ldc")) {
 			  Integer value = Integer.parseInt(node.children[0].getInst());
 			  if(value <= 5)
-				  os.println("iconst_"+value);
+				  this.println("iconst_"+value);
 			  else
-				  os.println("bipush " + value);
+				  this.println("bipush " + value);
 		  }else if(node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
 			  Integer local_var = node.children[0].local_var;
 			  if(local_var < 4)
-				  os.println( this.getType(node.type) + "load_" + node.children[0].local_var);
+				  this.println( this.getType(node.type) + "load_" + node.children[0].local_var);
 			  else
-				  os.println( this.getType(node.type) + "load " + node.children[0].local_var);
+				  this.println( this.getType(node.type) + "load " + node.children[0].local_var);
 		  }
 		  
-		  if( this.in_condition && node.type != null && node.type.equals("boolean") ) {
+		  if( this.in_while_condition && node.type != null && node.type.equals("boolean") ) {
 			  if(this.not) {
-				  //os.println("ifeq not_" + this.not_count); 
-				  os.println("ifne end_" + this.current_loop);
+				  //this.println("ifeq not_" + this.not_count); 
+				  this.println("ifne end_" + this.current_loop);
 			  }else {
-				  os.println("ifeq end_" + this.current_loop);
+				  this.println("ifeq end_" + this.current_loop);
 			  }
 		  }
 	  }
 	  
 	  private void printLoadGlobal(IRNode node) {
-			os.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + node.getChildren()[0].getInst() + " " + retType(node.type) );
+			this.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + node.getChildren()[0].getInst() + " " + retType(node.type) );
 	  }
 	  
 	  private void printLoadArray(IRNode node) {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  os.println("iaload");
+		  this.println("iaload");
 	  }
 	  
 	  private void printNewIntArr(IRNode node) {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  os.println("newarray int");
+		  this.println("newarray int");
 	  }
 	  
 	  private void printStore(IRNode node) {
@@ -190,9 +198,9 @@ public class Jasmin {
 		  IRNode lhn = node.children[0];
 		  Integer local_var = lhn.local_var;
 		  if(local_var < 4)
-			  os.println(this.getType(node.type) + "store_" + local_var);
+			  this.println(this.getType(node.type) + "store_" + local_var);
 		  else
-			  os.println(this.getType(node.type) + "store " + local_var);
+			  this.println(this.getType(node.type) + "store " + local_var);
 		  
 	  }
 	  
@@ -201,27 +209,27 @@ public class Jasmin {
 				printJasmin(node.getChildren()[i]);
 			}
 		//   putfield <field-spec> <descriptor>
-		  os.println("putfield " + root.getClassName() + "/"  + node.getChildren()[0].getInst() + " " + retType(node.type));
+		  this.println("putfield " + root.getClassName() + "/"  + node.getChildren()[0].getInst() + " " + retType(node.type));
 	  }
 	  
 	  private void printStoreArray(IRNode node) {
 		  IRNode lhn = node.children[0];
 		  Integer local_var = lhn.local_var;
 		  //TODO:: Não sei se é preciso	
-		  //os.println("aload_" + local_var); 
+		  this.println("aload_0"); 
 		  if(local_var!=null) {
 			  if(local_var < 4)
-				  os.println("aload_" + local_var);
+				  this.println("aload_" + local_var);
 			  else
-				  os.println("aload " + local_var);
+				  this.println("aload " + local_var);
 		  }else {
-			  os.println("getfield " + root.getClassName() + "/"  + node.getChildren()[0].getInst() + " [" + retType(node.type));
+			  this.println("getfield " + root.getClassName() + "/"  + node.getChildren()[0].getInst() + " [" + retType(node.type));
 		  }
 		  
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  os.println(this.getType(node.type) + "astore");
+		  this.println(this.getType(node.type) + "astore");
 		  
 	  }
 	  
@@ -230,9 +238,10 @@ public class Jasmin {
 			  printJasmin(node.getChildren()[i]);
 		  }
 		  if(node.getChildren().length == 0)
-			  os.println("return");
+			  this.println("return");
 		  else {
-			  os.println( getType(node.children[0].type) + "return");
+			  String returnType = node.parent.parent.children[1].children[0].getInst();
+			  this.println( getType(returnType) + "return");
 		  }
 		  
 	  }
@@ -240,14 +249,20 @@ public class Jasmin {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  if(this.not == false)
-			  os.println("if_icmpge end_" + this.current_loop);
-		  else {
+		  if(this.not == false) {
+			  if(this.in_while_condition)
+				  this.println("if_icmpge end_" + this.current_loop);
+			  else if(this.in_if_condition)
+				  this.println("if_icmpge else_" + this.current_if);
+		  }else {
 			  //se for o ultimo filho
 			  if(node == node.parent.getChildren()[node.parent.getChildren().length - 1]) {
-				  os.println("if_icmplt end_" + this.current_loop);
+				  if(this.in_while_condition)
+					  this.println("if_icmplt end_" + this.current_loop);
+				  else if(this.in_if_condition)
+					  this.println("if_icmplt else_" + this.current_if);
 			  }else
-				  os.println("if_icmpge not_" + this.not_count);
+				  this.println("if_icmpge not_" + this.not_count);
 		  }
 	  }
 	  private void printNot(IRNode node) {
@@ -256,38 +271,63 @@ public class Jasmin {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  //os.println("goto end_" + this.current_loop);
-		  os.println("not_" + this.not_count + ":");
+		  //this.println("goto end_" + this.current_loop);
+		  this.println("not_" + this.not_count + ":");
 		  this.not = !this.not;
 	  }
+	  
 	  private void printAnd(IRNode node) {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  //os.println("if_icmpge end_" + this.current_loop);
+		  //this.println("if_icmpge end_" + this.current_loop);
 	  }
 	  
 	  private void printWhile(IRNode node) {
 		  
 		  String loop = "loop"+ ++this.loop_count;
-		  this.current_loop = loop;
 		  
-		  os.println(loop + ":");
+		  this.println(loop + ":");
 		  
 		  IRNode condition = node.children[0];
 		  this.current_loop = loop;
-		  this.in_condition = true;
+		  this.in_while_condition = true;
 		  printJasmin(condition);
-		  this.in_condition = false;
+		  this.in_while_condition = false;
 		  
-		  //os.println("if_icmpge end_" + loop);
-		  os.println("");
+		  //this.println("if_icmpge end_" + loop);
+		  this.println("");
 		  for(int i = 1; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
-			  os.println("");
+			  this.println("");
 		  }
-		  os.println("goto " + loop);
-		  os.println("end_"+ loop + ":");
+		  this.println("goto " + loop);
+		  this.println("end_"+ loop + ":");
+	  }
+	  private void printIf(IRNode node) {
+		  
+		  String c_if = "if"+ ++this.if_count;
+		  
+		  IRNode condition = node.children[0];
+		  this.current_if = c_if;
+		  this.in_if_condition = true;
+		  printJasmin(condition);
+		  this.in_if_condition = false;
+		  
+		  //this.println("if_icmpge end_" + loop);
+		  this.println("");
+		  for(int i = 0; i < node.children[1].getChildren().length; i++) {
+			  printJasmin(node.children[1].getChildren()[i]);
+			  this.println("");
+		  }
+		  this.println("goto end_" + c_if );
+		  this.println("");
+		  this.println("else_"+c_if + ":");
+		  for(int i = 0; i < node.children[2].getChildren().length; i++) {
+			  printJasmin(node.children[2].getChildren()[i]);
+			  this.println("");
+		  }
+		  this.println("end_"+ c_if + ":");
 	  }
 	  
 	  private void printClass(IRNode root) {
@@ -295,7 +335,7 @@ public class Jasmin {
 		  String toPrint = ".class public ";
 		  toPrint += r.getChildren()[0].getInst();
 		  root.setClassName(r.getChildren()[0].getInst());
-		  os.println(toPrint);
+		  this.println(toPrint);
 		  
 		  toPrint = ".super ";
 		  if (r.getChildren()[1].getInst().equals("Object")) {
@@ -304,7 +344,7 @@ public class Jasmin {
 		  else {
 			  toPrint += r.getChildren()[1].getInst();
 		  }
-		  os.println(toPrint);
+		  this.println(toPrint);
 		  
 		  for(int i = 2; i < r.getChildren().length; i++) {
 			  printJasmin(r.getChildren()[i]);
@@ -313,6 +353,7 @@ public class Jasmin {
 	  }
 	  
 	  private void printMethod(IRNode r) {
+		  this.println("");
 		  String toPrint = ".method ";
 		  toPrint += ((r.getChildren()[0]).getChildren()[0]).getInst();
 		  toPrint += " ";
@@ -330,33 +371,33 @@ public class Jasmin {
 		  toPrint += ")";
 		  toPrint += retType(((r.getChildren()[1]).getChildren()[0]).getInst());
 		  
-		  os.println(toPrint);
+		  this.println(toPrint);
 		  
 		  toPrint = "\t.limit stack " + r.op_stack; //TODO: implementar na IR
-		  os.println(toPrint);
+		  this.println(toPrint);
 		  
 		  toPrint = "\t.limit locals ";
 		  
 		  toPrint += r.locals_stack;
 
 
-		  os.println(toPrint);
-		  os.print("\n");
+		  this.println(toPrint);
+		  this.println("");
 		  
 		  for (int k = 0; k < (r.getChildren()[4]).getChildren().length; k++) {
 			  printJasmin((r.getChildren()[4]).getChildren()[k]);
-			  os.println("");
+			  this.println("");
 		  }
 		  
 		  
 		  if(((r.getChildren()[1]).getChildren()[0]).getInst().equals("void")) {
 			  toPrint = "\treturn";
-			  os.println(toPrint);
+			  this.println(toPrint);
 		  }
 		  
 		  toPrint = ".end method";
 		  
-		  os.println(toPrint);
+		  this.println(toPrint);
 		  
 	  }
 	  
@@ -368,7 +409,7 @@ public class Jasmin {
 		  }
 		  
 		  String toPrint = "invoke"; //TODO: verificar static ou virtual
-		  os.println(toPrint);
+		  this.println(toPrint);
 		  
 
 		  toPrint = "\t" + r.getChildren()[2].getInst() + "." + r.getChildren()[3].getInst() + "(";
@@ -380,20 +421,34 @@ public class Jasmin {
 		  }			  
 		  //System.out.println("   dsfd " + (r.getChildren()[1]).getChildren()[0].getInst());
 		  toPrint += ")" + retType((r.getChildren()[1]).getChildren()[0].getInst());
-		  os.println(toPrint);
+		  this.println(toPrint);
 
 		  
 		  
 	  }
 	  
 	  private void printFields(IRNode r) {
-		  
+		  this.println("");
 		  for (int i = 0; i < r.getChildren().length; i++) {
 			  String toPrint =".field ";
 			  toPrint += r.getChildren()[i].getInst() + " " + retType(r.getChildren()[i].getIRType());
-			  os.println(toPrint);
+			  this.println(toPrint);
 		  }
 	  }
+	  
+	  
+	  
+	  
+	  
+	  
+	  private void println(String str) {
+		  this.os.println(str);
+		  if(this.debugMode && this.os != System.out)
+			  System.out.println(str);
+	  }
+	  
+	  
+	  
 	 /*
 	  public String printJasmin(IRNode node) {
 		    String func = "";
@@ -404,7 +459,7 @@ public class Jasmin {
 	          
               if(root.toString().equals("EXPRESSION")) {
             	  if(root.parent.toString().equals("RETURN_EXPRESSION")) {
-            		  os.println("RETURN EX\n");
+            		  this.println("RETURN EX\n");
             	  jasmin += retType(root.type)  + "return" + "\n\n";
               }}
 
