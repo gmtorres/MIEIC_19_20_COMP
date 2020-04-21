@@ -9,9 +9,9 @@ import static BoardBase.placeTaken();
 import static A.b(boolean);
 
 class TicTacToe {
-	
+
 	TicTacToe e;
-  
+
   public int g(){
   	int i;
   	boolean b;
