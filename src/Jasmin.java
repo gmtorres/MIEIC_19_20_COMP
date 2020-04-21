@@ -44,7 +44,7 @@ public class Jasmin {
 		    case "String[]":
 		    	return "[Ljava/lang/String";
 		    default:
-		        return "";
+		        return type;
 		    }
 	  }
 	  
@@ -496,10 +496,27 @@ public class Jasmin {
 	  }
 	  
 private void printInvokeVirtual(IRNode r) {
+	
+		  Integer local_var = r.getChildren()[3].local_var;
 		  
+		  if (local_var != null) {
+			  if(local_var < 4)
+				  this.println("aload_" + local_var);
+			  else
+				  this.println("aload " + local_var);
+		  }
+		  
+		  else {
+			  this.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + r.getChildren()[3].getInst() + " " + retType(r.getChildren()[2].getInst()) );
+		  }
+		
+		
+	
 		  for (int t = 5; t < r.getChildren().length; t++) {
 			  printJasmin(r.getChildren()[t]);
 		  }
+		  
+		  
 		  
 		  String toPrint = "invokevirtual"; 
 		  this.println(toPrint);
