@@ -6,9 +6,16 @@ class exemplo {
 	  int whoseturn;
 	  int movesmade;
 	  int[] pieces;
+	  
+	  public  exemplo(int t) {
+		  whoseturn = t;
+	  }
 
 	// Initializes a Tic Tac Toe object.
 	  public boolean init() {
+	  	int[] g;
+	  	int i;
+	  	exemplo e = new exemplo(2);
 	    row0 = new int[3];
 	    row1 = new int[3];
 	    row2 = new int[3];
@@ -17,32 +24,10 @@ class exemplo {
 	    pieces[1] = 2;
 	    whoseturn = 0;
 	    movesmade = 0;
+	    g = new int[7];
+	    i = g[7];
+	    e.init();
 	    return true;
-	  }
-
-	  public int[] getRow0(){
-	    return row0;
-	  }
-
-	  public int[] getRow1(){
-	    return row1;
-	  }
-	  public int[] getRow2(){
-	    return row2;
-	  }
-	  
-	  public boolean inbounds(int row, int column) {
-	    boolean in;
-	    if (row < 0)
-	      in =  false;
-	    else if (column < 0)
-	      in =  false;
-	    else if (2 < row) 
-	      in =  false;
-	    else if (2 < column) 
-	      in = false;
-	    else in = true;
-	    return in;
 	  }
 
 

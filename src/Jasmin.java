@@ -226,13 +226,13 @@ public class Jasmin {
 		  IRNode lhn = node.children[0];
 		  Integer local_var = lhn.local_var;
 		  //TODO:: N�o sei se � preciso	
-		  this.println("aload_0"); 
 		  if(local_var!=null) {
 			  if(local_var < 4)
 				  this.println("aload_" + local_var);
 			  else
 				  this.println("aload " + local_var);
 		  }else {
+			  this.println("aload_0"); 
 			  this.println("getfield " + root.getClassName() + "/"  + node.getChildren()[0].getInst() + " [" + retType(node.type));
 		  }
 		  

@@ -628,6 +628,10 @@ public class IRNode {
 			IRNode var = new IRNode(this);
 			this.addChild(var);
 			var.setInst(lhn.name);
+			if(lhn.name.equals("this"))
+				var.local_var = 0;
+			else
+				var.local_var = sn.simbolTable.getSimbol(lhn.name).local_var;
 		}
 		
 		child.setInst(o.get(i));
@@ -744,6 +748,19 @@ public class IRNode {
 		return (a >= b) ? a : b;
 	}
 	
+	private void cleanStack() {
+		for(int i = this.children.length-1; i >= 0 ;i--) {
+			if(this.children[i].reg != null)
+				this.reg_allocated.push(this.children[i].reg);
+		}
+	}
+	private void resetStack() {
+		this.reg_allocated = new Stack<Integer>();
+		for(int i = maxReg; i > 0; i--) {
+			reg_allocated.push(i);
+		}
+	}
+	
 	public void setRegisters() {
 		
 		if(this.inst.equals("method")) {
@@ -757,6 +774,7 @@ public class IRNode {
 		
 		if(this.inst.equals("method")) {
 			this.op_stack = this.max_op_stack;
+			this.resetStack();
 		}
 		else if(this.inst.equals("ldl")
 			|| this.inst.equals("ldp")
@@ -838,7 +856,12 @@ public class IRNode {
 			Integer reg = this.children[0].reg;
 			if(reg != null)
 				this.reg_allocated.push(reg);
-		}
+		}/*else if(this.inst.equals("while")) {
+			this.children[this.children.length-1].cleanStack();
+		}else if(this.inst.equals("if")) {
+			this.children[this.children.length-2].cleanStack();
+			this.children[this.children.length-1].cleanStack();
+		}*/
 		
 		/*if(this.inst.equals("method")) {
 			this.op_stack = this.max_op_stack;
