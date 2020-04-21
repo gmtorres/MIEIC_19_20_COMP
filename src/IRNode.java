@@ -39,7 +39,9 @@ public class IRNode {
 	
 	//can be useful for the code generation
 	String type = null;
-	 
+	
+    String className;
+
 	//intruction
 	private String inst = "";
 	
@@ -820,6 +822,13 @@ public class IRNode {
 		}
 		
 	}
+	
+	  String getClassName() {
+	        return this.className;
+	    }
+	  void setClassName(String className) {
+	      this.className = className;
+	  }
 	
 	
 }

@@ -73,12 +73,16 @@ public class Jasmin {
 		  	case "sta":
 		  		printStoreArray(r);
 		  		break;
+		  	case "stg":
+		  		printStoreGlobal(r);
+		  		break;
 		  	case "ldc":
 		  	case "ldl":
 		  	case "ldp":
-		  	/*case "ldg":*/
 		  		printLoad(r);
 		  		break;
+		  	case "ldg":
+		  		printLoadGlobal(r);
 		  	case "lda":
 		  		printLoadArray(r);
 		  		break;
@@ -159,6 +163,11 @@ public class Jasmin {
 			  }
 		  }
 	  }
+	  
+	  private void printLoadGlobal(IRNode node) {
+			os.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + node.getChildren()[0].getInst() + " " + retType(node.type) + "\n");
+	  }
+	  
 	  private void printLoadArray(IRNode node) {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
@@ -184,6 +193,11 @@ public class Jasmin {
 		  else
 			  os.println(this.getType(node.type) + "store " + local_var);
 		  
+	  }
+	  
+	  private void printStoreGlobal(IRNode node) {
+		//   putfield <field-spec> <descriptor>
+		  os.println("putfield " + root.getClassName() + "/"  + node.getChildren()[0].getInst() + " " + retType(node.type));
 	  }
 	  
 	  private void printStoreArray(IRNode node) {
@@ -270,6 +284,7 @@ public class Jasmin {
 		  IRNode r = root.getChildren()[0];
 		  String toPrint = ".class public ";
 		  toPrint += r.getChildren()[0].getInst();
+		  root.setClassName(r.getChildren()[0].getInst());
 		  os.println(toPrint);
 		  
 		  toPrint = ".super ";
@@ -368,7 +383,6 @@ public class Jasmin {
 			  toPrint += r.getChildren()[i].getInst() + " " + retType(r.getChildren()[i].getIRType());
 			  os.println(toPrint);
 		  }
-				  
 	  }
 	 /*
 	  public String printJasmin(IRNode node) {
