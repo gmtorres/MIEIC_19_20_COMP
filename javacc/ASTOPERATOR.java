@@ -68,7 +68,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  //System.out.println(lhn.type + "  " + lhn.toString() + "  " + lhn.name);
 	  //System.out.println(rhn.type + "  " + rhn.toString() + "  " + rhn.name);
 	  if(!lhn.type.equals(rhn.type)) {
-		  System.out.println("Line " + this.lineNo + ": Types incompatible " + lhn.type + " and " + rhn.type + ".");
+		  System.out.println("Line " + this.lineNo + ": Types incompatible " + lhn.type + " " + this.name + " " + rhn.type + ".");
 		  result = false;
 	  }
 	  
