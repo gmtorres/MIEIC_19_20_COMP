@@ -22,6 +22,9 @@ class TicTacToe {
   
   // Initializes a Tic Tac Toe object.
   public boolean init() {
+  	
+  	int b;
+  	
     row0 = new int[3];
     row1 = new int[3];
     row2 = new int[3];
@@ -31,23 +34,22 @@ class TicTacToe {
     whoseturn = 0;
     movesmade = 0;
     p = 1;
-    
     sape = new TicTacToe();
     
-    sape.getRow0(p, pieces[0]);
+    if(p < 3){
+    	if(p < 3){
+    		//b = 2;
+    		p = 4;
+    	}else{
+    		p = 3;
+    	}
+    }else{
+    	b = 2;
+    }
+    
+    p = b + 3;
     
     return true;
   }
   
-    public int[] getRow0(int a, int b){
-    return row0;
-  }
-
-  public int[] getRow1(){
-    return row1;
-  }
-  public int[] getRow2(){
-    return row2;
-  }
-  
-}
+ }

@@ -29,10 +29,11 @@ class ASTASSIGN_VAR extends SimpleNode {
 	  SimpleNode lhn  = (SimpleNode) this.children[0];
 	  SimpleNode rhn  = (SimpleNode) this.children[1];
 	  this.lineNo = rhn.lineNo;
+	  
 	  if(!lhn.type.equals(rhn.type)) {
 		  Descriptor d = this.descriptors.getDescriptor(rhn.type);
 		  if(d == null || !d.doesExtends(lhn.type)) {
-			  System.out.println("Line " + this.lineNo + ": Assigning imcompatible type:  " + lhn.type + "  and  " + rhn.type);
+			  System.out.println("Error on line " + this.lineNo + ": Assigning imcompatible type:  " + lhn.type + "  and  " + rhn.type);
 			  return false;
 		  }
 		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(d);
@@ -40,14 +41,21 @@ class ASTASSIGN_VAR extends SimpleNode {
 		  Descriptor d = this.descriptors.getDescriptor(rhn.type);
 		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(d);
 	  }
+	  
 	  String context = info.toString().split(" ")[0];
-	  if(context.equals("IF:") || info.toString().split(" ")[0].equals("ELSE:")) {
-		  info.append(" " + ((SimpleNode) lhn.children[0]).name);
-		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).condInitialized = true;
-		  if(context.equals("IF:")) this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).ifInitialized = true;
-		  if(context.equals("ELSE:")) this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).elseInitialized = true;
+	  if(context.equals("IF:") || context.equals("ELSE:")) {
+		  Simbol s = this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name);
+		  if(s.isInitialized == false) {
+			  info.append(" " + ((SimpleNode) lhn.children[0]).name);
+			  s.isInitialized = true;
+		  }
 	  }else
 		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).isInitialized = true;
+	  
+	  if(this.descriptors.getDescriptor(lhn.type).content != null) {
+		  if(((SimpleNode) rhn.children[0]).val != null)
+			  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).size = ((SimpleNode) rhn.children[0]).val;
+	  }
 	  
 	  return result;
   }
