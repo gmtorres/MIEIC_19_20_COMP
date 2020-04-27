@@ -26,7 +26,11 @@ class SimpleNode implements Node {
   public boolean has_scope = false;
   
   //public DescriptorTable descriptorsTable = null;
-    
+  static Integer max_semantic_errors;
+  
+  static {
+	  max_semantic_errors = 10;
+  }
 
   public SimpleNode(int i) {
     id = i;
@@ -104,7 +108,7 @@ class SimpleNode implements Node {
   }
   
   
-  public boolean createTable() {
+  public boolean createTable() throws SemanticException {
 	  
 	  
 	  if(this.parent != null) {
@@ -134,7 +138,7 @@ class SimpleNode implements Node {
 	  return result;
   }
   
-  public boolean doSemanticAnalysis(StringBuilder info) {
+  public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException {
 	  
 	  boolean result = true;
 	  
@@ -172,6 +176,13 @@ class SimpleNode implements Node {
 	
 	public FunctionTable getFunctionTable() {
 		return functionTable;
+	}
+	
+	public void decrementMaxErros() throws SemanticException {
+		this.max_semantic_errors--;
+		if(this.max_semantic_errors == 0) {
+			throw new SemanticException();
+		}
 	}
    
   

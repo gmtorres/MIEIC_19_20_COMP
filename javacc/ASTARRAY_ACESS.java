@@ -10,7 +10,7 @@ class ASTARRAY_ACESS extends SimpleNode {
     super(p, id);
   }
   
-  public boolean doSemanticAnalysis(StringBuilder info) {
+  public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException {
 	  
 	  
 	  boolean result = true;
@@ -28,12 +28,16 @@ class ASTARRAY_ACESS extends SimpleNode {
 	  SimpleNode lhn  = (SimpleNode) this.children[0];
 	  if(lhn.toString().equals("IDENTIFIER")) {
 		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
+
 			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " is not known.");
+			  this.decrementMaxErros();
 			  return false;
 		  }else {
 			  Simbol s = this.simbolTable.getSimbol(lhn.name);
 			  if(s == null){
+
 				  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " is not known.");
+				  this.decrementMaxErros();
 				  return false;
 			  }else if(s.isInitialized == false 
 					  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
@@ -42,6 +46,7 @@ class ASTARRAY_ACESS extends SimpleNode {
 					  System.out.println("Warning on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " may not have been initiated.");
 				  }else {
 					  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " has not been initiated.");
+					  this.decrementMaxErros();
 					  return false;
 				  }
 			  }else
@@ -54,6 +59,7 @@ class ASTARRAY_ACESS extends SimpleNode {
 		  SimpleNode rhn  = (SimpleNode) this.children[1];
 		  if(!rhn.type.equals("int")) {
 			  System.out.println("Error on line " + rhn.lineNo + ", column " + rhn.columnNo + ": Index must be int");
+			  this.decrementMaxErros();
 			  return false;
 		  }
 		  this.type = this.descriptors.getDescriptor(lhn.type).content.getName();

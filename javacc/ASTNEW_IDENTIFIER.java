@@ -12,7 +12,7 @@ class ASTNEW_IDENTIFIER extends SimpleNode {
     super(p, id);
   }
   
-  public boolean doSemanticAnalysis(StringBuilder info) {
+  public boolean doSemanticAnalysis(StringBuilder info)  throws SemanticException{
 	  
 	  
 	  boolean result = true;
@@ -36,12 +36,14 @@ class ASTNEW_IDENTIFIER extends SimpleNode {
 	  
 	  if(d == null) {
 		  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Type " + lhn.name + " is not known.");
+		  this.decrementMaxErros();
 		  return false;
 	  }else {
 		   
 		  List<Descriptor> listDesc =d.getParams();
 		  if (listDesc.size() != rhn.jjtGetNumChildren()) {
 			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong number of parameters in type " + lhn.name);
+			  this.decrementMaxErros();
 			  return false;
 		  }
 		  else {
@@ -50,6 +52,7 @@ class ASTNEW_IDENTIFIER extends SimpleNode {
 				  SimpleNode rhnc = (SimpleNode) rhn.children[ii];
 				  if(!(listDesc.get(ii).getName().equals(((SimpleNode)rhnc.children[0]).type))) {
 					  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong argument type: " + ((SimpleNode)rhnc.children[0]).type + " should be " + listDesc.get(ii).getName());
+					  this.decrementMaxErros();
 					  return false;
 				  }
 			  }

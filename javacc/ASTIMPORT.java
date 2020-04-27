@@ -14,7 +14,7 @@ class ASTIMPORT extends SimpleNode {
     super(p, id);
   }
   
-public boolean createTable() {
+public boolean createTable() throws SemanticException {
 	  
 	  
 	  if(this.parent != null) {
@@ -61,6 +61,7 @@ public boolean createTable() {
 			  listDesc.add(d);
 			  if(d == null) {
 				  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Could not find type " + type);
+				  this.decrementMaxErros();
 				  result = false; 
 			  }else
 				  this.simbolTable.addSimbol(d, String.valueOf("a" + i));

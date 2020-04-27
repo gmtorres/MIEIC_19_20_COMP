@@ -16,7 +16,7 @@ class ASTMETHOD extends SimpleNode {
     this.has_scope = true;
   }
 
-  public boolean createTable() {
+  public boolean createTable() throws SemanticException {
 	  
 	boolean result = true;
 	  
@@ -48,6 +48,7 @@ class ASTMETHOD extends SimpleNode {
 	//if (this.functionTable.addFunction(this.type,this.descriptors.getDescriptor("this").name, this.name, this.simbolTable, this.is_static) == false) {
 	if (this.functionTable.addFunction(this.type,this.descriptors.getDescriptor("this").name, this.name, this.simbolTable, this.is_static, listDesc) == false) {
 	    System.out.println(/*"Line " + this.lineNo + ": "+*/ "Error adding function" + this.type + " " + this.name);
+	    this.decrementMaxErros();
 	    result = false;
 	  }
 	

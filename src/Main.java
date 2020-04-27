@@ -5,7 +5,7 @@ import java.io.File;
 public class Main {
 	
 
-    public static void main(String args[]) throws ParseException {   
+    public static void main(String args[]) throws ParseException, SemanticException {   
 
 		
             System.out.println("TESTE:");
@@ -22,21 +22,26 @@ public class Main {
         	myJmm.failed = false;
         	myJmm.max_errors = 10;
 
+
         	ASTProgram root = myJmm.Program();
 	        root.dump("");
 
 	        if(myJmm.failed == true) {
 	        	throw new ParseException();
 	        }
-	        
-	        if(root.createTable() == false) {
-	        	System.out.println("There are semantic errors while creating table.");
-	        	return;
-	        }
-	        
-	        if(root.doSemanticAnalysis(new StringBuilder("")) == false) {
-	        	System.out.println("There are semantic errors while analysing.");
-	        	return;
+	        SimpleNode.max_semantic_errors = 10;
+	        try {
+	        	if(root.createTable() == false) {
+		        	System.out.println("There are semantic errors while creating table.");
+		        	return;
+		        }
+		        if(root.doSemanticAnalysis(new StringBuilder("")) == false) {
+		        	System.out.println("There are semantic errors while analysing.");
+		        	return;
+		        }
+	        }catch(SemanticException e) {
+	        	System.out.println("Max semantic errors reached while analysing.");
+	        	throw e;
 	        }
 	        
 	        

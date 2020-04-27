@@ -10,7 +10,7 @@ class ASTVAR extends SimpleNode {
     super(p, id);
   }
   
-  public boolean createTable() {
+  public boolean createTable() throws SemanticException {
 	  
 	  if(this.parent != null) {
 		 this.functionTable = ((SimpleNode)this.parent).functionTable;
@@ -33,6 +33,7 @@ class ASTVAR extends SimpleNode {
 	  if( lhn.toString().equals("IDENTIFIER") && 
 			  this.simbolTable.isSimbolKnown(lhn.name) == false) {
 		  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Simbol " + lhn.name + " is not known.");
+		  this.decrementMaxErros();
 		  result = false;
 	  }
 	   
@@ -46,7 +47,7 @@ class ASTVAR extends SimpleNode {
 	  return result;
   }
   
-public boolean doSemanticAnalysis(StringBuilder info) {
+public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException {
 	  
 	  
 	  boolean result = true;
@@ -66,6 +67,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 		  //System.out.println(lhn.name);
 		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
 			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " is not known.");
+			  this.decrementMaxErros();
 			  return false;
 		  }else {
 			  lhn.type = this.simbolTable.getSimbol(lhn.name).getType().getName();
@@ -77,6 +79,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 		  SimpleNode rhn  = (SimpleNode) this.children[1];
 		  if(!rhn.type.equals("int")) {
 			  System.out.println("Error on line " + rhn.lineNo + ", column " + rhn.columnNo + ": Index must be int");
+			  this.decrementMaxErros();
 			  return false;
 		  }
 		  
@@ -92,15 +95,13 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 		  
 		  if(d == null) return false;
 		  if(d.content == null) {
-			  //this.type = d.getName(); //error
 			  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Simbol " + lhn.name + " must be an array.");
+			  this.decrementMaxErros();
 			  return false;
 		  }
 		  else this.type = d.content.getName();
 	  }
-	  
-	  //System.out.println("Type: " + this.type);
-	  
+	  	  
 	  return result;
   }
   

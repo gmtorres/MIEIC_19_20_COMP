@@ -10,7 +10,7 @@ class ASTARGUMENT extends SimpleNode {
     super(p, id);
   }
 
-  public boolean createTable() {
+  public boolean createTable() throws SemanticException {
 	  
 	  if(this.parent != null) {
 		 this.functionTable = ((SimpleNode)this.parent).functionTable;
@@ -32,12 +32,15 @@ class ASTARGUMENT extends SimpleNode {
 	  Descriptor d = this.descriptors.getDescriptor(this.type);
 	  
 	  if(d == null) {
+
 		  System.out.println("Error on line "+ this.lineNo + ", column " + this.columnNo + ": Could not find type " + this.type);
+		  this.decrementMaxErros();
 		  result = false; 
 	  }else {
 		  if(this.simbolTable.addSimbol(d,this.name,true) == false) {
 			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Duplicate simbol " + this.name);
-			  result = false; 
+			  this.decrementMaxErros();
+			  result = false;
 		  }
 	  }
 	   
