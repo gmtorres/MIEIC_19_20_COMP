@@ -32,7 +32,7 @@ class ASTVAR extends SimpleNode {
 	  SimpleNode lhn  = (SimpleNode) this.children[0]; // IDENTIFIER to assing
 	  if( lhn.toString().equals("IDENTIFIER") && 
 			  this.simbolTable.isSimbolKnown(lhn.name) == false) {
-		  System.out.println("Error on line " + lhn.lineNo + ": Simbol " + lhn.name + " is not known.");
+		  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Simbol " + lhn.name + " is not known.");
 		  result = false;
 	  }
 	   
@@ -65,7 +65,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  if(lhn.toString().equals("IDENTIFIER")) {
 		  //System.out.println(lhn.name);
 		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
-			  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
+			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " is not known.");
 			  return false;
 		  }else {
 			  lhn.type = this.simbolTable.getSimbol(lhn.name).getType().getName();
@@ -76,7 +76,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  if(this.jjtGetNumChildren() == 2) {
 		  SimpleNode rhn  = (SimpleNode) this.children[1];
 		  if(!rhn.type.equals("int")) {
-			  System.out.println("Error on line " + rhn.lineNo + ": Index must be int");
+			  System.out.println("Error on line " + rhn.lineNo + ", column " + rhn.columnNo + ": Index must be int");
 			  return false;
 		  }
 		  
@@ -84,7 +84,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 		  if(((SimpleNode)rhn.children[0]).toString().equals("INTEGERLITERAL")) {
 			  int index = ((SimpleNode)rhn.children[0]).val;
 			  if(size != null && index >= size) {
-				  System.out.println("Warning on line " + rhn.lineNo + ": Size is greater than array size.");
+				  System.out.println("Warning on line " + rhn.lineNo + ", column " + rhn.columnNo + ": Size is greater than array size.");
 			  }
 		  }
 		  
@@ -93,7 +93,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 		  if(d == null) return false;
 		  if(d.content == null) {
 			  //this.type = d.getName(); //error
-			  System.out.println("Error on line " + lhn.lineNo + ": Simbol " + lhn.name + " must be an array.");
+			  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Simbol " + lhn.name + " must be an array.");
 			  return false;
 		  }
 		  else this.type = d.content.getName();

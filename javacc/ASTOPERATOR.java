@@ -28,16 +28,16 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  if(lhn.toString().equals("IDENTIFIER")) {
 		  Simbol s = this.simbolTable.getSimbol(lhn.name);
 		  if(s == null){
-			  System.out.println("Error on line " + lhn.lineNo + ": Simbol " + lhn.name + " is not known.");
+			  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Simbol " + lhn.name + " is not known.");
 			  return false;
 		  }else if(s.isInitialized == false 
 				  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
 				  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
 			  	
 			  if(s.condInitialized || this.simbolTable.getScope(lhn.name).equals("global")) {
-				  System.out.println("Warning on line " + lhn.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
+				  System.out.println("Warning on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Simbol " + lhn.name + " may not have been initiated.");
 			  }else {
-				  System.out.println("Error on line " + lhn.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
+				  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Simbol " + lhn.name + " has not been initiated.");
 				  return false;
 			  }
 		  }
@@ -46,15 +46,15 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  if(rhn.toString().equals("IDENTIFIER")) {
 		  Simbol s = this.simbolTable.getSimbol(rhn.name);
 		  if(s == null){
-			  System.out.println("Error on line " + rhn.lineNo + ": Simbol " + rhn.name + " is not known.");
+			  System.out.println("Error on line " + rhn.lineNo + ", column " + rhn.columnNo + ": Simbol " + rhn.name + " is not known.");
 			  return false;
 		  }else if(s.isInitialized == false 
 				  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
 				  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
 				  if(s.condInitialized || this.simbolTable.getScope(rhn.name).equals("global")) {
-					  System.out.println("Warning on line " + rhn.lineNo + ": Simbol " + rhn.name + " may not have been initiated.");
+					  System.out.println("Warning on line " + rhn.lineNo + ", column " + rhn.columnNo + ": Simbol " + rhn.name + " may not have been initiated.");
 				  }else {
-					  System.out.println("Error on line " + rhn.lineNo + ": Simbol " + rhn.name + " has not been initiated.");
+					  System.out.println("Error on line " + rhn.lineNo + ", column " + rhn.columnNo + ": Simbol " + rhn.name + " has not been initiated.");
 					  return false;
 				  }
 		  }
