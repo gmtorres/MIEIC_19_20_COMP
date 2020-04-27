@@ -578,7 +578,10 @@ public class IRNode {
 		this.addChild(child);
 
 		ArrayList<String> objs = new ArrayList<String>();
-		if(lhn.name.equals("this")) {
+		if(lhn.toString().equals("NEW_IDENTIFIER")) {
+			objs = sn.descriptors.getDescriptor(((SimpleNode) lhn.children[0]).name).getAllTypes();
+		}
+		else if(lhn.name.equals("this")) {
 			objs = sn.descriptors.getDescriptor("this").getAllTypes();
 			this.setInst("invoke_virtual");
 		}else{

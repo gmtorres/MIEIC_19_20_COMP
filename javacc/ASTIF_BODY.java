@@ -17,18 +17,18 @@ class ASTIF_BODY extends SimpleNode {
 	  if(this.children != null) {
 		  for(Node node : this.children) {
 			  boolean r = ((SimpleNode) node).doSemanticAnalysis(info_temp);
-			  //System.out.println(info_temp);
 			  result = result && r;
 		  }
 	  }
-	  //System.out.println(info_temp);
-	  
+
 	  String [] assignVars = info_temp.toString().split(" ");
 	  for(int i = 1; i < assignVars.length; i++) {
-		  if(this.simbolTable.getSimbol(assignVars[i]).ifInitialized) {
-			  this.simbolTable.getSimbol(assignVars[i]).ifInitialized = false;
-			  this.simbolTable.getSimbol(assignVars[i]).init++;
-		  }
+
+		  info.append(" " + assignVars[i]);
+		  Simbol s = this.simbolTable.getSimbol(assignVars[i]);
+		  s.ifInitialized = true;
+		  s.isInitialized = false;
+		  s.condInitialized = true;
 	  }
 	  
 	  return result;

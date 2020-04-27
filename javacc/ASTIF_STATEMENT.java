@@ -13,24 +13,28 @@ class ASTIF_STATEMENT extends SimpleNode {
   public boolean doSemanticAnalysis(StringBuilder info) {
 	  
 	  boolean result = true;
-	  
+	  StringBuilder info_temp = new StringBuilder("");
 	  if(this.children != null) {
 		  for(Node node : this.children) {
-			  boolean r = ((SimpleNode) node).doSemanticAnalysis(info);
+			  boolean r = ((SimpleNode) node).doSemanticAnalysis(info_temp);
 			  result = result && r;
 		  }
 	  }
 	  
-	  //System.out.println("dasf " + info.toString()+".") ;
-	  String [] vars = info.toString().split(" ");
+	  String [] vars = info_temp.toString().split(" ");
 	  if(vars.length > 0) {
 		  int i = 0;
 		  if(vars[0].equals("IF:") || vars[0].equals("ELSE:")) i = 1;
 		  for(;i<vars.length;i++) {
 			  if(vars[i].equals("")) continue;
-			  //System.out.println("VAR:" + vars[i]);
-			  //this.simbolTable.getSimbol(vars[i]).ifInitialized = false;
-			  //this.simbolTable.getSimbol(vars[i]).elseInitialized = false;
+
+			  Simbol s = this.simbolTable.getSimbol(vars[i]);
+			  if(s.ifInitialized && s.elseInitialized) {
+				  info.append(" " + vars[i]);
+				  s.isInitialized = true;
+			  }
+			  s.ifInitialized = false;
+			  s.elseInitialized = false;
 		  }
 	  }
 	  

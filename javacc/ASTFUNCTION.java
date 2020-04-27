@@ -33,14 +33,17 @@ class ASTFUNCTION extends SimpleNode {
 	    SimpleNode rhn  = (SimpleNode) this.children[1];
 
 		ArrayList<String> objs = new ArrayList<String>();
-		if(lhn.name.equals("this")) {
+		if(lhn.toString().equals("NEW_IDENTIFIER")) {
+			objs = this.descriptors.getDescriptor(((SimpleNode) lhn.children[0]).name).getAllTypes();
+		}
+		else if(lhn.name.equals("this")) {
 			objs = this.descriptors.getDescriptor("this").getAllTypes();
 		}
 		else{
 			if(this.simbolTable.isSimbolKnown(lhn.name)) {
 				Simbol s = this.simbolTable.getSimbol(lhn.name);
 				if(s.getAssignType() == null) {
-					  System.out.println("Line " + lhn.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
+					  System.out.println("Error on line " + lhn.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
 					  return false;
 				  }
 				objs = this.simbolTable.getSimbol(lhn.name).getAssignType().getAllTypes();
@@ -63,7 +66,7 @@ class ASTFUNCTION extends SimpleNode {
 			List<Descriptor> listDesc = f.get(i).getDescriptors();
 			if (listDesc.size() != rhn.jjtGetNumChildren()) {
 				if(objs.size() == 1)
-					System.out.println("Line " + this.lineNo + ": Wrong number of parameters in function " + lhn.name + "." + this.name);
+					System.out.println("Error on line " + this.lineNo + ": Wrong number of parameters in function " + lhn.name + "." + this.name);
 				continue;
 			}
 			else {
@@ -72,7 +75,7 @@ class ASTFUNCTION extends SimpleNode {
 					SimpleNode rhnc = (SimpleNode) rhn.children[ii];
 					if(!(listDesc.get(ii).getName().equals(((SimpleNode)rhnc.children[0]).type))) {
 						if(objs.size() == 1)
-							System.out.println("Line " + this.lineNo + ": Wrong argument type: " + ((SimpleNode)rhnc.children[0]).type + " should be " + listDesc.get(ii).getName());
+							System.out.println("Error on line " + this.lineNo + ": Wrong argument type: " + ((SimpleNode)rhnc.children[0]).type + " should be " + listDesc.get(ii).getName());
 						break;
 					}
 				}
@@ -86,7 +89,7 @@ class ASTFUNCTION extends SimpleNode {
 		}
 		if(i == f.size()) {
 			result = false;
-			String toPrint = "Line " + this.lineNo + ": Function " + lhn.name + "." + this.name+"(";
+			String toPrint = "Error on line " + this.lineNo + ": Function " + lhn.name + "." + this.name+"(";
 			for(int a = 0; a < rhn.jjtGetNumChildren(); a++ ) {
 				SimpleNode rhnc = (SimpleNode) rhn.children[a];
 				toPrint+= ((SimpleNode)rhnc.children[0]).type;

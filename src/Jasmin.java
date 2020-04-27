@@ -479,10 +479,10 @@ public class Jasmin {
 		  }
 		  
 		  String toPrint = "invokestatic"; 
-		  this.println(toPrint);
+		  //this.println(toPrint);
 		  
 
-		  toPrint = "\t" + r.getChildren()[2].getInst() + "." + r.getChildren()[3].getInst() + "(";
+		  toPrint += "\t" + r.getChildren()[2].getInst() + "." + r.getChildren()[3].getInst() + "(";
 		  IRNode [] params = (r.getChildren()[0]).getChildren();
 		  for (int i= 0; i < params.length; i++) {
 			  toPrint += retType(params[i].getInst());

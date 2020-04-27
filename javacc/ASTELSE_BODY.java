@@ -21,38 +21,14 @@ class ASTELSE_BODY extends SimpleNode {
 		  }
 	  }
 	  
-	  //System.out.println(info_temp);
-	  
 	  String [] assignVars = info_temp.toString().split(" ");
 	  for(int i = 1; i < assignVars.length; i++) {
-		  //System.out.println(assignVars[i] + "  " + this.simbolTable.getSimbol(assignVars[i]).ifInitialized + "  " + info.toString());
+
 		  info.append(" " + assignVars[i]);
-		  if(this.simbolTable.getSimbol(assignVars[i]).elseInitialized) {
-			  this.simbolTable.getSimbol(assignVars[i]).elseInitialized = false;
-			  this.simbolTable.getSimbol(assignVars[i]).init--;
-			  
-			  if(info.toString().split(" ")[0].equals("IF:")) {
-				  if(this.simbolTable.getSimbol(assignVars[i]).init == 0) {
-					  this.simbolTable.getSimbol(assignVars[i]).init++;  
-				  }
-				  this.simbolTable.getSimbol(assignVars[i]).ifInitialized = true;
-			  }
-			  else if(info.toString().split(" ")[0].equals("ELSE:")) {
-				  if(this.simbolTable.getSimbol(assignVars[i]).init == 0) {
-					  this.simbolTable.getSimbol(assignVars[i]).init--;  
-				  }
-				  this.simbolTable.getSimbol(assignVars[i]).elseInitialized = true;
-			  }
-			  else {
-				  if( this.simbolTable.getSimbol(assignVars[i]).init == 0)
-					  this.simbolTable.getSimbol(assignVars[i]).isInitialized = true;
-				  else 
-					  this.simbolTable.getSimbol(assignVars[i]).init = 0;
-			  }
-			  
-			  
-		  }
-		  
+		  Simbol s = this.simbolTable.getSimbol(assignVars[i]);
+		  s.elseInitialized = true;
+		  s.isInitialized = false;
+		  s.condInitialized = true;
 	  }
 	  
 	  return result;
