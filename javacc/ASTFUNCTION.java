@@ -55,8 +55,8 @@ class ASTFUNCTION extends SimpleNode {
 		}
 		ArrayList<Function> f = new ArrayList<Function>();
 		for(int i = 0; i < objs.size();i++)
-			if(this.functionTable.isFunctionHere( objs.get(i),this.name))
-				f.add(this.functionTable.getFunction(objs.get(i),this.name));
+			if(this.functionTable.isFunctionHere( objs.get(i),this.name,rhn.jjtGetNumChildren()))
+				f.add(this.functionTable.getFunction(objs.get(i),this.name,rhn.jjtGetNumChildren()));
 		int i = 0;
 		for(;i<f.size();i++) {
 			//this.type = f.get(i).getType();

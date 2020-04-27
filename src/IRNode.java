@@ -597,8 +597,8 @@ public class IRNode {
 		ArrayList<Function> f = new ArrayList<Function>();
 		ArrayList<String> o = new ArrayList<String>();
 		for(int i = 0; i < objs.size();i++)
-			if(sn.functionTable.isFunctionHere(objs.get(i),sn.name)) {
-				f.add(sn.functionTable.getFunction(objs.get(i),sn.name));
+			if(sn.functionTable.isFunctionHere(objs.get(i),sn.name,rhn.jjtGetNumChildren())) {
+				f.add(sn.functionTable.getFunction(objs.get(i),sn.name,rhn.jjtGetNumChildren()));
 				o.add(objs.get(i));
 			}
 		

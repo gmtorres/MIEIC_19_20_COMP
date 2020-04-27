@@ -15,34 +15,34 @@ public class FunctionTable {
         this.parentClass = parentClass;
     }
 
-    boolean isFunctionHere(String object ,String name) {
-		return functions.get(object +"."+ name) != null;
+    boolean isFunctionHere(String object ,String name, int no) {
+		return functions.get(object +"."+ name+"@"+no) != null;
     }
-    
+    /*
     boolean addFunction(String return_type, String object, String name, SimbolTable st) {
         //TODO: Questao das 2 funcoes com mesmo nome
         Function f = new Function(return_type, object, name, st);
         functions.put(object +"."+ name, f);
         return true;
-    }
+    }*/
 
     boolean addFunction(String return_type, String object, String name, SimbolTable st, boolean stFlag, List<Descriptor> list) {
         //TODO: Questao das 2 funcoes com mesmo nome
         Function f = new Function(return_type, object, name, st, stFlag, list);
-        functions.put(object +"."+ name, f);
+        functions.put(object +"."+ name + "@"+list.size(), f);
         return true;
     }
-
+/*
     boolean addFunction(String return_type, String object, String name, SimbolTable st, boolean stFlag) {
         //TODO: Questao das 2 funcoes com mesmo nome
         Function f = new Function(return_type, object, name, st, stFlag);
         functions.put(object +"."+ name, f);
         return true;
     }
-
-    Function getFunction(String object ,String name) {
-        if (isFunctionHere(object,name)) {
-            return this.functions.get(object +"."+ name);
+*/
+    Function getFunction(String object ,String name, int no) {
+        if (isFunctionHere(object,name,no)) {
+            return this.functions.get(object +"."+ name+"@"+no);
         }
         else return null;
     }

@@ -10,23 +10,44 @@ import static A.b(boolean);
 
 class TicTacToe {
 
-	TicTacToe e;
-
-  public int g(){
-  	int i;
-  	boolean b;
-  	e = new TicTacToe();
-  	while(true)
-  		i = 4 + 5; 
-  	b = 4 < i;
-  	
-  	A.b(4<5);
-  	e.a();
-  	return 4;
+  int[] row0;
+  int[] row1;
+  int[] row2;
+  int whoseturn;
+  int movesmade;
+  int p;
+  int[] pieces;
+  
+  TicTacToe sape;
+  
+  // Initializes a Tic Tac Toe object.
+  public boolean init() {
+    row0 = new int[3];
+    row1 = new int[3];
+    row2 = new int[3];
+    pieces = new int[2];
+    pieces[0] = 1;
+    pieces[1] = 2;
+    whoseturn = 0;
+    movesmade = 0;
+    p = 1;
+    
+    sape = new TicTacToe();
+    
+    sape.getRow0(p, pieces[0]);
+    
+    return true;
   }
   
-  public int a(){
-  	return 2;
+    public int[] getRow0(int a, int b){
+    return row0;
+  }
+
+  public int[] getRow1(){
+    return row1;
+  }
+  public int[] getRow2(){
+    return row2;
   }
   
 }

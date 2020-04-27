@@ -38,6 +38,8 @@ public class Main {
 	        	System.out.println("There are semantic errors while analysing.");
 	        	return;
 	        }
+	        
+	        
 
 	        //root.printTables();
 	        

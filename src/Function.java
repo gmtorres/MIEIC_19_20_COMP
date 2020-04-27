@@ -39,7 +39,8 @@ public class Function {
     }
 
     public String toString() {
-    	return return_type + "   " + object + "   " +   name; 
+    	String[] names = name.split("@");
+    	return return_type + "   " + object + "   " +   names[0]; 
     }
 
     public String getType() {
