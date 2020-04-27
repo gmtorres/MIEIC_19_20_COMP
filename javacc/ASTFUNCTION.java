@@ -33,7 +33,10 @@ class ASTFUNCTION extends SimpleNode {
 	    SimpleNode rhn  = (SimpleNode) this.children[1];
 
 		ArrayList<String> objs = new ArrayList<String>();
-		if(lhn.name.equals("this")) {
+		if(lhn.toString().equals("NEW_IDENTIFIER")) {
+			objs = this.descriptors.getDescriptor(((SimpleNode) lhn.children[0]).name).getAllTypes();
+		}
+		else if(lhn.name.equals("this")) {
 			objs = this.descriptors.getDescriptor("this").getAllTypes();
 		}
 		else{
