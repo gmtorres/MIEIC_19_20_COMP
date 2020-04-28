@@ -12,7 +12,7 @@ class ASTMETHOD_BODY extends SimpleNode {
     this.has_scope = true;
   }
   
-  public boolean createTable() {
+  public boolean createTable() throws SemanticException {
 	  
 	  
 	  if(this.parent != null) {

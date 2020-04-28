@@ -12,7 +12,7 @@ class ASTCLASS_DECL extends SimpleNode {
     this.has_scope = true;
   }
   
-  public boolean createTable() {
+  public boolean createTable() throws SemanticException {
 	  
 	  
 	  if(this.parent != null) {
@@ -40,6 +40,7 @@ class ASTCLASS_DECL extends SimpleNode {
 			  Descriptor d = this.descriptors.getDescriptor(lhn.name);
 			  if(d == null) {
 				  System.out.println(lhn.name + " is not known");
+				  this.decrementMaxErros();
 				  return false;
 			  }else {
 				  this.descriptors.getDescriptor("this").extend = d;

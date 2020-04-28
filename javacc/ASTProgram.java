@@ -15,7 +15,7 @@ class ASTProgram extends SimpleNode {
   }
 
 
-  public boolean createTable() {
+  public boolean createTable() throws SemanticException {
 
     boolean result = true;
 

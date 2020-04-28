@@ -11,7 +11,7 @@ class ASTOPERATOR extends SimpleNode {
   }
   
   
-public boolean doSemanticAnalysis(StringBuilder info) {
+public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException{
 	  
 	  
 	  boolean result = true;
@@ -29,6 +29,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 		  Simbol s = this.simbolTable.getSimbol(lhn.name);
 		  if(s == null){
 			  System.out.println("Error on line " + lhn.lineNo + ": Simbol " + lhn.name + " is not known.");
+			  this.decrementMaxErros();
 			  return false;
 		  }else if(s.isInitialized == false 
 				  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
@@ -38,6 +39,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 				  System.out.println("Warning on line " + lhn.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
 			  }else {
 				  System.out.println("Error on line " + lhn.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
+				  this.decrementMaxErros();
 				  return false;
 			  }
 		  }
@@ -55,6 +57,7 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 					  System.out.println("Warning on line " + rhn.lineNo + ": Simbol " + rhn.name + " may not have been initiated.");
 				  }else {
 					  System.out.println("Error on line " + rhn.lineNo + ": Simbol " + rhn.name + " has not been initiated.");
+					  this.decrementMaxErros();
 					  return false;
 				  }
 		  }
@@ -69,16 +72,17 @@ public boolean doSemanticAnalysis(StringBuilder info) {
 	  //System.out.println(rhn.type + "  " + rhn.toString() + "  " + rhn.name);
 	  if(!lhn.type.equals(rhn.type)) {
 		  System.out.println("Error on line " + this.lineNo + ": Types incompatible " + lhn.type + " " + this.name + " " + rhn.type + ".");
+		  this.decrementMaxErros();
 		  result = false;
 	  }
 	  
 	  if(this.name.equals("&&")) {
-		  if(!lhn.type.equals("boolean")) { System.out.println("Error on line " + this.lineNo + ": " +  lhn.type  + " operation must be boolean."); result = false; }
-		  else if(!lhn.type.equals("boolean")) { System.out.println("Error on line " + this.lineNo + ": " +  rhn.type  + " operation must be boolean."); result = false; }
+		  if(!lhn.type.equals("boolean")) { System.out.println("Error on line " + this.lineNo + ": " +  lhn.type  + " operation must be boolean."); result = false; this.decrementMaxErros(); }
+		  else if(!lhn.type.equals("boolean")) { System.out.println("Error on line " + this.lineNo + ": " +  rhn.type  + " operation must be boolean."); result = false; this.decrementMaxErros(); }
 		  else this.type = "boolean";
 	  }else {
-		  if(!lhn.type.equals("int")) { System.out.println("Error on line " + this.lineNo + ": " + lhn.type  + " operation must be int."); result = false; }
-		  else if(!lhn.type.equals("int")) { System.out.println("Error on line " + this.lineNo + ": " +  rhn.type  + " operation must be int."); result = false; }
+		  if(!lhn.type.equals("int")) { System.out.println("Error on line " + this.lineNo + ": " + lhn.type  + " operation must be int."); result = false; this.decrementMaxErros(); }
+		  else if(!lhn.type.equals("int")) { System.out.println("Error on line " + this.lineNo + ": " +  rhn.type  + " operation must be int."); result = false; this.decrementMaxErros(); }
 		  else
 			  if(this.name.equals("<")) this.type = "boolean";
 			  else this.type = "int";

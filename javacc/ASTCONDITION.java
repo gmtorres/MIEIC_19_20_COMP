@@ -10,7 +10,7 @@ class ASTCONDITION extends SimpleNode {
     super(p, id);
   }
   
-	public boolean doSemanticAnalysis(StringBuilder info) {
+	public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException {
 		  
 		  
 		  boolean result = true;
@@ -27,6 +27,7 @@ class ASTCONDITION extends SimpleNode {
 		  
 		  if(((SimpleNode) this.children[0]).type != "boolean") {
 			  System.out.println("Error on line " + this.lineNo + ": Condition must be boolean.");
+			  this.decrementMaxErros();
 			  return false;
 		  }
 		  return result;

@@ -14,7 +14,7 @@ class ASTFUNCTION extends SimpleNode {
   }
   
   
-  public boolean doSemanticAnalysis(StringBuilder info) {
+  public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException {
 
 		boolean result = true;
 
@@ -44,6 +44,7 @@ class ASTFUNCTION extends SimpleNode {
 				Simbol s = this.simbolTable.getSimbol(lhn.name);
 				if(s.getAssignType() == null) {
 					  System.out.println("Error on line " + lhn.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
+					  this.decrementMaxErros();
 					  return false;
 				  }
 				objs = this.simbolTable.getSimbol(lhn.name).getAssignType().getAllTypes();
@@ -96,6 +97,7 @@ class ASTFUNCTION extends SimpleNode {
 				if(a != rhn.jjtGetNumChildren() - 1 ) toPrint+=", ";
 			}
 			System.out.println(toPrint + ") is not known.");
+			this.decrementMaxErros();
 		}
 	
 	  return result;

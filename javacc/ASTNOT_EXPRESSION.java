@@ -10,7 +10,7 @@ class ASTNOT_EXPRESSION extends SimpleNode {
     super(p, id);
   }
   
-  public boolean doSemanticAnalysis(StringBuilder info) {
+  public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException {
 	  
 	  
 	  boolean result = true;
@@ -29,11 +29,13 @@ class ASTNOT_EXPRESSION extends SimpleNode {
 	  if(lhn.toString().equals("IDENTIFIER")) {
 		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
 			  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
+			  this.decrementMaxErros();
 			  return false;
 		  }else {
 			  Simbol s = this.simbolTable.getSimbol(lhn.name);
 			  if(s == null){
 				  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
+				  this.decrementMaxErros();
 				  return false;
 			  }else if(s.isInitialized == false 
 					  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
@@ -42,8 +44,9 @@ class ASTNOT_EXPRESSION extends SimpleNode {
 					  System.out.println("Warning on line " + this.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
 				  }else {
 					  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
+					  this.decrementMaxErros();
 					  return false;
-					  }
+				  }
 			  }
 				  lhn.type = s.getType().getName();
 		  }
@@ -54,6 +57,7 @@ class ASTNOT_EXPRESSION extends SimpleNode {
 	  if(!this.type.equals("boolean")) {
 		  System.out.println("Line " + this.lineNo + ": Was expecting a boolean");
 		  this.type = null;
+		  this.decrementMaxErros();
 		  result = false;
 	  }
 	  

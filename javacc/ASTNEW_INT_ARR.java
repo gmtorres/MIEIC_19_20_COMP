@@ -10,7 +10,7 @@ class ASTNEW_INT_ARR extends SimpleNode {
     super(p, id);
   }
   
-  public boolean doSemanticAnalysis(StringBuilder info) {
+  public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException {
 	  
 	  
 	  boolean result = true;
@@ -29,6 +29,7 @@ class ASTNEW_INT_ARR extends SimpleNode {
 	  
 	  if(!lhn.type.equals("int")) {
 		  System.out.println("Error on line " + lhn.lineNo + ": Size of array must be a int");
+		  this.decrementMaxErros();
 		  return false;
 	  }
 	  if(((SimpleNode)lhn.children[0]).toString().equals("INTEGERLITERAL")) {

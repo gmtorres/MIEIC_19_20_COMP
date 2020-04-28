@@ -10,7 +10,7 @@ class ASTIF_BODY extends SimpleNode {
     super(p, id);
   }
   
-  public boolean doSemanticAnalysis(StringBuilder info) {
+  public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException {
 	  
 	  boolean result = true;
 	  StringBuilder info_temp = new StringBuilder("IF:");

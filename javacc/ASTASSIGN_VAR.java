@@ -11,7 +11,7 @@ class ASTASSIGN_VAR extends SimpleNode {
   }
   
   
-  public boolean doSemanticAnalysis(StringBuilder info) {
+  public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException {
 	  
 	  
 	  boolean result = true;
@@ -34,6 +34,7 @@ class ASTASSIGN_VAR extends SimpleNode {
 		  Descriptor d = this.descriptors.getDescriptor(rhn.type);
 		  if(d == null || !d.doesExtends(lhn.type)) {
 			  System.out.println("Error on line " + this.lineNo + ": Assigning imcompatible type:  " + lhn.type + "  and  " + rhn.type);
+			  this.decrementMaxErros();
 			  return false;
 		  }
 		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(d);

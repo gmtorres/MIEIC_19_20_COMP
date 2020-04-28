@@ -10,7 +10,7 @@ class ASTINTEGERLITERAL extends SimpleNode {
     super(p, id);
   }
   
-public boolean doSemanticAnalysis(StringBuilder info) {	  
+public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException {	  
 	boolean result = true;
 	  if(this.children != null) {
 		  for(Node node : this.children) {

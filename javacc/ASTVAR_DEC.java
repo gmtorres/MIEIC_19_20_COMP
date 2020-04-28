@@ -10,7 +10,7 @@ class ASTVAR_DEC extends SimpleNode {
     super(p, id);
   }
   
-  public boolean createTable() {
+  public boolean createTable()  throws SemanticException{
 	  
 	  if(this.parent != null) {
 		 this.functionTable = ((SimpleNode)this.parent).functionTable;
@@ -33,10 +33,12 @@ class ASTVAR_DEC extends SimpleNode {
 	  
 	  if(d == null) {
 		  System.out.println("Error on line " + this.lineNo + ": Could not find type " + this.type);
+		  this.decrementMaxErros();
 		  result = false; 
 	  }else {
 		  if(this.simbolTable.addSimbol(d,this.name) == false) {
 			  System.out.println("Error on line " + this.lineNo + ": Duplicate simbol " + this.name);
+			  this.decrementMaxErros();
 			  result = false; 
 		  }
 	  }
