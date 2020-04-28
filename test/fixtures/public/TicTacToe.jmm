@@ -27,7 +27,7 @@ class TicTacToe {
     whoseturn = 0;
     movesmade = 0;
     this.soma();
-    this.soma(1,1);
+    this.soma(1);
     BoardBase.printWinner(whoseturn);
     return true;
   }

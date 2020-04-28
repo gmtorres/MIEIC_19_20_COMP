@@ -43,7 +43,7 @@ class ASTEXPRESSION extends SimpleNode {
 						  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
 					  System.out.println("info: " + info.toString());
 					  if(s.condInitialized || this.simbolTable.getScope(lhn.name).equals("global")) {
-						  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
+						  System.out.println("Warning on line " + this.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
 					  }else {
 						  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
 						  this.decrementMaxErros();
