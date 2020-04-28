@@ -32,14 +32,15 @@ class ASTARGUMENT extends SimpleNode {
 	  Descriptor d = this.descriptors.getDescriptor(this.type);
 	  
 	  if(d == null) {
-		  System.out.println("Error on line "+ this.lineNo +": Could not find type " + this.type);
+
+		  System.out.println("Error on line "+ this.lineNo + ", column " + this.columnNo + ": Could not find type " + this.type);
 		  this.decrementMaxErros();
 		  result = false; 
 	  }else {
 		  if(this.simbolTable.addSimbol(d,this.name,true) == false) {
-			  System.out.println("Error on line " + this.lineNo + ": Duplicate simbol " + this.name);
+			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Duplicate simbol " + this.name);
 			  this.decrementMaxErros();
-			  result = false; 
+			  result = false;
 		  }
 	  }
 	   

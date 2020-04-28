@@ -28,20 +28,20 @@ class ASTPAR_EXPRESSION extends SimpleNode {
 	  SimpleNode lhn  = (SimpleNode) this.children[0];
 	  if(lhn.toString().equals("IDENTIFIER")) {
 		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
-			  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
+			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " is not known.");
 			  this.decrementMaxErros();
 			  return false;
 		  }else {
 			  Simbol s = this.simbolTable.getSimbol(lhn.name);
 			  if(s == null){
-				  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
+				  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " is not known.");
 				  this.decrementMaxErros();
 				  return false;
 			  }else if(s.isInitialized == false){
 				  if(s.condInitialized || this.simbolTable.getScope(lhn.name).equals("global")) {
-					  System.out.println("Warning on line " + this.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
+					  System.out.println("Warning on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " may not have been initiated.");
 				  }else {
-					  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
+					  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " has not been initiated.");
 					  this.decrementMaxErros();
 					  return false;
 				  }

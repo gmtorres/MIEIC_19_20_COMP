@@ -28,22 +28,22 @@ class ASTNOT_EXPRESSION extends SimpleNode {
 	  SimpleNode lhn  = (SimpleNode) this.children[0];
 	  if(lhn.toString().equals("IDENTIFIER")) {
 		  if(this.simbolTable.isSimbolKnown(lhn.name) == false){
-			  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
+			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " is not known.");
 			  this.decrementMaxErros();
 			  return false;
 		  }else {
 			  Simbol s = this.simbolTable.getSimbol(lhn.name);
 			  if(s == null){
-				  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " is not known.");
+				  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " is not known.");
 				  this.decrementMaxErros();
 				  return false;
 			  }else if(s.isInitialized == false 
 					  && !(info.toString().split(" ")[0].equals("IF:") && s.ifInitialized)
 					  && !(info.toString().split(" ")[0].equals("ELSE:") && s.elseInitialized)){
 				  if(s.condInitialized || this.simbolTable.getScope(lhn.name).equals("global")) {
-					  System.out.println("Warning on line " + this.lineNo + ": Simbol " + lhn.name + " may not have been initiated.");
+					  System.out.println("Warning on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " may not have been initiated.");
 				  }else {
-					  System.out.println("Error on line " + this.lineNo + ": Simbol " + lhn.name + " has not been initiated.");
+					  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " has not been initiated.");
 					  this.decrementMaxErros();
 					  return false;
 				  }
@@ -55,7 +55,7 @@ class ASTNOT_EXPRESSION extends SimpleNode {
 	  this.type = lhn.type;
 	  
 	  if(!this.type.equals("boolean")) {
-		  System.out.println("Line " + this.lineNo + ": Was expecting a boolean");
+		  System.out.println("Line " + this.lineNo + ", column " + this.columnNo + ": Was expecting a boolean");
 		  this.type = null;
 		  this.decrementMaxErros();
 		  result = false;

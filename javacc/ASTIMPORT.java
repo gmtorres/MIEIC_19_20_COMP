@@ -60,7 +60,7 @@ public boolean createTable() throws SemanticException {
 			  Descriptor d = this.descriptors.getDescriptor(type);
 			  listDesc.add(d);
 			  if(d == null) {
-				  System.out.println("Error on line " + this.lineNo + ": Could not find type " + type);
+				  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Could not find type " + type);
 				  this.decrementMaxErros();
 				  result = false; 
 			  }else

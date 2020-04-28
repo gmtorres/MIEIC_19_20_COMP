@@ -35,14 +35,14 @@ class ASTNEW_IDENTIFIER extends SimpleNode {
 	  Descriptor d = this.descriptors.getDescriptor(lhn.name);
 	  
 	  if(d == null) {
-		  System.out.println("Error on line " + this.lineNo + ": Type " + lhn.name + " is not known.");
+		  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Type " + lhn.name + " is not known.");
 		  this.decrementMaxErros();
 		  return false;
 	  }else {
 		   
 		  List<Descriptor> listDesc =d.getParams();
 		  if (listDesc.size() != rhn.jjtGetNumChildren()) {
-			  System.out.println("Error on line " + this.lineNo + ": Wrong number of parameters in type " + lhn.name);
+			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong number of parameters in type " + lhn.name);
 			  this.decrementMaxErros();
 			  return false;
 		  }
@@ -51,7 +51,7 @@ class ASTNEW_IDENTIFIER extends SimpleNode {
 			  for (; ii < rhn.jjtGetNumChildren(); ii++) {
 				  SimpleNode rhnc = (SimpleNode) rhn.children[ii];
 				  if(!(listDesc.get(ii).getName().equals(((SimpleNode)rhnc.children[0]).type))) {
-					  System.out.println("Error on line " + this.lineNo + ": Wrong argument type: " + ((SimpleNode)rhnc.children[0]).type + " should be " + listDesc.get(ii).getName());
+					  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong argument type: " + ((SimpleNode)rhnc.children[0]).type + " should be " + listDesc.get(ii).getName());
 					  this.decrementMaxErros();
 					  return false;
 				  }

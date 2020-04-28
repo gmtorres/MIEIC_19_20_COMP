@@ -67,7 +67,7 @@ class ASTFUNCTION extends SimpleNode {
 			List<Descriptor> listDesc = f.get(i).getDescriptors();
 			if (listDesc.size() != rhn.jjtGetNumChildren()) {
 				if(objs.size() == 1)
-					System.out.println("Error on line " + this.lineNo + ": Wrong number of parameters in function " + lhn.name + "." + this.name);
+					System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong number of parameters in function " + lhn.name + "." + this.name);
 				continue;
 			}
 			else {
@@ -76,7 +76,7 @@ class ASTFUNCTION extends SimpleNode {
 					SimpleNode rhnc = (SimpleNode) rhn.children[ii];
 					if(!(listDesc.get(ii).getName().equals(((SimpleNode)rhnc.children[0]).type))) {
 						if(objs.size() == 1)
-							System.out.println("Error on line " + this.lineNo + ": Wrong argument type: " + ((SimpleNode)rhnc.children[0]).type + " should be " + listDesc.get(ii).getName());
+							System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong argument type: " + ((SimpleNode)rhnc.children[0]).type + " should be " + listDesc.get(ii).getName());
 						break;
 					}
 				}
@@ -90,7 +90,7 @@ class ASTFUNCTION extends SimpleNode {
 		}
 		if(i == f.size()) {
 			result = false;
-			String toPrint = "Error on line " + this.lineNo + ": Function " + lhn.name + "." + this.name+"(";
+			String toPrint = "Error on line " + this.lineNo + ", column " + this.columnNo + ": Function " + lhn.name + "." + this.name+"(";
 			for(int a = 0; a < rhn.jjtGetNumChildren(); a++ ) {
 				SimpleNode rhnc = (SimpleNode) rhn.children[a];
 				toPrint+= ((SimpleNode)rhnc.children[0]).type;

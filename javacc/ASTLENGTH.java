@@ -27,7 +27,7 @@ class ASTLENGTH extends SimpleNode {
 	  
 	  SimpleNode lhn  = (SimpleNode) this.children[0];
 	  if(!lhn.toString().equals("IDENTIFIER") || (lhn.type != null && (lhn.type.equals("int") || lhn.type.equals("boolean") ))) {
-		  System.out.println("Error on line " + lhn.lineNo + ": Cannot do size of this simbol");
+		  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Cannot do size of this simbol");
 		  this.decrementMaxErros();
 		  return false;
 	  }

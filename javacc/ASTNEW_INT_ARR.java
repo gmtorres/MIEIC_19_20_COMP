@@ -28,7 +28,7 @@ class ASTNEW_INT_ARR extends SimpleNode {
 	  SimpleNode lhn  = (SimpleNode) this.children[0];
 	  
 	  if(!lhn.type.equals("int")) {
-		  System.out.println("Error on line " + lhn.lineNo + ": Size of array must be a int");
+		  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Size of array must be a int");
 		  this.decrementMaxErros();
 		  return false;
 	  }
