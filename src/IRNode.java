@@ -641,14 +641,17 @@ public class IRNode {
 				if(lhn.name.equals("this")) {
 					load.setInst("ldl");
 					var.local_var = 0;
+					load.type = "this";
 				}else {
-					Integer local = sn.simbolTable.getSimbol(lhn.name).local_var;
+					Simbol s = sn.simbolTable.getSimbol(lhn.name);
+					Integer local = s.local_var;
 					if(local == null) {
 						load.setInst("ldg");
 					}else {
 						load.setInst("ldl");
 					}
 					var.local_var = local;
+					load.type = s.getType().name;
 				}
 			}
 		}

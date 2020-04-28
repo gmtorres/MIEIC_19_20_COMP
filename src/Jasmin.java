@@ -57,7 +57,7 @@ public class Jasmin {
 		    case "int[]":
 		        return "a";
 		    default:
-		        return "";
+		        return "a";
 		    }
 	  }
 	  
@@ -497,32 +497,25 @@ public class Jasmin {
 	  
 private void printInvokeVirtual(IRNode r) {
 	
-		  Integer local_var = r.getChildren()[3].local_var;
+		  /*Integer local_var = r.getChildren()[3].local_var;
 		  
 		  if (local_var != null) {
 			  if(local_var < 4)
 				  this.println("aload_" + local_var);
 			  else
 				  this.println("aload " + local_var);
-		  }
-		  
-		  else {
+		  }else {
 			  this.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + r.getChildren()[3].getInst() + " " + retType(r.getChildren()[2].getInst()) );
-		  }
-		
-		
-	
+		  }*/
+		  printJasmin(r.getChildren()[3]);
+
 		  for (int t = 5; t < r.getChildren().length; t++) {
 			  printJasmin(r.getChildren()[t]);
 		  }
-		  
-		  
-		  
-		  String toPrint = "invokevirtual"; 
-		  this.println(toPrint);
-		  
 
-		  toPrint = "\t" + r.getChildren()[2].getInst() + "." + r.getChildren()[4].getInst() + "(";
+		  String toPrint = "invokevirtual"; 
+		  
+		  toPrint += " " + r.getChildren()[2].getInst() + "." + r.getChildren()[4].getInst() + "(";
 		  IRNode [] params = (r.getChildren()[0]).getChildren();
 		  for (int i= 0; i < params.length; i++) {
 			  toPrint += retType(params[i].getInst());
