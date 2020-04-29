@@ -3,7 +3,7 @@ import static Exemplo2.teste2();
 
 class Exemplo {
 	
-	boolean d;
+	int d;
 	
 	public int teste(){
 		
@@ -13,7 +13,7 @@ class Exemplo {
 
 		Exemplo2.teste2();
 		
-		this.teste();
+		d = this.teste() + 4;
 		e.teste();
 		new Exemplo().teste();
 
