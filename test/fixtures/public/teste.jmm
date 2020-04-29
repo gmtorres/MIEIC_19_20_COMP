@@ -2,7 +2,9 @@
 import static Exemplo2.teste2();
 
 class Exemplo {
-
+	
+	boolean d;
+	
 	public int teste(){
 		
 		Exemplo e;
@@ -14,7 +16,7 @@ class Exemplo {
 		this.teste();
 		e.teste();
 		new Exemplo().teste();
-		
+
 		return 0;
 		
 	}
