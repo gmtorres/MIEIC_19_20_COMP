@@ -181,7 +181,7 @@ class SimpleNode implements Node {
 	public void decrementMaxErros() throws SemanticException {
 		this.max_semantic_errors--;
 		if(this.max_semantic_errors == 0) {
-			throw new SemanticException();
+			throw new SemanticException("Max semantic errors reached while analysing.");
 		}
 	}
    

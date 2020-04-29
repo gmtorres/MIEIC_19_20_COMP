@@ -3,6 +3,7 @@
 //import static ioPlus.printResult(int) void;
 
 class exemplo {
+
 	public boolean performSingleEstimate() {
 		int rand1;
 		int rand2;
@@ -45,7 +46,23 @@ class exemplo {
 	public static void main(String[] args) {
 		int pi_estimate_times_100;
 		int num_samples;
-
+	
+	
+	public int teste() {
+		
+		exemplo e;
+		
+		e = new exemplo();
+		
+		exemplo2.teste2();
+		
+		this.teste();
+		e.teste();
+		new exemplo().teste();
+		
+		return 0;
+	}
+	
 		num_samples = 10; //ioPlus.requestNumber();
 		pi_estimate_times_100 = new exemplo().estimatePi100(num_samples);
 

@@ -57,7 +57,7 @@ public class Jasmin {
 		    case "int[]":
 		        return "a";
 		    default:
-		        return "";
+		        return "a";
 		    }
 	  }
 	  
@@ -150,6 +150,8 @@ public class Jasmin {
 		  
 		  toPrint += ")V";
 		  this.println(toPrint);
+		  
+		  this.printPop(node);
 	  }
 	  
 	  
@@ -168,7 +170,7 @@ public class Jasmin {
 		  case "/": this.println("idiv");
 			  break;
 		  }
-		  
+		  this.printPop(node);
 	  }
 	  
 	  private void printLoad(IRNode node) {
@@ -198,10 +200,23 @@ public class Jasmin {
 				  this.println("ifeq " + tag);
 			  }
 		  }
+		  //this.printPop(node);
 	  }
 	  
 	  private void printLoadGlobal(IRNode node) {
 			this.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + node.getChildren()[0].getInst() + " " + retType(node.type) );
+			/*if((this.in_while_condition || this.in_if_condition) && node.type != null && node.type.equals("boolean") ) {
+				  String tag = "";
+				  if(this.in_while_condition) tag = "end_" + this.current_loop;
+				  else if(this.in_if_condition) tag = "else_" + this.current_if;
+				  if(this.not) {
+					  //this.println("ifeq not_" + this.not_count); 
+					  this.println("ifne " + tag);
+				  }else {
+					  this.println("ifeq " + tag);
+				  }
+			  }
+			  //this.printPop(node);*/
 	  }
 	  
 	  private void printLoadArray(IRNode node) {
@@ -490,49 +505,38 @@ public class Jasmin {
 				  toPrint +=", ";
 		  }			  
 		  //System.out.println("   dsfd " + (r.getChildren()[1]).getChildren()[0].getInst());
-		  toPrint += ")" + retType((r.getChildren()[1]).getChildren()[0].getInst());
+		  String type = (r.getChildren()[1]).getChildren()[0].getInst();
+		  toPrint += ")" + retType(type);
 		  this.println(toPrint);
-
+		  
+		  if(!type.equals("void"))
+			  this.printPop(r);
+		  
 	  }
 	  
 private void printInvokeVirtual(IRNode r) {
-	
-		  Integer local_var = r.getChildren()[3].local_var;
-		  
-		  if (local_var != null) {
-			  if(local_var < 4)
-				  this.println("aload_" + local_var);
-			  else
-				  this.println("aload " + local_var);
-		  }
-		  
-		  else {
-			  this.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + r.getChildren()[3].getInst() + " " + retType(r.getChildren()[2].getInst()) );
-		  }
-		
-		
-	
+
+		  printJasmin(r.getChildren()[3]);
+
 		  for (int t = 5; t < r.getChildren().length; t++) {
 			  printJasmin(r.getChildren()[t]);
 		  }
-		  
-		  
-		  
-		  String toPrint = "invokevirtual"; 
-		  this.println(toPrint);
-		  
 
-		  toPrint = "\t" + r.getChildren()[2].getInst() + "." + r.getChildren()[4].getInst() + "(";
+		  String toPrint = "invokevirtual"; 
+		  
+		  toPrint += " " + r.getChildren()[2].getInst() + "." + r.getChildren()[4].getInst() + "(";
 		  IRNode [] params = (r.getChildren()[0]).getChildren();
 		  for (int i= 0; i < params.length; i++) {
 			  toPrint += retType(params[i].getInst());
 			  if(i != params.length - 1)
 				  toPrint +=", ";
-		  }			  
-		  toPrint += ")" + retType((r.getChildren()[1]).getChildren()[0].getInst());
+		  }
+		  String type = (r.getChildren()[1]).getChildren()[0].getInst();
+		  toPrint += ")" + retType(type);
 		  this.println(toPrint);
-
 		  
+		  if(!type.equals("void"))
+			  this.printPop(r);
 		  
 	  }
 	  
@@ -546,10 +550,28 @@ private void printInvokeVirtual(IRNode r) {
 	  }
 	  
 	  
+	  private void printPop(IRNode r) {
+		  IRNode parent = r.getParent();
+		  if(parent == null)
+			  return;
+		  String parentInst = parent.getInst();
+		  if(!parentInst.equals("st") && 
+				  !parentInst.equals("+") && 
+				  !parentInst.equals("-") && 
+				  !parentInst.equals("/") && 
+				  !parentInst.equals("*") && 
+				  !parentInst.equals("&&") && 
+				  !parentInst.equals("<") && 
+				  !parentInst.equals("param") &&
+				  !parentInst.equals("funcParams") &&
+				  !parentInst.equals("st") &&
+				  !parentInst.equals("stg") &&
+				  !parentInst.equals("sta") ) {
+			  this.println("pop");
+		  }
+	  }
 	  
-	  
-	  
-	  
+
 	  private void println(String str) {
 		  this.os.println(str);
 		  if(this.debugMode && this.os != System.out)

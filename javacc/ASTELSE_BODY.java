@@ -22,11 +22,12 @@ class ASTELSE_BODY extends SimpleNode {
 	  }
 	  
 	  String [] assignVars = info_temp.toString().split(" ");
+	  info.append(" // ");
 	  for(int i = 1; i < assignVars.length; i++) {
 
 		  info.append(" " + assignVars[i]);
 		  Simbol s = this.simbolTable.getSimbol(assignVars[i]);
-		  s.elseInitialized = true;
+		  //s.elseInitialized = true;
 		  s.isInitialized = false;
 		  s.condInitialized = true;
 	  }

@@ -26,7 +26,7 @@ class ASTIF_BODY extends SimpleNode {
 
 		  info.append(" " + assignVars[i]);
 		  Simbol s = this.simbolTable.getSimbol(assignVars[i]);
-		  s.ifInitialized = true;
+		  //s.ifInitialized = true;
 		  s.isInitialized = false;
 		  s.condInitialized = true;
 	  }

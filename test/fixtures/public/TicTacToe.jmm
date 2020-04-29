@@ -25,7 +25,10 @@ class TicTacToe {
     pieces[1] = 2;
     whoseturn = 0;
     movesmade = 0;
+<<<<<<< HEAD
     BoardBase.printWinner(whoseturn);
+=======
+>>>>>>> 234471bd8934d54696752fe7871472ed42da966c
     return true;
   }
 

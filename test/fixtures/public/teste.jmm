@@ -1,39 +1,24 @@
-import static BoardBase.sameArray(int[]) boolean;
-import static BoardBase.sameArray(int[]) boolean;
-import static BoardBase.printBoard(int[],int[],int[]) void; 
-import static BoardBase.printWinner(int) void;
-import static BoardBase.playerTurn(int) int[];
-import static BoardBase.wrongMove();
-import static BoardBase.placeTaken();
 
-import static A.b(boolean);
+import static Exemplo2.teste2();
 
-class TicTacToe {
+class Exemplo {
+	
+	int d;
+	
+	public int teste(){
+		
+		Exemplo e;
+		
+		e = new Exemplo();
 
-  int[] row0;
-  int[] row1;
-  int[] row2;
-  int whoseturn;
-  int movesmade;
-  int p;
-  int[] pieces;
-  
-  TicTacToe sape;
-  
-  // Initializes a Tic Tac Toe object.
-  public boolean init() {
-    int a;
-    int b;
-    a = this.soma();
-    b = this.soma(2,3);
-    return true;
-  }
-  
-  public int soma(){
-  	return 2;
-  }
-   public int soma(int c){
-  	return 3;
-  }
+		Exemplo2.teste2();
+		
+		d = this.teste() + 4;
+		e.teste();
+		new Exemplo().teste();
+
+		return 0;
+		
+	}
   
  }

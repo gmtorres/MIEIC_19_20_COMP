@@ -50,7 +50,7 @@ class ASTFUNCTION extends SimpleNode {
 				objs = this.simbolTable.getSimbol(lhn.name).getAssignType().getAllTypes();
 			}else {
 				Descriptor d = this.descriptors.getDescriptor(lhn.name);
-				System.out.println(lhn.name + "  " + d);
+				//System.out.println(lhn.name + "  " + d);
 				if(d != null)
 					objs = d.getAllTypes();
 				else

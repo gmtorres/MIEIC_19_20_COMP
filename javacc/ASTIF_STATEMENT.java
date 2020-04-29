@@ -20,23 +20,55 @@ class ASTIF_STATEMENT extends SimpleNode {
 			  result = result && r;
 		  }
 	  }
+	  //System.out.println("fim do if_statement: " + info_temp.toString());
+	  String [] parts = info_temp.toString().split("//");
+	  String [] vars_if = parts[0].toString().split(" ");
+	  String [] vars_else = parts[1].toString().split(" ");
+	  for(int i = 0; i < vars_if.length;i++) {
+		  if(vars_if[i].equals("")) continue;
+		  Simbol s = this.simbolTable.getSimbol(vars_if[i]);
+		  s.ifInitialized = true;
+	  }
+	  for(int i = 0; i < vars_else.length;i++) {
+		  if(vars_else[i].equals("")) continue;
+		  Simbol s = this.simbolTable.getSimbol(vars_else[i]);
+		  s.elseInitialized = true;
+	  }
+
+		
+	  String [] vars = new String[vars_if.length + vars_else.length];
+	  System.arraycopy(vars_if,0,vars,0,vars_if.length);
+	  System.arraycopy(vars_else,0,vars,vars_if.length,vars_else.length);
 	  
-	  String [] vars = info_temp.toString().split(" ");
-	  if(vars.length > 0) {
+	  for(int i = 0; i < vars.length; i++) {
+		  if(vars[i].equals("")) continue;
+		  Simbol s = this.simbolTable.getSimbol(vars[i]);
+		  //System.out.println(vars[i] + " " + s.ifInitialized + " " + s.elseInitialized);
+		  if(s.ifInitialized && s.elseInitialized) {
+			  info.append(" " + vars[i]);
+			  //System.out.println("if_statement adicionei " + vars[i]);
+			  s.isInitialized = true;
+		  }
+		  s.ifInitialized = false;
+		  s.elseInitialized = false;
+	  }
+	  /*if(vars.length > 0) {
 		  int i = 0;
 		  if(vars[0].equals("IF:") || vars[0].equals("ELSE:")) i = 1;
 		  for(;i<vars.length;i++) {
 			  if(vars[i].equals("")) continue;
 
 			  Simbol s = this.simbolTable.getSimbol(vars[i]);
+			  System.out.println(vars[i] + " " + s.ifInitialized + " " + s.elseInitialized);
 			  if(s.ifInitialized && s.elseInitialized) {
 				  info.append(" " + vars[i]);
+				  System.out.println("if_statement adicionei " + vars[i]);
 				  s.isInitialized = true;
 			  }
 			  s.ifInitialized = false;
 			  s.elseInitialized = false;
 		  }
-	  }
+	  }*/
 	  
 	  return result;
 	  
