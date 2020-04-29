@@ -139,8 +139,12 @@ public class IRNode {
 		obj.setInst(sn.name);
 		this.addChild(obj);
 		
-		if(sn.jjtGetNumChildren() == 0)
+		if(sn.jjtGetNumChildren() == 0) {
+			IRNode child = new IRNode(this);
+			child.setInst("Object");
+			this.addChild(child);
 			return;
+		}
 		int n = sn.jjtGetNumChildren();
 		
 		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);

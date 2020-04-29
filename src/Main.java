@@ -32,15 +32,13 @@ public class Main {
 	        SimpleNode.max_semantic_errors = 10;
 	        try {
 	        	if(root.createTable() == false) {
-		        	System.out.println("There are semantic errors while creating table.");
-		        	return;
+		        	throw new SemanticException("There are semantic errors while creating table.");
 		        }
 		        if(root.doSemanticAnalysis(new StringBuilder("")) == false) {
-		        	System.out.println("There are semantic errors while analysing.");
-		        	return;
+		        	throw new SemanticException("There are semantic errors while analysing.");
 		        }
 	        }catch(SemanticException e) {
-	        	System.out.println("Max semantic errors reached while analysing.");
+	        	System.out.println(e);
 	        	throw e;
 	        }
 	        

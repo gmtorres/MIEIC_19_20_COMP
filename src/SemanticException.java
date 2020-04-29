@@ -3,8 +3,15 @@ import java.io.*;
 
 public class SemanticException extends Exception {
 	
-	SemanticException(){
+	String description;
+	
+	SemanticException(String description){
 		super();
+		this.description = description;
+	}
+	
+	public String toString() {
+		return this.description;
 	}
 	
 }
