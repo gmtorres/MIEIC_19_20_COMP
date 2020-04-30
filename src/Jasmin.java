@@ -40,9 +40,9 @@ public class Jasmin {
 		    case "int[]":
 		    	return "[I";
 		    case "String":
-		    	return "Ljava/lang/String";
+		    	return "Ljava/lang/String;";
 		    case "String[]":
-		    	return "[Ljava/lang/String";
+		    	return "[Ljava/lang/String;";
 		    default:
 		        return type;
 		    }
@@ -423,13 +423,20 @@ public class Jasmin {
 		  this.println(toPrint);
 		  
 		  toPrint = ".super ";
+		  String obj;
 		  if (r.getChildren()[1].getInst().equals("Object")) {
-			  toPrint += "java/lang/Object";
+			  obj = "java/lang/Object";
 		  }
 		  else {
-			  toPrint += r.getChildren()[1].getInst();
+			  obj= r.getChildren()[1].getInst();
 		  }
-		  this.println(toPrint);
+		  this.println(toPrint + obj);
+		  
+		  this.println("\n.method public <init>()V");
+		  this.println("aload_0");
+		  this.println("invokenonvirtual " + obj + "/<init>()V");
+		  this.println("return");
+		  this.println(".end method");
 		  
 		  for(int i = 2; i < r.getChildren().length; i++) {
 			  printJasmin(r.getChildren()[i]);
@@ -440,8 +447,10 @@ public class Jasmin {
 	  private void printMethod(IRNode r) {
 		  this.println("");
 		  String toPrint = ".method ";
-		  toPrint += ((r.getChildren()[0]).getChildren()[0]).getInst();
-		  toPrint += " ";
+		  for(int i = 0; i < r.getChildren()[0].children.length;i++) {
+			  toPrint += ((r.getChildren()[0]).getChildren()[i]).getInst();
+			  toPrint += " ";
+		  }
 		  toPrint += ((r.getChildren()[1]).getChildren()[1]).getInst();
 		  toPrint += "(";
 		  
@@ -461,9 +470,9 @@ public class Jasmin {
 		  toPrint = "\t.limit stack " + r.op_stack; 
 		  this.println(toPrint);
 		  
-		  toPrint = "\t.limit locals ";
+		  toPrint = "\t.limit locals 10";
 		  
-		  toPrint += r.locals_stack;
+		  //toPrint += r.locals_stack;
 
 
 		  this.println(toPrint);
@@ -566,7 +575,8 @@ private void printInvokeVirtual(IRNode r) {
 				  !parentInst.equals("funcParams") &&
 				  !parentInst.equals("st") &&
 				  !parentInst.equals("stg") &&
-				  !parentInst.equals("sta") ) {
+				  !parentInst.equals("sta")&&
+				  !parentInst.equals("return") ) {
 			  this.println("pop");
 		  }
 	  }

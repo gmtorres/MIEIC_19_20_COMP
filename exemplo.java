@@ -1,24 +1,15 @@
-class exemplo {
+class Exemplo{ 
 	
-	public static int teste1() {
-		return 3;
+	public static void main(String[] args) 
+    { 
+		int d;
+		Exemplo e;
+		e = new Exemplo();
+    	d=3;
+		e.soma(d);
 	}
 	
-	public int teste() {
-		
-		exemplo e;
-		
-		e = new exemplo();
-		
-		exemplo2.teste2();
-		
-		this.teste();
-		e.teste();
-		new exemplo().teste();
-		
-		return 0;
+	public  int soma(int a){
+		return a+1;
 	}
-	
-
-
-}
+} 

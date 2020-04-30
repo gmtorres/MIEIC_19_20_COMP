@@ -1,4 +1,5 @@
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.io.FileInputStream;
 import java.io.File;
 
@@ -41,11 +42,8 @@ public class Main {
 	        	System.out.println(e);
 	        	throw e;
 	        }
-	        
-	        
 
 	        //root.printTables();
-	        
 	        //root.descriptors.printTable();
 
 	        IRBuilder ir = new IRBuilder(root);
@@ -53,8 +51,16 @@ public class Main {
 	        ir.dump();
 	        
 	        System.out.println("\n--------------*****************-----------------	\n");
-
-	        Jasmin j = new Jasmin(ir.root,System.out,false);
+	        
+	        PrintStream file;
+	        try{
+	        	file = new PrintStream(new File("jasmin.j"));
+	        }catch(Exception e) {
+	        	System.out.println(e);
+	        	return;
+	        }
+	        
+	        Jasmin j = new Jasmin(ir.root,file,true);
 
 
     }

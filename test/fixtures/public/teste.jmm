@@ -1,24 +1,18 @@
+import static io.println(int);
 
-import static Exemplo2.teste2();
-
-class Exemplo {
+class Hello {
 	
-	int d;
+	public static void main(String[] args) 
+    { 
+		int d;
+		Hello e;
+		e = new Hello();
+    	d=3;
+		this.soma(d);
+	}
 	
-	public int teste(){
-		
-		Exemplo e;
-		
-		e = new Exemplo();
-
-		Exemplo2.teste2();
-		
-		d = this.teste() + 4;
-		e.teste();
-		new Exemplo().teste();
-
-		return 0;
-		
+	public  int soma(int a){
+		return a+1;
 	}
   
  }
