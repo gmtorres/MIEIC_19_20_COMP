@@ -322,10 +322,7 @@ class Life {
 
         i = 0;
         while (i < neigh.length) {
-            if (this.ne(field[neigh[i]],0))
-                ret = ret + 1;
-            else {
-            }
+
 
             i = i + 1;
         }
