@@ -668,7 +668,7 @@ public class IRNode {
 		
 		List<Descriptor> args = invoked.getDescriptors();
 		String retType = invoked.getType();
-		
+		this.type = retType;
 		IRNode retNode = new IRNode(this);
 		funcReturn.addChild(retNode);
 		retNode.setInst(retType);

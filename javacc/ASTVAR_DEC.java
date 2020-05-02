@@ -36,7 +36,10 @@ class ASTVAR_DEC extends SimpleNode {
 		  this.decrementMaxErros();
 		  result = false; 
 	  }else {
-		  if(this.simbolTable.addSimbol(d,this.name) == false) {
+		  boolean global = false;
+		  if(this.simbolTable.getScope().equals("global"))
+			  global = true;
+		  if(this.simbolTable.addSimbol(d,this.name,global) == false) {
 			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Duplicate simbol " + this.name);
 			  this.decrementMaxErros();
 			  result = false; 

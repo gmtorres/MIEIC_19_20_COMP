@@ -208,7 +208,10 @@ public class Jasmin {
 	  }
 	  
 	  private void printLoadGlobal(IRNode node) {
-			this.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + node.getChildren()[0].getInst() + " " + retType(node.type) );
+		  	String name = node.getChildren()[0].getInst();
+		  	if(name.equals("field"))
+		  		name = "__"+name;
+			this.println("aload_0\n" + "getfield " + root.getClassName()  + "/" + name + " " + retType(node.type) );
 			/*if((this.in_while_condition || this.in_if_condition) && node.type != null && node.type.equals("boolean") ) {
 				  String tag = "";
 				  if(this.in_while_condition) tag = "end_" + this.current_loop;
@@ -258,12 +261,16 @@ public class Jasmin {
 	  }
 	  
 	  private void printStoreGlobal(IRNode node) {
-			for(int i = 0; i < node.getChildren().length; i++) {
-				printJasmin(node.getChildren()[i]);
-			}
-		//   putfield <field-spec> <descriptor>
-		  this.println("putfield " + root.getClassName() + "/"  + node.getChildren()[0].getInst() + " " + retType(node.type));
-	  }
+		  this.println("aload_0");
+		  for(int i = 0; i < node.getChildren().length; i++) {
+			  printJasmin(node.getChildren()[i]);
+		  }
+		  //putfield <field-spec> <descriptor>
+		  String name = node.getChildren()[0].getInst();
+		  if(name.equals("field"))
+		  		name = "__"+name;
+		  this.println("putfield " + root.getClassName() + "/"  + name + " " + retType(node.type));
+  }
 	  
 	  private void printStoreArray(IRNode node) {
 		  IRNode lhn = node.children[0];
@@ -436,14 +443,18 @@ public class Jasmin {
 		  }
 		  this.println(toPrint + obj);
 		  
-		  this.println("\n.method public <init>()V");
-		  this.println("aload_0");
-		  this.println("invokenonvirtual " + obj + "/<init>()V");
-		  this.println("return");
-		  this.println(".end method");
-		  
+		  boolean change = false;
 		  for(int i = 2; i < r.getChildren().length; i++) {
-			  printJasmin(r.getChildren()[i]);
+			  IRNode n = r.getChildren()[i];
+			  if(change == false && n.getInst().equals("method")) {
+				  change = true;
+				  this.println("\n.method public <init>()V");
+				  this.println("aload_0");
+				  this.println("invokenonvirtual " + obj + "/<init>()V");
+				  this.println("return");
+				  this.println(".end method");
+			  }
+			  printJasmin(n);
 		  }
 		  
 	  }
@@ -471,10 +482,10 @@ public class Jasmin {
 		  
 		  this.println(toPrint);
 		  
-		  toPrint = "\t.limit stack " + r.op_stack; 
+		  toPrint = "\t.limit stack 100"/* + r.op_stack*/; 
 		  this.println(toPrint);
 		  
-		  toPrint = "\t.limit locals 10";
+		  toPrint = "\t.limit locals 100";
 		  
 		  //toPrint += r.locals_stack;
 
@@ -525,9 +536,21 @@ public class Jasmin {
 		  if(!type.equals("void"))
 			  this.printPop(r);
 		  
+		  if((this.in_while_condition || this.in_if_condition) && r.type != null && r.type.equals("boolean") ) {
+			  String tag = "";
+			  if(this.in_while_condition) tag = "end_" + this.current_loop;
+			  else if(this.in_if_condition) tag = "else_" + this.current_if;
+			  if(this.not) {
+				  //this.println("ifeq not_" + this.not_count); 
+				  this.println("ifne " + tag);
+			  }else {
+				  this.println("ifeq " + tag);
+			  }
+		  }
+		  
 	  }
 	  
-private void printInvokeVirtual(IRNode r) {
+	  private void printInvokeVirtual(IRNode r) {
 
 		  printJasmin(r.getChildren()[3]);
 
@@ -551,13 +574,29 @@ private void printInvokeVirtual(IRNode r) {
 		  if(!type.equals("void"))
 			  this.printPop(r);
 		  
+		  
+		  if((this.in_while_condition || this.in_if_condition) && r.type != null && r.type.equals("boolean") ) {
+			  String tag = "";
+			  if(this.in_while_condition) tag = "end_" + this.current_loop;
+			  else if(this.in_if_condition) tag = "else_" + this.current_if;
+			  if(this.not) {
+				  //this.println("ifeq not_" + this.not_count); 
+				  this.println("ifne " + tag);
+			  }else {
+				  this.println("ifeq " + tag);
+			  }
+		  }
+		  
 	  }
 	  
 	  private void printFields(IRNode r) {
 		  this.println("");
 		  for (int i = 0; i < r.getChildren().length; i++) {
 			  String toPrint =".field ";
-			  toPrint += r.getChildren()[i].getInst() + " " + retType(r.getChildren()[i].getIRType());
+			  String name = r.getChildren()[i].getInst();
+			  if(name.equals("field"))
+				  name = "__" + name;
+			  toPrint += name + " " + retType(r.getChildren()[i].getIRType());
 			  this.println(toPrint);
 		  }
 	  }
@@ -574,13 +613,16 @@ private void printInvokeVirtual(IRNode r) {
 				  !parentInst.equals("/") && 
 				  !parentInst.equals("*") && 
 				  !parentInst.equals("&&") && 
+				  !parentInst.equals("not") && 
 				  !parentInst.equals("<") && 
 				  !parentInst.equals("param") &&
 				  !parentInst.equals("funcParams") &&
 				  !parentInst.equals("st") &&
 				  !parentInst.equals("stg") &&
 				  !parentInst.equals("sta") &&
-				  !parentInst.equals("return") &&
+				  !parentInst.equals("return")&&
+				  !( parentInst.equals("if") && this.in_if_condition) &&
+				  !( parentInst.equals("while") && this.in_while_condition) &&
 				  !parentInst.equals("invoke_static") &&
 				  !parentInst.equals("invoke_virtual") ) {
 			  this.println("pop");
