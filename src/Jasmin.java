@@ -36,7 +36,7 @@ public class Jasmin {
 		    case "int":
 		        return "I";  
 		    case "boolean":
-		    	return "B";	      
+		    	return "Z";	      
 		    case "int[]":
 		    	return "[I";
 		    case "String":

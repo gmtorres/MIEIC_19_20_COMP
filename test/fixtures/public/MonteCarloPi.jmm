@@ -1,6 +1,7 @@
 import static MathUtils.random(int,int) int; //lowerLimit,upperLimit
 import static ioPlus.requestNumber() int;
 import static ioPlus.printResult(int) void;
+import static io.println(int);
 class MonteCarloPi {
 	public boolean performSingleEstimate() {
 		int rand1;
@@ -28,16 +29,16 @@ class MonteCarloPi {
 
 		samples_so_far = 0;
 		samples_in_circle = 0;
-
+		io.println(n);
 		while (samples_so_far < n) {
 			if (this.performSingleEstimate()) {
 				samples_in_circle = samples_in_circle + 1;
 			} else {
 			}
 			samples_so_far = samples_so_far + 1;
+			
 		}
-
-		pi_estimate = 400 * samples_in_circle / n;
+		pi_estimate = (400 * samples_in_circle) / n;
 		return pi_estimate;
 	}
 

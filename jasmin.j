@@ -1,13 +1,12 @@
-.class public Life
+.class public TicTacToe
 .super java/lang/Object
 
-.field UNDERPOP_LIM I
-.field OVERPOP_LIM I
-.field REPRODUCE_NUM I
-.field LOOPS_PER_MS I
-.field xMax I
-.field yMax I
-.field __field [I
+.field row0 [I
+.field row1 [I
+.field row2 [I
+.field whoseturn I
+.field movesmade I
+.field pieces [I
 
 .method public <init>()V
 aload_0
@@ -15,1276 +14,693 @@ invokenonvirtual java/lang/Object/<init>()V
 return
 .end method
 
-.method public static main([Ljava/lang/String;)V
+.method public init()Z
 	.limit stack 100
 	.limit locals 100
 
-new Life
-dup
-invokespecial Life/<init>()V
-astore_2
-
-aload_2
-invokevirtual Life.init()B
-pop
-
-loop1:
-iconst_1
-ifeq end_loop1
-
-aload_2
-invokevirtual Life.printField()B
-pop
-
-aload_2
-invokevirtual Life.update()B
-pop
-
-invokestatic	io.read()I
-istore_3
-
-goto loop1
-end_loop1:
-
-	return
-.end method
-
-.method public init()B
-	.limit stack 100
-	.limit locals 100
-
-iconst_1
+aload_0
+iconst_3
 newarray int
-astore_1
+putfield TicTacToe/row0 [I
+
+aload_0
+iconst_3
+newarray int
+putfield TicTacToe/row1 [I
+
+aload_0
+iconst_3
+newarray int
+putfield TicTacToe/row2 [I
 
 aload_0
 iconst_2
-putfield Life/UNDERPOP_LIM I
+newarray int
+putfield TicTacToe/pieces [I
 
 aload_0
-iconst_3
-putfield Life/OVERPOP_LIM I
-
-aload_0
-iconst_3
-putfield Life/REPRODUCE_NUM I
-
-aload_0
-ldc 225000
-putfield Life/LOOPS_PER_MS I
-
-aload_0
-aload_0
-aload_1
-invokevirtual Life.field([I)[I
-putfield Life/__field [I
-
-aload_1
+getfield TicTacToe/pieces [I
 iconst_0
-iaload
-istore_2
+iconst_1
+iastore
 
 aload_0
-iload_2
+getfield TicTacToe/pieces [I
 iconst_1
-isub
-putfield Life/xMax I
+iconst_2
+iastore
 
 aload_0
+iconst_0
+putfield TicTacToe/whoseturn I
+
 aload_0
-getfield Life/__field [I
-arraylength
-iload_2
-idiv
-iconst_1
-isub
-putfield Life/yMax I
+iconst_0
+putfield TicTacToe/movesmade I
 
 iconst_1
 ireturn
 
 .end method
 
-.method public field([I)[I
+.method public getRow0()[I
 	.limit stack 100
 	.limit locals 100
 
-bipush 100
-newarray int
-astore_2
-
-aload_1
-iconst_0
-bipush 10
-iastore
-
-aload_2
-iconst_0
-iconst_0
-iastore
-
-aload_2
-iconst_1
-iconst_0
-iastore
-
-aload_2
-iconst_2
-iconst_1
-iastore
-
-aload_2
-iconst_3
-iconst_0
-iastore
-
-aload_2
-iconst_4
-iconst_0
-iastore
-
-aload_2
-iconst_5
-iconst_0
-iastore
-
-aload_2
-bipush 6
-iconst_0
-iastore
-
-aload_2
-bipush 7
-iconst_0
-iastore
-
-aload_2
-bipush 8
-iconst_0
-iastore
-
-aload_2
-bipush 9
-iconst_0
-iastore
-
-aload_2
-bipush 10
-iconst_1
-iastore
-
-aload_2
-bipush 11
-iconst_0
-iastore
-
-aload_2
-bipush 12
-iconst_1
-iastore
-
-aload_2
-bipush 13
-iconst_0
-iastore
-
-aload_2
-bipush 14
-iconst_0
-iastore
-
-aload_2
-bipush 15
-iconst_0
-iastore
-
-aload_2
-bipush 16
-iconst_0
-iastore
-
-aload_2
-bipush 17
-iconst_0
-iastore
-
-aload_2
-bipush 18
-iconst_0
-iastore
-
-aload_2
-bipush 19
-iconst_0
-iastore
-
-aload_2
-bipush 20
-iconst_0
-iastore
-
-aload_2
-bipush 21
-iconst_1
-iastore
-
-aload_2
-bipush 22
-iconst_1
-iastore
-
-aload_2
-bipush 23
-iconst_0
-iastore
-
-aload_2
-bipush 24
-iconst_0
-iastore
-
-aload_2
-bipush 25
-iconst_0
-iastore
-
-aload_2
-bipush 26
-iconst_0
-iastore
-
-aload_2
-bipush 27
-iconst_0
-iastore
-
-aload_2
-bipush 28
-iconst_0
-iastore
-
-aload_2
-bipush 29
-iconst_0
-iastore
-
-aload_2
-bipush 30
-iconst_0
-iastore
-
-aload_2
-bipush 31
-iconst_0
-iastore
-
-aload_2
-bipush 32
-iconst_0
-iastore
-
-aload_2
-bipush 33
-iconst_0
-iastore
-
-aload_2
-bipush 34
-iconst_0
-iastore
-
-aload_2
-bipush 35
-iconst_0
-iastore
-
-aload_2
-bipush 36
-iconst_0
-iastore
-
-aload_2
-bipush 37
-iconst_0
-iastore
-
-aload_2
-bipush 38
-iconst_0
-iastore
-
-aload_2
-bipush 39
-iconst_0
-iastore
-
-aload_2
-bipush 40
-iconst_0
-iastore
-
-aload_2
-bipush 41
-iconst_0
-iastore
-
-aload_2
-bipush 42
-iconst_0
-iastore
-
-aload_2
-bipush 43
-iconst_0
-iastore
-
-aload_2
-bipush 44
-iconst_0
-iastore
-
-aload_2
-bipush 45
-iconst_0
-iastore
-
-aload_2
-bipush 46
-iconst_0
-iastore
-
-aload_2
-bipush 47
-iconst_0
-iastore
-
-aload_2
-bipush 48
-iconst_0
-iastore
-
-aload_2
-bipush 49
-iconst_0
-iastore
-
-aload_2
-bipush 50
-iconst_0
-iastore
-
-aload_2
-bipush 51
-iconst_0
-iastore
-
-aload_2
-bipush 52
-iconst_0
-iastore
-
-aload_2
-bipush 53
-iconst_0
-iastore
-
-aload_2
-bipush 54
-iconst_0
-iastore
-
-aload_2
-bipush 55
-iconst_0
-iastore
-
-aload_2
-bipush 56
-iconst_0
-iastore
-
-aload_2
-bipush 57
-iconst_0
-iastore
-
-aload_2
-bipush 58
-iconst_0
-iastore
-
-aload_2
-bipush 59
-iconst_0
-iastore
-
-aload_2
-bipush 60
-iconst_0
-iastore
-
-aload_2
-bipush 61
-iconst_0
-iastore
-
-aload_2
-bipush 62
-iconst_0
-iastore
-
-aload_2
-bipush 63
-iconst_0
-iastore
-
-aload_2
-bipush 64
-iconst_0
-iastore
-
-aload_2
-bipush 65
-iconst_0
-iastore
-
-aload_2
-bipush 66
-iconst_0
-iastore
-
-aload_2
-bipush 67
-iconst_0
-iastore
-
-aload_2
-bipush 68
-iconst_0
-iastore
-
-aload_2
-bipush 69
-iconst_0
-iastore
-
-aload_2
-bipush 70
-iconst_0
-iastore
-
-aload_2
-bipush 71
-iconst_0
-iastore
-
-aload_2
-bipush 72
-iconst_0
-iastore
-
-aload_2
-bipush 73
-iconst_0
-iastore
-
-aload_2
-bipush 74
-iconst_0
-iastore
-
-aload_2
-bipush 75
-iconst_0
-iastore
-
-aload_2
-bipush 76
-iconst_0
-iastore
-
-aload_2
-bipush 77
-iconst_0
-iastore
-
-aload_2
-bipush 78
-iconst_0
-iastore
-
-aload_2
-bipush 79
-iconst_0
-iastore
-
-aload_2
-bipush 80
-iconst_0
-iastore
-
-aload_2
-bipush 81
-iconst_0
-iastore
-
-aload_2
-bipush 82
-iconst_0
-iastore
-
-aload_2
-bipush 83
-iconst_0
-iastore
-
-aload_2
-bipush 84
-iconst_0
-iastore
-
-aload_2
-bipush 85
-iconst_0
-iastore
-
-aload_2
-bipush 86
-iconst_0
-iastore
-
-aload_2
-bipush 87
-iconst_0
-iastore
-
-aload_2
-bipush 88
-iconst_0
-iastore
-
-aload_2
-bipush 89
-iconst_0
-iastore
-
-aload_2
-bipush 90
-iconst_0
-iastore
-
-aload_2
-bipush 91
-iconst_0
-iastore
-
-aload_2
-bipush 92
-iconst_0
-iastore
-
-aload_2
-bipush 93
-iconst_0
-iastore
-
-aload_2
-bipush 94
-iconst_0
-iastore
-
-aload_2
-bipush 95
-iconst_0
-iastore
-
-aload_2
-bipush 96
-iconst_0
-iastore
-
-aload_2
-bipush 97
-iconst_0
-iastore
-
-aload_2
-bipush 98
-iconst_0
-iastore
-
-aload_2
-bipush 99
-iconst_0
-iastore
-
-aload_2
+aload_0
+getfield TicTacToe/row0 [I
 areturn
 
 .end method
 
-.method public update()B
+.method public getRow1()[I
 	.limit stack 100
 	.limit locals 100
 
 aload_0
-getfield Life/__field [I
-arraylength
-newarray int
-astore 5
+getfield TicTacToe/row1 [I
+areturn
 
-iconst_0
-istore_1
+.end method
 
-loop2:
-iload_1
-aload_0
-getfield Life/__field [I
-arraylength
-if_icmpge end_loop2
+.method public getRow2()[I
+	.limit stack 100
+	.limit locals 100
 
 aload_0
-getfield Life/__field [I
-iload_1
-iaload
-istore_2
+getfield TicTacToe/row2 [I
+areturn
 
-aload_0
-iload_1
-invokevirtual Life.getLiveNeighborN(I)I
-istore_3
+.end method
+
+.method public MoveRow([II)Z
+	.limit stack 100
+	.limit locals 100
 
 iload_2
-iconst_1
-if_icmplt else_if1
-not_1:
+iconst_0
+if_icmpge else_if1
 
-aload_0
-iload_3
-aload_0
-getfield Life/UNDERPOP_LIM I
-invokevirtual Life.ge(II)B
-ifeq else_if2
-aload_0
-iload_3
-aload_0
-getfield Life/OVERPOP_LIM I
-invokevirtual Life.le(II)B
-ifeq else_if2
+iconst_0
+istore_3
 
-iconst_1
+goto end_if1
+
+else_if1:
+iconst_2
+iload_2
+if_icmpge else_if2
+
+iconst_0
+istore_3
 
 goto end_if2
 
 else_if2:
 iconst_0
+aload_1
+iload_2
+iaload
+if_icmpge else_if3
 
-end_if2:
-istore 4
-
-iload 4
-ifne else_if3
-not_2:
-
-aload 5
-iload_1
 iconst_0
-iastore
+istore_3
 
 goto end_if3
 
 else_if3:
-aload 5
-iload_1
+aload_1
+iload_2
 aload_0
-getfield Life/__field [I
-iload_1
+getfield TicTacToe/pieces [I
+aload_0
+getfield TicTacToe/whoseturn I
 iaload
 iastore
 
+aload_0
+aload_0
+getfield TicTacToe/movesmade I
+iconst_1
+iadd
+putfield TicTacToe/movesmade I
+
+iconst_1
+istore_3
+
 end_if3:
 
-goto end_if1
+end_if2:
 
-else_if1:
-aload_0
+end_if1:
+
 iload_3
-aload_0
-getfield Life/REPRODUCE_NUM I
-invokevirtual Life.eq(II)B
-ifeq else_if4
+ireturn
 
-aload 5
+.end method
+
+.method public Move(II)Z
+	.limit stack 100
+	.limit locals 100
+
 iload_1
-iconst_1
-iastore
+iconst_0
+if_icmplt else_if4
+not_1:
+iconst_0
+iload_1
+if_icmplt else_if4
+not_2:
+
+aload_0
+aload_0
+getfield TicTacToe/row0 [I
+iload_2
+invokevirtual TicTacToe.MoveRow([II)Z
+istore_3
 
 goto end_if4
 
 else_if4:
-aload 5
-iload_1
-aload_0
-getfield Life/__field [I
-iload_1
-iaload
-iastore
-
-end_if4:
-
-end_if1:
-
 iload_1
 iconst_1
-iadd
-istore_1
-
-goto loop2
-end_loop2:
-
-aload_0
-aload 5
-putfield Life/__field [I
-
+if_icmplt else_if5
+not_3:
 iconst_1
-ireturn
-
-.end method
-
-.method public printField()B
-	.limit stack 100
-	.limit locals 100
-
-iconst_0
-istore_1
-
-iconst_0
-istore_2
-
-loop3:
 iload_1
-aload_0
-getfield Life/__field [I
-arraylength
-if_icmpge end_loop3
+if_icmplt else_if5
+not_4:
 
 aload_0
+aload_0
+getfield TicTacToe/row1 [I
 iload_2
-aload_0
-getfield Life/xMax I
-invokevirtual Life.gt(II)B
-ifeq else_if5
-
-invokestatic	io.println()V
-
-iconst_0
-istore_2
+invokevirtual TicTacToe.MoveRow([II)Z
+istore_3
 
 goto end_if5
 
 else_if5:
-end_if5:
-
-aload_0
-getfield Life/__field [I
 iload_1
-iaload
-invokestatic	io.print(I)V
-
-iload_1
-iconst_1
-iadd
-istore_1
-
-iload_2
-iconst_1
-iadd
-istore_2
-
-goto loop3
-end_loop3:
-
-invokestatic	io.println()V
-
-invokestatic	io.println()V
-
-iconst_1
-ireturn
-
-.end method
-
-.method public trIdx(II)I
-	.limit stack 100
-	.limit locals 100
-
-iload_1
-aload_0
-getfield Life/xMax I
-iconst_1
-iadd
-iload_2
-imul
-iadd
-ireturn
-
-.end method
-
-.method public cartIdx(I)[I
-	.limit stack 100
-	.limit locals 100
-
-aload_0
-getfield Life/xMax I
-iconst_1
-iadd
-istore 4
-
-iload_1
-iload 4
-idiv
-istore_3
-
-iload_1
-iload_3
-iload 4
-imul
-isub
-istore_2
-
 iconst_2
-newarray int
-astore 5
-
-aload 5
-iconst_0
-iload_2
-iastore
-
-aload 5
-iconst_1
-iload_3
-iastore
-
-aload 5
-areturn
-
-.end method
-
-.method public getNeighborCoords(I)[I
-	.limit stack 100
-	.limit locals 100
-
-aload_0
+if_icmplt else_if6
+not_5:
+iconst_2
 iload_1
-invokevirtual Life.cartIdx(I)[I
-astore 8
+if_icmplt else_if6
+not_6:
 
-aload 8
-iconst_0
-iaload
-istore_2
-
-aload 8
-iconst_1
-iaload
+aload_0
+aload_0
+getfield TicTacToe/row2 [I
+iload_2
+invokevirtual TicTacToe.MoveRow([II)Z
 istore_3
-
-iload_2
-aload_0
-getfield Life/xMax I
-if_icmpge else_if6
-
-iload_2
-iconst_1
-iadd
-istore 6
-
-aload_0
-iload_2
-iconst_0
-invokevirtual Life.gt(II)B
-ifeq else_if7
-
-iload_2
-iconst_1
-isub
-istore 4
-
-goto end_if7
-
-else_if7:
-aload_0
-getfield Life/xMax I
-istore 4
-
-end_if7:
 
 goto end_if6
 
 else_if6:
 iconst_0
-istore 6
-
-iload_2
-iconst_1
-isub
-istore 4
+istore_3
 
 end_if6:
 
+end_if5:
+
+end_if4:
+
 iload_3
-aload_0
-getfield Life/yMax I
+ireturn
+
+.end method
+
+.method public inbounds(II)Z
+	.limit stack 100
+	.limit locals 100
+
+iload_1
+iconst_0
+if_icmpge else_if7
+
+iconst_0
+istore_3
+
+goto end_if7
+
+else_if7:
+iload_2
+iconst_0
 if_icmpge else_if8
 
-iload_3
-iconst_1
-iadd
-istore 7
-
-aload_0
-iload_3
 iconst_0
-invokevirtual Life.gt(II)B
-ifeq else_if9
-
-iload_3
-iconst_1
-isub
-istore 5
-
-goto end_if9
-
-else_if9:
-aload_0
-getfield Life/yMax I
-istore 5
-
-end_if9:
+istore_3
 
 goto end_if8
 
 else_if8:
-iconst_0
-istore 7
-
-iload_3
-iconst_1
-isub
-istore 5
-
-end_if8:
-
-bipush 8
-newarray int
-astore 9
-
-aload 9
-iconst_0
-aload_0
-iload_2
-iload 5
-invokevirtual Life.trIdx(II)I
-iastore
-
-aload 9
-iconst_1
-aload_0
-iload 4
-iload 5
-invokevirtual Life.trIdx(II)I
-iastore
-
-aload 9
 iconst_2
-aload_0
-iload 4
-iload_3
-invokevirtual Life.trIdx(II)I
-iastore
-
-aload 9
-iconst_3
-aload_0
-iload 4
-iload 7
-invokevirtual Life.trIdx(II)I
-iastore
-
-aload 9
-iconst_4
-aload_0
-iload_2
-iload 7
-invokevirtual Life.trIdx(II)I
-iastore
-
-aload 9
-iconst_5
-aload_0
-iload 6
-iload 7
-invokevirtual Life.trIdx(II)I
-iastore
-
-aload 9
-bipush 6
-aload_0
-iload 6
-iload_3
-invokevirtual Life.trIdx(II)I
-iastore
-
-aload 9
-bipush 7
-aload_0
-iload 6
-iload 5
-invokevirtual Life.trIdx(II)I
-iastore
-
-aload 9
-areturn
-
-.end method
-
-.method public getLiveNeighborN(I)I
-	.limit stack 100
-	.limit locals 100
-
-iconst_0
-istore 4
-
-aload_0
 iload_1
-invokevirtual Life.getNeighborCoords(I)[I
-astore_2
+if_icmpge else_if9
 
 iconst_0
 istore_3
 
-loop4:
-iload_3
-aload_2
-arraylength
-if_icmpge end_loop4
+goto end_if9
 
-aload_0
-aload_0
-getfield Life/__field [I
-aload_2
-iload_3
-iaload
-iaload
+else_if9:
+iconst_2
+iload_2
+if_icmpge else_if10
+
 iconst_0
-invokevirtual Life.ne(II)B
-ifeq else_if10
-
-iload 4
-iconst_1
-iadd
-istore 4
+istore_3
 
 goto end_if10
 
 else_if10:
+iconst_1
+istore_3
+
 end_if10:
 
+end_if9:
+
+end_if8:
+
+end_if7:
+
 iload_3
-iconst_1
-iadd
-istore_3
-
-goto loop4
-end_loop4:
-
-iload 4
 ireturn
 
 .end method
 
-.method public busyWait(I)B
+.method public changeturn()Z
 	.limit stack 100
 	.limit locals 100
 
-iload_1
 aload_0
-getfield Life/LOOPS_PER_MS I
-imul
-istore_3
+iconst_1
+aload_0
+getfield TicTacToe/whoseturn I
+isub
+putfield TicTacToe/whoseturn I
+
+iconst_1
+ireturn
+
+.end method
+
+.method public getCurrentPlayer()I
+	.limit stack 100
+	.limit locals 100
+
+aload_0
+getfield TicTacToe/whoseturn I
+iconst_1
+iadd
+ireturn
+
+.end method
+
+.method public winner()I
+	.limit stack 100
+	.limit locals 100
 
 iconst_0
+iconst_1
+isub
 istore_2
 
-loop5:
-iload_2
-iload_3
-if_icmpge end_loop5
+iconst_3
+newarray int
+astore_1
 
-iload_2
-iconst_1
-iadd
+aload_0
+getfield TicTacToe/row0 [I
+invokestatic	BoardBase.sameArray([I)Z
+ifeq else_if11
+iconst_0
+aload_0
+getfield TicTacToe/row0 [I
+iconst_0
+iaload
+if_icmpge else_if11
+
+aload_0
+getfield TicTacToe/row0 [I
+iconst_0
+iaload
 istore_2
-
-goto loop5
-end_loop5:
-
-iconst_1
-ireturn
-
-.end method
-
-.method public eq(II)B
-	.limit stack 100
-	.limit locals 100
-
-aload_0
-iload_1
-iload_2
-invokevirtual Life.lt(II)B
-ifne else_if11
-not_3:
-aload_0
-iload_2
-iload_1
-invokevirtual Life.lt(II)B
-ifne else_if11
-not_4:
-
-iconst_1
 
 goto end_if11
 
 else_if11:
+aload_0
+getfield TicTacToe/row1 [I
+invokestatic	BoardBase.sameArray([I)Z
+ifeq else_if12
 iconst_0
-
-end_if11:
-ireturn
-
-.end method
-
-.method public ne(II)B
-	.limit stack 100
-	.limit locals 100
+aload_0
+getfield TicTacToe/row1 [I
+iconst_0
+iaload
+if_icmpge else_if12
 
 aload_0
-iload_1
-iload_2
-invokevirtual Life.eq(II)B
-ifne else_if12
-not_5:
-
-iconst_1
+getfield TicTacToe/row1 [I
+iconst_0
+iaload
+istore_2
 
 goto end_if12
 
 else_if12:
+aload_0
+getfield TicTacToe/row2 [I
+invokestatic	BoardBase.sameArray([I)Z
+ifeq else_if13
 iconst_0
-
-end_if12:
-ireturn
-
-.end method
-
-.method public lt(II)B
-	.limit stack 100
-	.limit locals 100
-
-iload_1
-iload_2
+aload_0
+getfield TicTacToe/row2 [I
+iconst_0
+iaload
 if_icmpge else_if13
 
-iconst_1
+aload_0
+getfield TicTacToe/row2 [I
+iconst_0
+iaload
+istore_2
 
 goto end_if13
 
 else_if13:
 iconst_0
+istore_3
 
-end_if13:
-ireturn
-
-.end method
-
-.method public le(II)B
-	.limit stack 100
-	.limit locals 100
-
-aload_0
-iload_1
+loop1:
 iload_2
-invokevirtual Life.lt(II)B
-ifeq else_if14
-not_7:
-aload_0
-iload_1
-iload_2
-invokevirtual Life.eq(II)B
-ifeq else_if14
-not_8:
-not_8:
-
 iconst_1
+if_icmpge end_loop1
+iload_3
+iconst_3
+if_icmpge end_loop1
+
+aload_1
+iconst_0
+aload_0
+getfield TicTacToe/row0 [I
+iload_3
+iaload
+iastore
+
+aload_1
+iconst_1
+aload_0
+getfield TicTacToe/row1 [I
+iload_3
+iaload
+iastore
+
+aload_1
+iconst_2
+aload_0
+getfield TicTacToe/row2 [I
+iload_3
+iaload
+iastore
+
+aload_1
+invokestatic	BoardBase.sameArray([I)Z
+ifeq else_if14
+iconst_0
+aload_1
+iconst_0
+iaload
+if_icmpge else_if14
+
+aload_1
+iconst_0
+iaload
+istore_2
 
 goto end_if14
 
 else_if14:
-iconst_0
-
 end_if14:
-ireturn
 
-.end method
-
-.method public gt(II)B
-	.limit stack 100
-	.limit locals 100
-
-aload_0
-iload_1
-iload_2
-invokevirtual Life.le(II)B
-ifne else_if15
-not_9:
-
+iload_3
 iconst_1
+iadd
+istore_3
 
-goto end_if15
+goto loop1
+end_loop1:
 
-else_if15:
+iload_2
+iconst_1
+if_icmpge else_if15
+
+aload_1
 iconst_0
-
-end_if15:
-ireturn
-
-.end method
-
-.method public ge(II)B
-	.limit stack 100
-	.limit locals 100
-
 aload_0
-iload_1
-iload_2
-invokevirtual Life.gt(II)B
-ifeq else_if16
-not_11:
-aload_0
-iload_1
-iload_2
-invokevirtual Life.eq(II)B
-ifeq else_if16
-not_12:
-not_12:
+getfield TicTacToe/row0 [I
+iconst_0
+iaload
+iastore
 
+aload_1
 iconst_1
+aload_0
+getfield TicTacToe/row1 [I
+iconst_1
+iaload
+iastore
+
+aload_1
+iconst_2
+aload_0
+getfield TicTacToe/row2 [I
+iconst_2
+iaload
+iastore
+
+aload_1
+invokestatic	BoardBase.sameArray([I)Z
+ifeq else_if16
+iconst_0
+aload_1
+iconst_0
+iaload
+if_icmpge else_if16
+
+aload_1
+iconst_0
+iaload
+istore_2
 
 goto end_if16
 
 else_if16:
+aload_1
 iconst_0
+aload_0
+getfield TicTacToe/row0 [I
+iconst_2
+iaload
+iastore
+
+aload_1
+iconst_1
+aload_0
+getfield TicTacToe/row1 [I
+iconst_1
+iaload
+iastore
+
+aload_1
+iconst_2
+aload_0
+getfield TicTacToe/row2 [I
+iconst_0
+iaload
+iastore
+
+aload_1
+invokestatic	BoardBase.sameArray([I)Z
+ifeq else_if17
+iconst_0
+aload_1
+iconst_0
+iaload
+if_icmpge else_if17
+
+aload_1
+iconst_0
+iaload
+istore_2
+
+goto end_if17
+
+else_if17:
+end_if17:
 
 end_if16:
+
+goto end_if15
+
+else_if15:
+end_if15:
+
+end_if13:
+
+end_if12:
+
+end_if11:
+
+iload_2
+iconst_1
+if_icmpge else_if18
+aload_0
+getfield TicTacToe/movesmade I
+bipush 9
+if_icmplt else_if18
+not_7:
+bipush 9
+aload_0
+getfield TicTacToe/movesmade I
+if_icmplt else_if18
+not_8:
+
+iconst_0
+istore_2
+
+goto end_if18
+
+else_if18:
+end_if18:
+
+iload_2
 ireturn
 
+.end method
+
+.method public static main([Ljava/lang/String;)V
+	.limit stack 100
+	.limit locals 100
+
+new TicTacToe
+dup
+invokespecial TicTacToe/<init>()V
+astore_2
+
+aload_2
+invokevirtual TicTacToe.init()Z
+pop
+
+loop2:
+aload_2
+invokevirtual TicTacToe.winner()I
+iconst_0
+iconst_1
+isub
+if_icmplt end_loop2
+not_9:
+iconst_0
+iconst_1
+isub
+aload_2
+invokevirtual TicTacToe.winner()I
+if_icmplt end_loop2
+not_10:
+
+iconst_0
+istore 4
+
+loop3:
+iload 4
+ifne end_loop3
+not_11:
+
+aload_2
+invokevirtual TicTacToe.getRow0()[I
+aload_2
+invokevirtual TicTacToe.getRow1()[I
+aload_2
+invokevirtual TicTacToe.getRow2()[I
+invokestatic	BoardBase.printBoard([I[I[I)V
+
+aload_2
+invokevirtual TicTacToe.getCurrentPlayer()I
+istore 6
+
+iload 6
+invokestatic	BoardBase.playerTurn(I)[I
+astore 5
+
+aload_2
+aload 5
+iconst_0
+iaload
+aload 5
+iconst_1
+iaload
+invokevirtual TicTacToe.inbounds(II)Z
+ifne else_if19
+not_12:
+
+invokestatic	BoardBase.wrongMove()V
+
+goto end_if19
+
+else_if19:
+aload_2
+aload 5
+iconst_0
+iaload
+aload 5
+iconst_1
+iaload
+invokevirtual TicTacToe.Move(II)Z
+ifne else_if20
+not_13:
+
+invokestatic	BoardBase.placeTaken()V
+
+goto end_if20
+
+else_if20:
+iconst_1
+istore 4
+
+end_if20:
+
+end_if19:
+
+goto loop3
+end_loop3:
+
+aload_2
+invokevirtual TicTacToe.changeturn()Z
+pop
+
+goto loop2
+end_loop2:
+
+aload_2
+invokevirtual TicTacToe.getRow0()[I
+aload_2
+invokevirtual TicTacToe.getRow1()[I
+aload_2
+invokevirtual TicTacToe.getRow2()[I
+invokestatic	BoardBase.printBoard([I[I[I)V
+
+aload_2
+invokevirtual TicTacToe.winner()I
+istore_3
+
+iload_3
+invokestatic	BoardBase.printWinner(I)V
+
+	return
 .end method
