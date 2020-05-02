@@ -179,8 +179,12 @@ public class Jasmin {
 			  Integer value = Integer.parseInt(node.children[0].getInst());
 			  if(value <= 5)
 				  this.println("iconst_"+value);
-			  else
+			  else if(value <= 127)
 				  this.println("bipush " + value);
+			  else if(value <= 32768)
+				  this.println("sipush " + value);
+			  else
+				  this.println("ldc " + value);
 		  }else if(node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
 			  Integer local_var = node.children[0].local_var;
 			  if(local_var < 4)
@@ -458,7 +462,7 @@ public class Jasmin {
 		  for (int i= 0; i < ((r.getChildren()[2]).getChildren().length); i++) {
 			  toPrint += retType(r.getChildren()[2].getChildren()[i].getInst());
 			  if(i != r.getChildren()[2].getChildren().length - 1)
-				  toPrint +=", ";
+				  toPrint +="";
 		  }
 
 		  
@@ -511,7 +515,7 @@ public class Jasmin {
 		  for (int i= 0; i < params.length; i++) {
 			  toPrint += retType(params[i].getInst());
 			  if(i != params.length - 1)
-				  toPrint +=", ";
+				  toPrint +="";
 		  }			  
 		  //System.out.println("   dsfd " + (r.getChildren()[1]).getChildren()[0].getInst());
 		  String type = (r.getChildren()[1]).getChildren()[0].getInst();
@@ -538,7 +542,7 @@ private void printInvokeVirtual(IRNode r) {
 		  for (int i= 0; i < params.length; i++) {
 			  toPrint += retType(params[i].getInst());
 			  if(i != params.length - 1)
-				  toPrint +=", ";
+				  toPrint +="";
 		  }
 		  String type = (r.getChildren()[1]).getChildren()[0].getInst();
 		  toPrint += ")" + retType(type);

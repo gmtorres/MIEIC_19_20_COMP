@@ -8,9 +8,11 @@ class Hello_T {
 		Hello_T e;
 		e = new Hello_T();
     	d=3;
-		while(d < 10){
-			d = e.soma(d);
-		}
+		if(!(d < 3))
+			d = 4;
+		else
+			d = 5;
+		io.println(d);
 	}
 	
 	public  int soma(int a){

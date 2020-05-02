@@ -1,4 +1,4 @@
-.class public Hello_T
+.class public Simple
 .super java/lang/Object
 
 .method public <init>()V
@@ -8,44 +8,76 @@ return
 .end method
 
 
-.method public static main([Ljava/lang/String;)V
+.method public add(II)I
 	.limit stack 2
 	.limit locals 10
 
-new Hello_T
-dup
-invokespecial Hello_T/<init>()V
-astore_3
+iload_1
+iload_2
+iadd
+istore_3
 
-iconst_3
+iload_3
+ireturn
+
+.end method
+
+.method public static main([Ljava/lang/String;)V
+	.limit stack 3
+	.limit locals 10
+
+bipush 20
 istore_2
 
-loop1:
-iload_2
 bipush 10
-if_icmpge end_loop1
+istore_3
 
-aload_3
+new Simple
+dup
+invokespecial Simple/<init>()V
+astore 5
+
+aload 5
 iload_2
-invokevirtual Hello_T.soma(I)I
-istore_2
+iload_3
+invokevirtual Simple.add(II)I
+istore 4
 
-goto loop1
-end_loop1:
+iload 4
+invokestatic	io.println(I)V
 
 	return
 .end method
 
-.method public soma(I)I
-	.limit stack 2
+.method public constInstr()I
+	.limit stack 1
 	.limit locals 10
 
-iload_1
-invokestatic	io.println(I)V
+iconst_0
+istore_1
 
-iload_1
-iconst_1
-iadd
+iconst_4
+istore_1
+
+bipush 8
+istore_1
+
+bipush 14
+istore_1
+
+sipush 250
+istore_1
+
+sipush 400
+istore_1
+
+sipush 1000
+istore_1
+
+ldc 100474650
+istore_1
+
+iconst_0
 ireturn
 
 .end method
