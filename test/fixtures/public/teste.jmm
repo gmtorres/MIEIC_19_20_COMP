@@ -15,7 +15,7 @@ class Hello_T {
 	
 	public  int soma(int a){
 		io.println(a);
-		return a+2;
+		return a+1;
 	}
   
  }

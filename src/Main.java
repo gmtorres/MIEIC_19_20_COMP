@@ -60,7 +60,8 @@ public class Main {
 	        
 	        PrintStream file;
 	        try{
-	        	file = new PrintStream(new File(parts[0] + ".j"));
+	        	//file = new PrintStream(new File(parts[0] + ".j"));
+	        	file = new PrintStream(new File("jasmin.j"));
 	        }catch(Exception e) {
 	        	System.out.println(e);
 	        	return;
