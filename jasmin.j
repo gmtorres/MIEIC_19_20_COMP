@@ -20,7 +20,7 @@ astore_3
 iconst_3
 istore_2
 
-aload_0
+aload_3
 iload_2
 invokevirtual Hello.soma(I)I
 pop

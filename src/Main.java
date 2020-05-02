@@ -7,6 +7,12 @@ public class Main {
 	
 
     public static void main(String args[]) throws ParseException, SemanticException {   
+    		
+    		String[] parts = args[0].split("\\.");
+    		if(!parts[1].equals("jmm")) {
+    			System.out.println("Can only parse jmm files");
+    			System.exit(0);
+    		}
 
 		
             System.out.println("TESTE:");
@@ -25,7 +31,7 @@ public class Main {
 
 
         	ASTProgram root = myJmm.Program();
-	        root.dump("");
+	        //root.dump("");
 
 	        if(myJmm.failed == true) {
 	        	throw new ParseException();
@@ -54,7 +60,7 @@ public class Main {
 	        
 	        PrintStream file;
 	        try{
-	        	file = new PrintStream(new File("jasmin.j"));
+	        	file = new PrintStream(new File(parts[0] + ".j"));
 	        }catch(Exception e) {
 	        	System.out.println(e);
 	        	return;

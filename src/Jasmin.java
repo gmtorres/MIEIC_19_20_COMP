@@ -575,8 +575,10 @@ private void printInvokeVirtual(IRNode r) {
 				  !parentInst.equals("funcParams") &&
 				  !parentInst.equals("st") &&
 				  !parentInst.equals("stg") &&
-				  !parentInst.equals("sta")&&
-				  !parentInst.equals("return") ) {
+				  !parentInst.equals("sta") &&
+				  !parentInst.equals("return") &&
+				  !parentInst.equals("invoke_static") &&
+				  !parentInst.equals("invoke_virtual") ) {
 			  this.println("pop");
 		  }
 	  }
