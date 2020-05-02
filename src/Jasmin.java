@@ -181,7 +181,7 @@ public class Jasmin {
 				  this.println("iconst_"+value);
 			  else if(value <= 127)
 				  this.println("bipush " + value);
-			  else if(value <= 32768)
+			  else if(value <= 32767)
 				  this.println("sipush " + value);
 			  else
 				  this.println("ldc " + value);

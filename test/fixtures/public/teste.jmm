@@ -1,23 +1,31 @@
 import static io.println(int);
 
-class Hello_T {
+class Hello_T {	
 	
 	public static void main(String[] args) 
     { 
 		int d;
 		Hello_T e;
 		e = new Hello_T();
-    	d=3;
-		if(!(d < 3))
-			d = 4;
-		else
-			d = 5;
-		io.println(d);
+		d = 1;
+		while(d < 16){
+			io.println(e.fibbonaci(d));
+			d = d + 1;
+		}
 	}
 	
 	public  int soma(int a){
 		io.println(a);
 		return a+1;
+	}
+	
+	public int fibbonaci(int n){
+		int r;
+		if(n < 3)
+			r = 1;
+		else
+			r = this.fibbonaci(n-2) + this.fibbonaci(n-1);
+		return r;
 	}
   
  }
