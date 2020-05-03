@@ -7,7 +7,7 @@ public class Descriptor {
 	SimbolTable simbolTable;
 	Descriptor content = null;
 	Descriptor extend = null;
-	List<Descriptor> params = new ArrayList<>();
+	List<List<Descriptor>> params = new ArrayList<>();
 	
 	public Descriptor(String nm, SimbolTable st){
 		this.name = nm;
@@ -51,12 +51,25 @@ public class Descriptor {
 		return l;
 	}
 	
-	public List<Descriptor> getParams(){
+	public List<List<Descriptor>> getParams(){
 		return this.params;
 	}
 	
-	public void setParams(List<Descriptor> p) {
-		this.params = p;
+	public boolean addParams(List<Descriptor> p) {
+		for(List<Descriptor> d : this.params) {
+			if(d.size() != p.size())
+				continue;
+			int i = 0;
+			for(; i < d.size() && i < p.size() ;i++) {
+				if(!d.get(i).name.equals(p.get(i).name)) {
+					break;
+				}
+			}
+			if(i == p.size() && i == d.size())
+				return false;
+		}
+		this.params.add(p);
+		return true;
 	}
 	
 	

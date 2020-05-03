@@ -1,34 +1,36 @@
-import static io.println(int);
+//key, value can be changed to other Types (e.g. boolean, int[], MyClass)
+import Map;
+import Map.put(int, int);
+import Map.get(int) int;
+import Map.clear();
+import Map.print();
+import Map.contains(int) boolean;
+import Map.remove(int) boolean;
 
-class Hello_T {	
-	int UNDERPOP_LIM;
-    int OVERPOP_LIM;
-    int REPRODUCE_NUM;
+ 
 
-    int LOOPS_PER_MS;
+//content can be changed to other Types (e.g. boolean, int[], MyClass)
+import List;
+import List(int);
+import List.add(int);
+import List.add(int, int);
+import List.contains(int) boolean;
+import List.remove(int) boolean;
+import List.size() int;
 
-    int xMax;
-    int yMax;
-    int[] field;
-    
-	public static void main(String[] args){ 	
-		Hello_T e;
-		boolean b;
-		e = new Hello_T();
-		b = e.b();
+ 
+
+import static io.println(int) void;
+import static io.println(int,int) void;
+import static io.readln() int;
+
+class ImportStressTest {
+	
+	public static void main(String[] args) {
+		List l;
+		3+4;
+		l = new List();
+		l = new List(2);		
 	}
 	
-    public boolean lt(int a, int b) {
-		return (a < b);
-    }
-	
-	public boolean b(){
-		int neighN;
-		neighN = 2;
-		UNDERPOP_LIM = 10;
-		OVERPOP_LIM = 20;
-		return this.lt(neighN,UNDERPOP_LIM) 
-				&& this.lt(neighN,OVERPOP_LIM);
-	}
-  
- }
+}

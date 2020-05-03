@@ -35,28 +35,52 @@ class ASTNEW_IDENTIFIER extends SimpleNode {
 	  Descriptor d = this.descriptors.getDescriptor(lhn.name);
 	  
 	  if(d == null) {
-		  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Type " + lhn.name + " is not known.");
+		  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Type " + lhn.name + " is not known.");
 		  this.decrementMaxErros();
 		  return false;
 	  }else {
 		   
-		  List<Descriptor> listDesc =d.getParams();
-		  if (listDesc.size() != rhn.jjtGetNumChildren()) {
-			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong number of parameters in type " + lhn.name);
-			  this.decrementMaxErros();
-			  return false;
-		  }
-		  else {
-			  int ii = 0;
-			  for (; ii < rhn.jjtGetNumChildren(); ii++) {
-				  SimpleNode rhnc = (SimpleNode) rhn.children[ii];
-				  if(!(listDesc.get(ii).getName().equals(((SimpleNode)rhnc.children[0]).type))) {
-					  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong argument type: " + ((SimpleNode)rhnc.children[0]).type + " should be " + listDesc.get(ii).getName());
+		  List<List<Descriptor>> L = d.getParams();
+		  int i = 0;
+		  for(; i < L.size();i++) {
+			  List<Descriptor> listDesc = L.get(i);
+			  if (listDesc.size() != rhn.jjtGetNumChildren()) {
+				  if(L.size() == 1) {
+					  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Wrong number of parameters in type " + lhn.name);
 					  this.decrementMaxErros();
 					  return false;
-				  }
+				  }else continue;
 			  }
-			  this.type = d.getName();  
+			  else {
+				  int ii = 0;
+				  for (; ii < rhn.jjtGetNumChildren(); ii++) {
+					  SimpleNode rhnc = (SimpleNode) rhn.children[ii];
+					  if(!(listDesc.get(ii).getName().equals(((SimpleNode)rhnc.children[0]).type))) {
+						  if(L.size() == 1) {
+							  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Wrong argument type: " + ((SimpleNode)rhnc.children[0]).type + " should be " + listDesc.get(ii).getName());
+							  this.decrementMaxErros();
+							  return false;
+						  }else break;
+					  }
+				  }
+				  if(ii != rhn.jjtGetNumChildren())
+						continue;
+					else {
+						this.type = d.getName();  
+						break;
+					}
+			  }
+		  }
+		  if(i == L.size()) {
+			  String toPrint = "Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Could not find constructor of type: " + lhn.name + "(";
+			  for(int a = 0; a < rhn.jjtGetNumChildren(); a++ ) {
+					SimpleNode rhnc = (SimpleNode) rhn.children[a];
+					toPrint+= ((SimpleNode)rhnc.children[0]).type;
+					if(a != rhn.jjtGetNumChildren() - 1 ) toPrint+=", ";
+			  }
+			  System.out.println(toPrint + ") .");
+			  this.decrementMaxErros();
+			  return false;
 		  }
 		  
 	  }

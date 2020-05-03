@@ -142,12 +142,15 @@ public class Jasmin {
 	  private void printNewObject(IRNode node) {
 		  this.println("new " + node.getChildren()[0].getInst());
 		  this.println("dup");
+		  for(int i = 0; i < node.getChildren()[1].getChildren().length; i++) {
+			  printJasmin(node.getChildren()[1].getChildren()[i]);
+		  }
 		  String toPrint = "";
 		  toPrint += ("invokespecial " +  node.getChildren()[0].getInst() + "/<init>" + "(");
 		  for (int i = 0; i< node.getChildren()[1].getChildren().length; i++) {
-			  toPrint += retType(node.getChildren()[1].getChildren()[i].getInst());
+			  toPrint += retType(node.getChildren()[1].getChildren()[i].type);
 			  if (i != node.getChildren()[1].getChildren().length - 1) {
-				  toPrint += ", "; 
+				  toPrint += ""; 
 			  }
 		  }
 		  

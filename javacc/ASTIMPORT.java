@@ -37,6 +37,13 @@ public boolean createTable() throws SemanticException {
 	  
 	  if(this.jjtGetNumChildren() == 1) {
 		  	this.descriptors.addDescriptor( ((SimpleNode) this.children[0]).name, this.simbolTable );
+		  	Descriptor d = this.descriptors.getDescriptor(((SimpleNode) this.children[0]).name);
+			if(!d.addParams(new ArrayList<Descriptor>())) {
+				System.out.print("Error on line " + ((SimpleNode) this.children[0]).lineNo + ", column " + ((SimpleNode) this.children[0]).columnNo + ": Type "+ ((SimpleNode) this.children[0]).name + "(" );
+				System.out.println(") already imported.");
+				this.decrementMaxErros();
+				result = false; 
+			}
 	  }else if(this.jjtGetNumChildren() == 2) {
 		  SimpleNode rhs = (SimpleNode) this.children[1];
 		  SimpleNode params;
@@ -60,29 +67,38 @@ public boolean createTable() throws SemanticException {
 			  Descriptor d = this.descriptors.getDescriptor(type);
 			  listDesc.add(d);
 			  if(d == null) {
-				  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Could not find type " + type);
+				  System.out.println("Error on line " + rhs.lineNo + ", column " + rhs.columnNo + ": Could not find type " + type);
 				  this.decrementMaxErros();
 				  result = false; 
 			  }else
 				  this.simbolTable.addSimbol(d, String.valueOf("a" + i));
 		  }
-		  if(rhs.toString().equals("METHOD_PROT"))
+		  
+		  if(rhs.toString().equals("METHOD_PROT")) {
 			  if(!this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable, this.is_static, listDesc)) {
 				  System.out.print("Error on line " + rhs.lineNo + ", column " + rhs.columnNo + ": Function "+ ((SimpleNode) this.children[0]).name + "." + rhs.name + "(" );
 				  for(int i = 0; i < listDesc.size();i++) {
 					  System.out.print(listDesc.get(i).name);
 					  if(i < listDesc.size()-1) System.out.print(",");
-				  }
-					  
+				  }  
 				  System.out.println(") already imported.");
 				  this.decrementMaxErros();
 				  result = false; 
 			  }
-		  else {
-			  this.descriptors.addDescriptor( ((SimpleNode) this.children[0]).name, this.simbolTable );
-			  Descriptor d = this.descriptors.getDescriptor(((SimpleNode) this.children[0]).name);
-			  d.setParams(listDesc);
+		}else{
+		  this.descriptors.addDescriptor( ((SimpleNode) this.children[0]).name, this.simbolTable );
+		  Descriptor d = this.descriptors.getDescriptor(((SimpleNode) this.children[0]).name);
+		  if(!d.addParams(listDesc)) {
+			  System.out.print("Error on line " + rhs.lineNo + ", column " + rhs.columnNo + ": Type "+ ((SimpleNode) this.children[0]).name + "(" );
+			  for(int i = 0; i < listDesc.size();i++) {
+				  System.out.print(listDesc.get(i).name);
+				  if(i < listDesc.size()-1) System.out.print(",");
+			  }  
+			  System.out.println(") already imported.");
+			  this.decrementMaxErros();
+			  result = false; 
 		  }
+		 }
 	  }
 	  
 	  
