@@ -30,7 +30,7 @@ class ImportStressTest {
 		List l;
 		3+4;
 		l = new List();
-		l = new List(2);
+		l = new List(true);
 		List.add(2,3);
 		List.add(2);		
 	}

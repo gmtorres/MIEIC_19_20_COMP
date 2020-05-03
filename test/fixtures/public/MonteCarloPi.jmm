@@ -38,7 +38,7 @@ class MonteCarloPi {
 			samples_so_far = samples_so_far + 1;
 			
 		}
-		pi_estimate = (400 * samples_in_circle) / n;
+		pi_estimate = 400 * samples_in_circle / n;
 		return pi_estimate;
 	}
 

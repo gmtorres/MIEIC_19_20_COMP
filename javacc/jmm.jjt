@@ -222,9 +222,19 @@ void LessAritm() #void : {Token t1;} {
 }
 
 void AddSubAritm() #void : {Token t1;} {
-    MulDivAritm() 
+    DivAritm() 
     	(LOOKAHEAD(2)( t1 = <ADD> | t1 = <SUB> ) AddSubAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2))*
     
+}
+
+void DivAritm() #void : {Token t1;} {
+	MulAritm() 
+    	(LOOKAHEAD(2)( t1 = <DIV> ) DivAritm() { jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) )*
+}
+
+void MulAritm() #void : {Token t1;} {
+	ExpTerminal() 
+    	(LOOKAHEAD(2)( t1 = <MUL> ) MulAritm() { jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) )*
 }
 
 void MulDivAritm() #void : {Token t1;} {
