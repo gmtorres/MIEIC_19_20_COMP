@@ -1,11 +1,10 @@
 import static BoardBase.sameArray(int[]) boolean;
-import static BoardBase.sameArray(int[]) boolean;
 import static BoardBase.printBoard(int[],int[],int[]) void; 
 import static BoardBase.printWinner(int) void;
 import static BoardBase.playerTurn(int) int[];
 import static BoardBase.wrongMove();
 import static BoardBase.placeTaken();
-
+import static io.println(int);
 
 class TicTacToe {
   int[] row0;
@@ -64,11 +63,14 @@ class TicTacToe {
     boolean mov;
     if(!(row < 0) && !(0 < row) ){
         mov = this.MoveRow(row0,column);
+        this.printArr(row0);
     }else if (!(row < 1) && !(1 < row)){
         mov = this.MoveRow(row1,column);
+        this.printArr(row1);
     }
     else if (!(row < 2) && !(2 < row)){
         mov = this.MoveRow(row2,column);
+        this.printArr(row2);
     }else{
         mov = false;
     }
@@ -147,6 +149,16 @@ class TicTacToe {
         else{}
     return winner;
   }
+  
+  public int printArr(int[] row){
+  	int i;
+  	i = 0;
+  	while(i < row.length){
+  		io.println(row[i]);
+  		i = i + 1;
+  	}
+  	return 0;
+  }
 
 
   public static void main(String[] args) {
@@ -167,7 +179,10 @@ class TicTacToe {
         BoardBase.printBoard(mygame.getRow0(), 
           mygame.getRow1(), 
           mygame.getRow2());
-
+		//mygame.printArr(mygame.getRow0());
+		//mygame.printArr(mygame.getRow1());
+		//mygame.printArr(mygame.getRow2());
+		
         player = mygame.getCurrentPlayer();            
         move = BoardBase.playerTurn(player);
 	    

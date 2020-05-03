@@ -67,7 +67,17 @@ public boolean createTable() throws SemanticException {
 				  this.simbolTable.addSimbol(d, String.valueOf("a" + i));
 		  }
 		  if(rhs.toString().equals("METHOD_PROT"))
-			  this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable, this.is_static, listDesc);
+			  if(!this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable, this.is_static, listDesc)) {
+				  System.out.print("Error on line " + rhs.lineNo + ", column " + rhs.columnNo + ": Function "+ ((SimpleNode) this.children[0]).name + "." + rhs.name + "(" );
+				  for(int i = 0; i < listDesc.size();i++) {
+					  System.out.print(listDesc.get(i).name);
+					  if(i < listDesc.size()-1) System.out.print(",");
+				  }
+					  
+				  System.out.println(") already imported.");
+				  this.decrementMaxErros();
+				  result = false; 
+			  }
 		  else {
 			  this.descriptors.addDescriptor( ((SimpleNode) this.children[0]).name, this.simbolTable );
 			  Descriptor d = this.descriptors.getDescriptor(((SimpleNode) this.children[0]).name);
