@@ -90,11 +90,6 @@ class TicTacToe {
     return in;
   }
 
-  // Changes whose turn it is.
-  public boolean changeturn() {
-    whoseturn = 1 - whoseturn;
-    return true;
-  }
 
   // Returns the current player's name.
   public int getCurrentPlayer() {
@@ -199,5 +194,11 @@ class TicTacToe {
 
     BoardBase.printWinner(win);
 
+  }
+  
+    // Changes whose turn it is.
+  public boolean changeturn() {
+    whoseturn = 1 - whoseturn;
+    return true;
   }
 }

@@ -5,8 +5,10 @@ public class Exemplo {
     { 
 		int d;
 		d = 1;
+		Exemplo e;
+		e = new Exemplo();
 		while(d < 16){
-			io.println(this.fibbonaci(d));
+			io.println(e.fibbonaci(d));
 			d = d + 1;
 		}
 	}

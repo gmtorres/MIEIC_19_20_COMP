@@ -131,6 +131,9 @@ public class Jasmin {
 		  	case "return":
 		  		printReturn(r);
 		  		break;
+		  	case "pop":
+		  		printPop(r);
+		  		break;
 		  }	
 		  
 		 
@@ -151,7 +154,7 @@ public class Jasmin {
 		  toPrint += ")V";
 		  this.println(toPrint);
 		  
-		  this.printPop(node);
+		  //this.printPop(node);
 	  }
 	  
 	  
@@ -170,7 +173,7 @@ public class Jasmin {
 		  case "/": this.println("idiv");
 			  break;
 		  }
-		  this.printPop(node);
+		  //this.printPop(node);
 	  }
 	  
 	  private void printLoad(IRNode node) {
@@ -482,12 +485,13 @@ public class Jasmin {
 		  
 		  this.println(toPrint);
 		  
-		  toPrint = "\t.limit stack 100"/* + r.op_stack*/; 
+		  //toPrint = "\t.limit stack 100 "/* + r.op_stack*/; 
+		  toPrint = "\t.limit stack " + r.op_stack; 
 		  this.println(toPrint);
 		  
-		  toPrint = "\t.limit locals 100";
+		  toPrint = "\t.limit locals ";
 		  
-		  //toPrint += r.locals_stack;
+		  toPrint += r.locals_stack;
 
 
 		  this.println(toPrint);
@@ -533,8 +537,8 @@ public class Jasmin {
 		  toPrint += ")" + retType(type);
 		  this.println(toPrint);
 		  
-		  if(!type.equals("void"))
-			  this.printPop(r);
+		  /*if(!type.equals("void"))
+			  this.printPop(r);*/
 		  
 		  if((this.in_while_condition || this.in_if_condition) && r.type != null && r.type.equals("boolean") ) {
 			  String tag = "";
@@ -571,8 +575,8 @@ public class Jasmin {
 		  toPrint += ")" + retType(type);
 		  this.println(toPrint);
 		  
-		  if(!type.equals("void"))
-			  this.printPop(r);
+		  /*if(!type.equals("void"))
+			  this.printPop(r);*/
 		  
 		  
 		  if((this.in_while_condition || this.in_if_condition) && r.type != null && r.type.equals("boolean") ) {
@@ -603,7 +607,7 @@ public class Jasmin {
 	  
 	  
 	  private void printPop(IRNode r) {
-		  IRNode parent = r.getParent();
+		  /*IRNode parent = r.getParent();
 		  if(parent == null)
 			  return;
 		  String parentInst = parent.getInst();
@@ -624,9 +628,10 @@ public class Jasmin {
 				  !( parentInst.equals("if") && this.in_if_condition) &&
 				  !( parentInst.equals("while") && this.in_while_condition) &&
 				  !parentInst.equals("invoke_static") &&
-				  !parentInst.equals("invoke_virtual") ) {
+				  !parentInst.equals("invoke_virtual") ) {*/
 			  this.println("pop");
-		  }
+			  
+		  //}
 	  }
 	  
 
