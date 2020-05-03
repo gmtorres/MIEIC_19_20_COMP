@@ -13,7 +13,7 @@ import Map.remove(int) boolean;
 import List;
 import List(int);
 import List.add(int);
-import List.add(int, int);
+import static List.add(int, int);
 import List.contains(int) boolean;
 import List.remove(int) boolean;
 import List.size() int;
@@ -30,7 +30,9 @@ class ImportStressTest {
 		List l;
 		3+4;
 		l = new List();
-		l = new List(2);		
+		l = new List(2);
+		List.add(2,3);
+		List.add(2);		
 	}
 	
 }

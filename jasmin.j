@@ -29,5 +29,13 @@ iconst_2
 invokespecial List/<init>(I)V
 astore_2
 
+iconst_2
+iconst_3
+invokestatic	List.add(II)V
+
+iconst_2
+iconst_5
+invokestatic	List.add(II)V
+
 	return
 .end method

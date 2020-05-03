@@ -31,7 +31,8 @@ class ASTFUNCTION extends SimpleNode {
 		this.type = "null";
 	    SimpleNode lhn  = (SimpleNode) this.children[0];
 	    SimpleNode rhn  = (SimpleNode) this.children[1];
-
+	    boolean request_static = false;
+	    
 		ArrayList<String> objs = new ArrayList<String>();
 		if(lhn.toString().equals("NEW_IDENTIFIER")) {
 			objs = this.descriptors.getDescriptor(((SimpleNode) lhn.children[0]).name).getAllTypes();
@@ -49,6 +50,7 @@ class ASTFUNCTION extends SimpleNode {
 				  }
 				objs = this.simbolTable.getSimbol(lhn.name).getAssignType().getAllTypes();
 			}else {
+				request_static = true;
 				Descriptor d = this.descriptors.getDescriptor(lhn.name);
 				//System.out.println(lhn.name + "  " + d);
 				if(d != null)
@@ -83,6 +85,9 @@ class ASTFUNCTION extends SimpleNode {
 				if(ii != rhn.jjtGetNumChildren())
 					continue;
 				else {
+					if(request_static && !f.get(i).isStatic) {
+						continue;
+					}
 					this.type = f.get(i).getType();
 					break;
 				}
@@ -90,7 +95,10 @@ class ASTFUNCTION extends SimpleNode {
 		}
 		if(i == f.size()) {
 			result = false;
-			String toPrint = "Error on line " + this.lineNo + ", column " + this.columnNo + ": Function " + lhn.name + "." + this.name+"(";
+			String toPrint = "Error on line " + this.lineNo + ", column " + this.columnNo + ": Function ";
+			if(request_static)
+				toPrint+= "static ";
+			toPrint+=  lhn.name + "." + this.name+"(";
 			for(int a = 0; a < rhn.jjtGetNumChildren(); a++ ) {
 				SimpleNode rhnc = (SimpleNode) rhn.children[a];
 				toPrint+= ((SimpleNode)rhnc.children[0]).type;

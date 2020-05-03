@@ -34,7 +34,7 @@ public boolean createTable() throws SemanticException {
 	  
 	  boolean result = true;
 	  
-	  
+	  SimpleNode lhs = (SimpleNode) this.children[0];
 	  if(this.jjtGetNumChildren() == 1) {
 		  	this.descriptors.addDescriptor( ((SimpleNode) this.children[0]).name, this.simbolTable );
 		  	Descriptor d = this.descriptors.getDescriptor(((SimpleNode) this.children[0]).name);
@@ -75,7 +75,7 @@ public boolean createTable() throws SemanticException {
 		  }
 		  
 		  if(rhs.toString().equals("METHOD_PROT")) {
-			  if(!this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable, this.is_static, listDesc)) {
+			  if(!this.functionTable.addFunction(rhs.type, ((SimpleNode) this.children[0]).name, rhs.name, this.simbolTable, lhs.is_static, listDesc)) {
 				  System.out.print("Error on line " + rhs.lineNo + ", column " + rhs.columnNo + ": Function "+ ((SimpleNode) this.children[0]).name + "." + rhs.name + "(" );
 				  for(int i = 0; i < listDesc.size();i++) {
 					  System.out.print(listDesc.get(i).name);
