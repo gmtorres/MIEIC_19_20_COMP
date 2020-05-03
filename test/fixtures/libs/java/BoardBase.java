@@ -17,7 +17,7 @@ public class BoardBase{
         System.out.println();
         System.out.println(row0[0]+"|"+row0[1]+"|"+row0[2]);
         System.out.println("- - -");
-        System.out.println(row1[0]+"|"+row1[1]+"|"+row2[2]);
+        System.out.println(row1[0]+"|"+row1[1]+"|"+row1[2]);
         System.out.println("- - -");
         System.out.println(row2[0]+"|"+row2[1]+"|"+row2[2]);
         System.out.println();
