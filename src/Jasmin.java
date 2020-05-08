@@ -44,7 +44,7 @@ public class Jasmin {
 		    case "String[]":
 		    	return "[Ljava/lang/String;";
 		    default:
-		        return type;
+		        return "L"+type+";";
 		    }
 	  }
 	  

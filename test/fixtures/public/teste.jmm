@@ -1,38 +1,42 @@
-//key, value can be changed to other Types (e.g. boolean, int[], MyClass)
-import Map;
-import Map.put(int, int);
-import Map.get(int) int;
-import Map.clear();
-import Map.print();
-import Map.contains(int) boolean;
-import Map.remove(int) boolean;
+import static io.println(int);
 
- 
-
-//content can be changed to other Types (e.g. boolean, int[], MyClass)
-import List;
-import List(int);
-import List.add(int);
-import static List.add(int, int);
-import List.contains(int) boolean;
-import List.remove(int) boolean;
-import List.size() int;
-
- 
-
-import static io.println(int) void;
-import static io.println(int,int) void;
-import static io.readln() int;
-
-class ImportStressTest {
+class Hello_T {	
 	
-	public static void main(String[] args) {
-		List l;
-		3+4;
-		l = new List();
-		l = new List(true);
-		List.add(2,3);
-		List.add(2);		
+	int i;
+	int num;
+	
+	public Hello_T getInst(int a){
+		Hello_T temp;
+		temp = new Hello_T();
+		temp.setI(a);
+		return temp;
 	}
 	
-}
+	public int setI(int a){
+		i = a;
+		return i;
+	}
+	
+    public boolean lt(int a, int b) {
+		return (a < b);
+    }
+	
+	public boolean b(){
+		return true;
+	}
+	
+	public int val(){
+		return i;
+	}
+	
+	public static void main(String[] args){ 	
+		Hello_T e;
+		boolean b;
+		e = new Hello_T();
+		b = e.lt(2,5);
+		b = e.b();
+		b = e.getInst(3).b();
+		io.println(e.val());
+	}
+  
+ }

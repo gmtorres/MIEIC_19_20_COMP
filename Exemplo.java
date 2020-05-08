@@ -12,6 +12,11 @@ public class Exemplo {
 			d = d + 1;
 		}
 	}
+	
+	public Exemplo getInst() {
+		return new Exemplo();
+	}
+	
 	public int fibbonaci(int n){
 
 		int r;

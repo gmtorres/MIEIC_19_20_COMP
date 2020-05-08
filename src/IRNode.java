@@ -591,6 +591,10 @@ public class IRNode {
 			objs = sn.descriptors.getDescriptor(((SimpleNode) lhn.children[0]).name).getAllTypes();
 			this.setInst("invoke_virtual");
 		}
+		else if(lhn.toString().equals("FUNCTION")) {
+			objs = sn.descriptors.getDescriptor(lhn.type).getAllTypes();
+			this.setInst("invoke_virtual");
+		}
 		else if(lhn.name.equals("this")) {
 			objs = sn.descriptors.getDescriptor("this").getAllTypes();
 			this.setInst("invoke_virtual");
@@ -644,23 +648,28 @@ public class IRNode {
 				load.getBuild(lhn);
 			}
 			else { 
-				IRNode var = new IRNode(load);
-				load.addChild(var);
-				var.setInst(lhn.name);
-				if(lhn.name.equals("this")) {
-					load.setInst("ldl");
-					var.local_var = 0;
-					load.type = "this";
+
+				if(lhn.toString().equals("FUNCTION")) {
+					load.getBuild(lhn);
 				}else {
-					Simbol s = sn.simbolTable.getSimbol(lhn.name);
-					Integer local = s.local_var;
-					if(local == null) {
-						load.setInst("ldg");
-					}else {
+					IRNode var = new IRNode(load);
+					load.addChild(var);
+					var.setInst(lhn.name);
+					if(lhn.name.equals("this")) {
 						load.setInst("ldl");
+						var.local_var = 0;
+						load.type = "this";
+					}else {
+						Simbol s = sn.simbolTable.getSimbol(lhn.name);
+						Integer local = s.local_var;
+						if(local == null) {
+							load.setInst("ldg");
+						}else {
+							load.setInst("ldl");
+						}
+						var.local_var = local;
+						load.type = s.getType().name;
 					}
-					var.local_var = local;
-					load.type = s.getType().name;
 				}
 			}
 		}

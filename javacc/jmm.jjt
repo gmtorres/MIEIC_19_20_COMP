@@ -258,9 +258,11 @@ void ExpTerminal() #void : {Token t1;} {
 
 void extendTerminal() #void: {Token t1;} {
 	(<SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE>) #ARRAY_ACESS(2) [ extendTerminal() ] 
-    | <DOT> ( ( <LENGTH> #LENGTH(1)  [ extendTerminal() ] ) 
-          	  | (  ( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; }
-               <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE> ) #FUNCTION (2)  [ extendTerminal()  ] ) )
+    | <DOT> ( 
+    	( <LENGTH> #LENGTH(1)  [ extendTerminal() ] ) 
+        | (  ( t1 = <IDENTIFIER> 
+        	{  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; }
+        <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE> ) #FUNCTION (2)  [ extendTerminal()  ] ) )
 }
 
 void ParExpression() #void : {} {	
