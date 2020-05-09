@@ -15,6 +15,7 @@ public class Jasmin {
 	  
 	  boolean in_while_condition = false;
 	  boolean in_if_condition = false;
+	  boolean in_or = false;
 	  boolean not = false;
 	  Integer not_count = 0;
 	  
@@ -183,11 +184,11 @@ public class Jasmin {
 		  String prefix = "";
 		  if(node.getInst().equals("ldc")) {
 			  Integer value = Integer.parseInt(node.children[0].getInst());
-			  if(value <= 5)
+			  if(value>= 0 && value <= 5)
 				  this.println("iconst_"+value);
-			  else if(value <= 127)
+			  else if(value>= -127 && value <= 127)
 				  this.println("bipush " + value);
-			  else if(value <= 32767)
+			  else if(value>= -32767 && value <= 32767)
 				  this.println("sipush " + value);
 			  else
 				  this.println("ldc " + value);
@@ -199,18 +200,28 @@ public class Jasmin {
 				  this.println( this.getType(node.type) + "load " + node.children[0].local_var);
 		  }
 		  
+		  this.printConditions(node);
+	  }
+	  
+	  private void printConditions(IRNode node) {
 		  if((this.in_while_condition || this.in_if_condition) && node.type != null && node.type.equals("boolean") ) {
 			  String tag = "";
 			  if(this.in_while_condition) tag = "end_" + this.current_loop;
 			  else if(this.in_if_condition) tag = "else_" + this.current_if;
+			  
 			  if(this.not) {
-				  //this.println("ifeq not_" + this.not_count); 
-				  this.println("ifne " + tag);
+				  //this.println("ifeq not_" + this.not_count);
+				  if(this.in_or)
+					  this.println("ifeq not_" + this.not_count);
+				  else
+					  this.println("ifne " + tag);
 			  }else {
-				  this.println("ifeq " + tag);
+				  if(this.in_or)
+					  this.println("ifne not_" + this.not_count);
+				  else
+					  this.println("ifeq " + tag);
 			  }
 		  }
-		  //this.printPop(node);
 	  }
 	  
 	  private void printLoadGlobal(IRNode node) {
@@ -230,6 +241,7 @@ public class Jasmin {
 				  }
 			  }
 			  //this.printPop(node);*/
+			this.printConditions(node);
 	  }
 	  
 	  private void printLoadArray(IRNode node) {
@@ -352,9 +364,19 @@ public class Jasmin {
 	  
 	  private void printAnd(IRNode node) {
 		  if(this.in_if_condition || this.in_while_condition) {
+			  if(this.not)
+				  this.in_or = true;
 			  for(int i = 0; i < node.getChildren().length; i++) {
 				  printJasmin(node.getChildren()[i]);
 			  }
+			  if(this.in_or){
+				  String tag = "";
+				  if(this.in_while_condition) tag = "end_" + this.current_loop;
+				  else if(this.in_if_condition) tag = "else_" + this.current_if;
+				  this.println("goto " + tag);
+			  }
+				  
+			  this.in_or = false;
 		  }
 		  else {
 			  this.printboolExpression(node);
@@ -543,7 +565,7 @@ public class Jasmin {
 		  /*if(!type.equals("void"))
 			  this.printPop(r);*/
 		  
-		  if((this.in_while_condition || this.in_if_condition) && r.type != null && r.type.equals("boolean") ) {
+		  /*if((this.in_while_condition || this.in_if_condition) && r.type != null && r.type.equals("boolean") ) {
 			  String tag = "";
 			  if(this.in_while_condition) tag = "end_" + this.current_loop;
 			  else if(this.in_if_condition) tag = "else_" + this.current_if;
@@ -553,7 +575,8 @@ public class Jasmin {
 			  }else {
 				  this.println("ifeq " + tag);
 			  }
-		  }
+		  }*/
+		  this.printConditions(r);
 		  
 	  }
 	  
@@ -582,7 +605,7 @@ public class Jasmin {
 			  this.printPop(r);*/
 		  
 		  
-		  if((this.in_while_condition || this.in_if_condition) && r.type != null && r.type.equals("boolean") ) {
+		  /*if((this.in_while_condition || this.in_if_condition) && r.type != null && r.type.equals("boolean") ) {
 			  String tag = "";
 			  if(this.in_while_condition) tag = "end_" + this.current_loop;
 			  else if(this.in_if_condition) tag = "else_" + this.current_if;
@@ -592,7 +615,8 @@ public class Jasmin {
 			  }else {
 				  this.println("ifeq " + tag);
 			  }
-		  }
+		  }*/
+		  this.printConditions(r);
 		  
 	  }
 	  

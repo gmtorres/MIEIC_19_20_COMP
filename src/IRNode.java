@@ -54,6 +54,10 @@ public class IRNode {
 		return this.parent;
 	}
 	
+	public void resetChildren() {
+		this.children = new IRNode[0];
+	}
+	
 	public IRNode[] getChildren() {
 		return this.children;
 	}

@@ -5,6 +5,17 @@ class Hello_T {
 	int i;
 	int num;
 	
+	public int ackermann(int m, int n) {
+		int ret;
+      	if (m < 1) 
+      		ret = n + 1;
+      	else if (n < 1) 
+      		ret = this.ackermann(m - 1, 1);
+      	else
+      		ret = this.ackermann(m - 1, this.ackermann(m, n - 1));
+      		return ret;
+	}
+	
 	public Hello_T getInst(int a){
 		Hello_T temp;
 		temp = new Hello_T();
@@ -17,10 +28,6 @@ class Hello_T {
 		return i;
 	}
 	
-    public boolean lt(int a, int b) {
-		return (a < b);
-    }
-	
 	public boolean b(){
 		return true;
 	}
@@ -29,14 +36,80 @@ class Hello_T {
 		return i;
 	}
 	
-	public static void main(String[] args){ 	
-		Hello_T e;
-		boolean b;
-		e = new Hello_T();
-		b = e.lt(2,5);
-		b = e.b();
-		b = e.getInst(3).b();
-		io.println(e.val());
+	public boolean eq(int a, int b) {
+		return (!this.lt(a, b) && !this.lt(b, a));
 	}
+	
+	public boolean ne(int a, int b) {
+		return (!this.eq(a, b));
+	}
+	
+    public boolean lt(int a, int b) {
+		return (a < b);
+    }
+    
+    public boolean gt(int a, int b) {
+		return (!this.le(a, b));
+    }
+    
+    public boolean ge(int a, int b) {
+		return !(!this.gt(a, b) && !this.eq(a, b));
+	}
+	
+	public boolean le(int a, int b) {
+		return !(!this.lt(a, b) && !this.eq(a, b));
+    }
+	
+	public static void main(String[] args){ 	
+		int f;
+		int t;
+		boolean a;
+		boolean b;	
+		int i;
+		
+		f = 0;
+		t = 10;
+		
+		a = false;
+		b = true;
+		
+		if(new Hello_T().lt(f,t)){
+			i = 1;
+		}else{
+			i = 0;
+		}
+		io.println(i);
+		
+		if(new Hello_T().eq(f,t)){
+			i = 1;
+		}else{
+			i = 0;
+		}
+		io.println(i);
+		
+		if(new Hello_T().le(f,t)){
+			i = 1;
+		}else{
+			i = 0;
+		}
+		io.println(i);
+		
+		if(new Hello_T().gt(f,t)){
+			i = 1;
+		}else{
+			i = 0;
+		}
+		io.println(i);
+		
+		if(!(!a && !b)){
+			i = 1;
+		}else{
+			i = 0;
+		}
+		io.println(i);
+		
+	}
+	
+	
   
  }

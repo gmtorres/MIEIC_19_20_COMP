@@ -216,10 +216,22 @@ void AndAritm() #void : {Token t1;} {
  }
 
 void LessAritm() #void : {Token t1;} {
-	AddSubAritm() 
-   		[LOOKAHEAD(2) t1 = <LESS_THAN> AddSubAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) ]
+	AddAritm() 
+   		[LOOKAHEAD(2) t1 = <LESS_THAN> AddAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) ]
     	
 }
+
+void AddAritm() #void : {Token t1;} {
+	SubAritm() 
+    	(LOOKAHEAD(2)( t1 = <ADD> ) AddAritm() { jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) )*
+}
+
+void SubAritm() #void : {Token t1;} {
+	DivAritm() 
+    	(LOOKAHEAD(2)( t1 = <SUB> ) SubAritm() { jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) )*
+}
+
+
 
 void AddSubAritm() #void : {Token t1;} {
     DivAritm() 
