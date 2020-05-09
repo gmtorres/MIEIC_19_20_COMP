@@ -96,6 +96,29 @@ public class IRNode {
 		  System.arraycopy(children, 0, c, 0, n);
 	      children = c;
 	  }
+	  
+	  public boolean isLast() {
+		  IRNode parent = this.getParent();
+		  return parent.getChildren()[parent.getChildren().length - 1] == this;
+	  }
+	  public boolean isLastInAnd() {
+		  IRNode node = this;
+		  IRNode parent = node.getParent();
+		  while(parent.getInst().equals("not")) {
+			  node = parent;
+			  parent = node.getParent();
+		  }
+		  if(!parent.getInst().equals("&&"))
+			  return false;
+		  return parent.getChildren()[parent.getChildren().length - 1] == node;
+	  }
+	  public boolean checkAnd() {
+		  IRNode parent = this.getParent();
+		  while(parent.getInst().equals("not")) {
+			  parent = parent.getParent();
+		  }
+		  return parent.getInst().equals("&&");
+	  }
 	
 	  public void setInst(String inst) {
 		  this.inst = inst;

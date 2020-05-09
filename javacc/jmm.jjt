@@ -212,7 +212,7 @@ void Expression() #void: {} {
 
 void AndAritm() #void : {Token t1;} {
     LessAritm()
-   		(LOOKAHEAD(2) t1 = <AND> LessAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) ) *
+   		(LOOKAHEAD(2) t1 = <AND> AndAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) ) *
  }
 
 void LessAritm() #void : {Token t1;} {

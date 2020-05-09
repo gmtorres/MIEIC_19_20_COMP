@@ -12,10 +12,12 @@ public class Jasmin {
 	  
 	  String current_loop;
 	  String current_if;
+	  String current_or;
 	  
 	  boolean in_while_condition = false;
 	  boolean in_if_condition = false;
 	  boolean in_or = false;
+	  Integer or_count = 0;
 	  boolean not = false;
 	  Integer not_count = 0;
 	  
@@ -204,24 +206,25 @@ public class Jasmin {
 	  }
 	  
 	  private void printConditions(IRNode node) {
-		  if((this.in_while_condition || this.in_if_condition) && node.type != null && node.type.equals("boolean") ) {
+		  /*if((this.in_while_condition || this.in_if_condition) && node.type != null && node.type.equals("boolean") ) {
 			  String tag = "";
 			  if(this.in_while_condition) tag = "end_" + this.current_loop;
 			  else if(this.in_if_condition) tag = "else_" + this.current_if;
 			  
+			  boolean last = node.isLast();
 			  if(this.not) {
 				  //this.println("ifeq not_" + this.not_count);
-				  if(this.in_or)
+				  if(this.in_or && !last)
 					  this.println("ifeq not_" + this.not_count);
 				  else
 					  this.println("ifne " + tag);
 			  }else {
-				  if(this.in_or)
-					  this.println("ifne not_" + this.not_count);
+				  if(this.in_or && last)
+					  this.println("ifne " + this.current_or );
 				  else
 					  this.println("ifeq " + tag);
 			  }
-		  }
+		  }*/
 	  }
 	  
 	  private void printLoadGlobal(IRNode node) {
@@ -328,21 +331,21 @@ public class Jasmin {
 			  for(int i = 0; i < node.getChildren().length; i++) {
 				  printJasmin(node.getChildren()[i]);
 			  }
-			  if(this.not == false) {
-				  if(this.in_while_condition)
-					  this.println("if_icmpge end_" + this.current_loop);
-				  else if(this.in_if_condition)
-					  this.println("if_icmpge else_" + this.current_if);
-			  }else {
-				  //se for o ultimo filho
-				  if(node == node.parent.getChildren()[node.parent.getChildren().length - 1]) {
-					  if(this.in_while_condition)
-						  this.println("if_icmplt end_" + this.current_loop);
-					  else if(this.in_if_condition)
-						  this.println("if_icmplt else_" + this.current_if);
-				  }else
-					  this.println("if_icmpge not_" + this.not_count);
+			  String tag = null;
+			  String op = null;
+			  
+			  if(this.in_while_condition) tag = "end_" + this.current_loop;
+			  else if(this.in_if_condition) tag = "else_" + this.current_if;
+			  if(this.in_or == false || (node.isLastInAnd() && node.checkAnd()))
+				  if(this.not) op = "if_icmplt ";
+				  else op = "if_icmpge ";
+			  else {
+				  if(this.not) op = "if_icmpge ";
+				  else op = "if_icmplt ";
+				  tag = /*"not_" +*/  this.current_or + "";
 			  }
+			  this.println(op + tag);
+			  
 		  }else {
 			  this.printboolExpression(node);
 		  }
@@ -350,12 +353,11 @@ public class Jasmin {
 	  private void printNot(IRNode node) {
 		  if(this.in_if_condition || this.in_while_condition) {
 			  this.not = !this.not;
-			  this.not_count++;
+			  int val = this.not_count++;
 			  for(int i = 0; i < node.getChildren().length; i++) {
 				  printJasmin(node.getChildren()[i]);
 			  }
-			  //this.println("goto end_" + this.current_loop);
-			  this.println("not_" + this.not_count + ":");
+			  this.println("not_" + String.valueOf(val) + ":");
 			  this.not = !this.not;
 		  }else {
 			  this.printboolExpression(node);
@@ -364,24 +366,29 @@ public class Jasmin {
 	  
 	  private void printAnd(IRNode node) {
 		  if(this.in_if_condition || this.in_while_condition) {
-			  if(this.not)
-				  this.in_or = true;
+			  String prev = null;
+			  if(/*this.not*/ node.parent.getInst().equals("not")) {
+				  this.in_or = !this.in_or;
+				  prev = this.current_or;
+			  }
 			  for(int i = 0; i < node.getChildren().length; i++) {
+				  if(node.parent.getInst().equals("not")) {
+					  this.current_or = "or_" + (this.or_count + 1);
+				  }
 				  printJasmin(node.getChildren()[i]);
-			  }
-			  if(this.in_or){
-				  String tag = "";
-				  if(this.in_while_condition) tag = "end_" + this.current_loop;
-				  else if(this.in_if_condition) tag = "else_" + this.current_if;
-				  this.println("goto " + tag);
-			  }
+				  if(node.parent.getInst().equals("not") && i != 0) {
+					  this.or_count++;
+					  this.println("or_" + this.or_count + ":");
+				  }
 				  
-			  this.in_or = false;
-		  }
-		  else {
+			  }
+			  if(/*this.not*/ node.parent.getInst().equals("not")) {
+				  this.in_or = !this.in_or;
+				  this.current_or = prev;
+			  }
+		  }else {
 			  this.printboolExpression(node);
 		  }
-		  //this.println("if_icmpge end_" + this.current_loop);
 	  }
 	  
 	  private void printWhile(IRNode node) {
