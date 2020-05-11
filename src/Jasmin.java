@@ -334,18 +334,16 @@ public class Jasmin {
 			  for(int i = 0; i < node.getChildren().length; i++) {
 				  printJasmin(node.getChildren()[i]);
 			  }
-			  String tag = null;
+			  String tag = this.fail_tag;
 			  String op = null;
 			  
-			  if(this.in_while_condition) tag = "end_" + this.current_loop;
-			  else if(this.in_if_condition) tag = "else_" + this.current_if;
 			  if(this.in_or == false || (node.isLastInAnd() && node.checkAnd()))
 				  if(this.not) op = "if_icmplt ";
 				  else op = "if_icmpge ";
 			  else {
 				  if(this.not) op = "if_icmpge ";
 				  else op = "if_icmplt ";
-				  tag = /*"not_" +*/  this.current_or + "";
+				  //tag = /*"not_" +*/  this.current_or + "";
 			  }
 			  this.println(op + tag);
 			  
@@ -370,18 +368,15 @@ public class Jasmin {
 	  private void printAnd(IRNode node) {
 		  if(this.in_if_condition || this.in_while_condition) {
 			  String prev = null;
-			  String temp_while = null;
-			  String temp_if = null;
+			  String temp_fail = null;
 			  if(node.parent.getInst().equals("not")) {
 				  //this.current_or = "or_" + this.or_count++;
 				  if(this.in_or == false) {
 					  this.in_or = true;
-				  }else if(this.in_or == true) { {
+				  }else if(this.in_or == true) {
 					  this.in_or = false;
-					  temp_while = this.current_loop;
-					  temp_if = this.current_if;
-					  this.current_loop = this.current_or;
-					  this.current_if = this.current_or;
+					  temp_fail = this.fail_tag;
+					  //this.fail_tag = "or_"
 				  }
 				  prev = this.current_or;
 				  this.current_or = "or_" + this.or_count;
@@ -399,9 +394,8 @@ public class Jasmin {
 				  this.println("end_or_" + (this.or_count) + ":");
 				  this.in_or = !this.in_or;
 				  this.current_or = prev;
-				  if(temp_while != null && temp_if != null) {
-					  this.current_loop = temp_while;
-					  this.current_if = temp_if;
+				  if(temp_fail != null) {
+					  this.fail_tag = temp_fail;
 				  }
 			  }
 		  }else {
@@ -472,7 +466,7 @@ public class Jasmin {
 		  this.current_if = c_if;
 		  
 		  this.sucess_tag = c_if;
-		  this.fail_tag = "end_" + c_if;
+		  this.fail_tag = "else_" + c_if;
 		  
 		  this.in_if_condition = true;
 		  printJasmin(condition);
