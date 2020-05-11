@@ -8,6 +8,7 @@ public class IRBuilder {
 	public IRBuilder(SimpleNode sn) {
 		root = new IRNode(null);
 		root.build(sn);
+		this.simplifyBooleans(root);
 		this.setPop(root);
 		root.setRegisters();
 		
@@ -21,7 +22,64 @@ public class IRBuilder {
 		this.root.dump(" ");
 	}
 	
-	public void setPop(IRNode node) {
+	private void simplifyBooleans(IRNode node) {
+		
+		if(node.getInst().equals("not")) { //se encontrar um not
+			IRNode child = node.children[0];
+			if(child.getInst().equals("not")) { //se o filho for um not, anular o not
+				node.setInst(child.children[0].getInst());
+				node.children = child.children[0].children;
+				for(int i = 0; i < node.children.length ;i++) {
+					node.children[i].parent = node;
+				}
+				this.simplifyBooleans(node);
+				return;
+			}else if(child.getInst().equals("&&")) { //se for
+				node.setInst("||");
+				node.children = child.children;
+				for(int i = 0; i < node.children.length;i++) {
+					child = node.children[i];
+					this.propagateNot(child,i);
+				}
+			}else if(child.getInst().equals("||")) { //se for
+				node.setInst("&&");
+				node.children = child.children;
+				for(int i = 0; i < node.children.length;i++) {
+					child = node.children[i];
+					this.propagateNot(child,i);
+				}
+			}
+		}
+		
+		
+		for(int i = 0; i < node.children.length;i++) {
+			IRNode child = node.children[i];
+			this.simplifyBooleans(child);
+		}
+	}
+	
+	private void propagateNot(IRNode node, int i) {
+		System.out.println(node.getInst() + " " + i);
+		
+		if(node.getInst().equals("&&"))
+			node.setInst("||");
+		else if(node.getInst().equals("||"))
+			node.setInst("&&");
+		else if(node.getInst().equals("<")){
+			IRNode newNode = new IRNode(node.parent);
+			IRNode parent = node.parent;
+			newNode.setInst("not");
+			parent.children[i] = newNode;
+			node.parent = newNode;
+			newNode.addChild(node);
+		}else if(node.getInst().equals("not")){
+			node.setInst(node.children[0].getInst());
+			node.children = node.children[0].children;
+		}
+		
+	}
+	
+	private void setPop(IRNode node) {
 		
 		for(int i = 0; i < node.children.length;i++) {
 			IRNode child = node.children[i];
@@ -35,6 +93,7 @@ public class IRBuilder {
 					inst.equals("*") ||
 					inst.equals("/") ||
 					inst.equals("&&") ||
+					inst.equals("||") ||
 					inst.equals("<")||
 					inst.equals("new_object") ) {
 				this.addPop(child,i);
@@ -53,6 +112,7 @@ public class IRBuilder {
 				  !parentInst.equals("/") && 
 				  !parentInst.equals("*") && 
 				  !parentInst.equals("&&") && 
+				  !parentInst.equals("||") && 
 				  !parentInst.equals("not") && 
 				  !parentInst.equals("<") && 
 				  !parentInst.equals("param") &&
@@ -74,7 +134,7 @@ public class IRBuilder {
 		  }
 	}
 	
-	public void constant_folding(IRNode sn) {
+	private void constant_folding(IRNode sn) {
 		
 		for(IRNode child : sn.children) {
 			this.constant_folding(child);

@@ -4,12 +4,12 @@ class Hello_T {
 	
 	public static void main(String[] args){ 	
 		boolean b;
+		boolean c;
 		int i;
 		i = 0;
 		
-		b = 3 < i && !(i < 5 && !(3<i && !(i<2 && 9 < i)));
+		b = (i < 5 && !(i <4 && !(2<i)));
 		
-		//b = !(!(!(i < 5) && i<2) && !(i < 3));
 		
 	}
 	

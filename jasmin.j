@@ -15,9 +15,6 @@ return
 iconst_0
 istore_3
 
-iconst_3
-iload_3
-if_icmpge else_if1
 iload_3
 iconst_5
 if_icmpge not_0

@@ -395,15 +395,18 @@ public class Jasmin {
 				  this.in_or = !this.in_or;
 				  prev_fail = this.fail_tag;
 				  prev_succ = this.sucess_tag;
-				  String success = "a";
+				  String success = "";
+				  String fail = "";
 				  if(this.in_or == true) {
+					  fail = this.fail_tag;
 					  success = "not_" + (this.not_count - 1);
 				  }else {
-					  this.fail_tag = "not_" + (this.not_count - 1);
+					  fail = "not_" + (this.not_count - 1);
 					  success = prev_succ;
 				  }
 				  for(int i = 0; i < node.getChildren().length; i++) {
 					  this.sucess_tag = success;
+					  this.fail_tag = fail;
 					  printJasmin(node.getChildren()[i]);
 				  }
 				  this.in_or = !this.in_or;

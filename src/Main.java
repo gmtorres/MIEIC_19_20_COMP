@@ -58,7 +58,7 @@ public class Main {
 	        
 	        System.out.println("\n--------------*****************-----------------	\n");
 	        
-	        PrintStream file;
+	        /*PrintStream file;
 	        try{
 	        	//file = new PrintStream(new File(parts[0] + ".j"));
 	        	file = new PrintStream(new File("jasmin.j"));
@@ -67,7 +67,7 @@ public class Main {
 	        	return;
 	        }
 	        
-	        Jasmin j = new Jasmin(ir.root,file,true);
+	        Jasmin j = new Jasmin(ir.root,file,true);*/
 
 
     }
