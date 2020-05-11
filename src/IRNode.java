@@ -108,8 +108,13 @@ public class IRNode {
 			  node = parent;
 			  parent = node.getParent();
 		  }
-		  if(!parent.getInst().equals("&&"))
-			  return false;
+		  while(parent.getInst().equals("&&")) {
+			  if(parent.getChildren()[parent.getChildren().length - 1] != node)
+				  return false;
+			  node = parent;
+			  parent = node.getParent();
+		  }
+		  
 		  return parent.getChildren()[parent.getChildren().length - 1] == node;
 	  }
 	  public boolean checkAnd() {
