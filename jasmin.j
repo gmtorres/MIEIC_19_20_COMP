@@ -17,14 +17,19 @@ istore_3
 
 iload_3
 iconst_5
-if_icmpge or_1
-iconst_3
+if_icmpge else_or_0
 iload_3
-if_icmpge or_1
+iconst_2
+if_icmpge else_or_0
+end_or_1:
+not_1:
+or_1:
 iload_3
 iconst_5
-if_icmplt else_if1
-or_1:
+if_icmpge else_or_0
+not_2:
+or_2:
+end_or_2:
 not_0:
 
 iconst_1

@@ -14,6 +14,9 @@ public class Jasmin {
 	  String current_if;
 	  String current_or;
 	  
+	  String sucess_tag;
+	  String fail_tag;
+	  
 	  boolean in_while_condition = false;
 	  boolean in_if_condition = false;
 	  boolean in_or = false;
@@ -367,24 +370,39 @@ public class Jasmin {
 	  private void printAnd(IRNode node) {
 		  if(this.in_if_condition || this.in_while_condition) {
 			  String prev = null;
-			  if(/*this.not*/ node.parent.getInst().equals("not")) {
-				  this.in_or = !this.in_or;
+			  String temp_while = null;
+			  String temp_if = null;
+			  if(node.parent.getInst().equals("not")) {
+				  //this.current_or = "or_" + this.or_count++;
+				  if(this.in_or == false) {
+					  this.in_or = true;
+				  }else if(this.in_or == true) { {
+					  this.in_or = false;
+					  temp_while = this.current_loop;
+					  temp_if = this.current_if;
+					  this.current_loop = this.current_or;
+					  this.current_if = this.current_or;
+				  }
 				  prev = this.current_or;
+				  this.current_or = "or_" + this.or_count;
 			  }
 			  for(int i = 0; i < node.getChildren().length; i++) {
-				  if(node.parent.getInst().equals("not")) {
-					  this.current_or = "or_" + (this.or_count + 1);
+				  if(this.in_or) {
+					  this.current_or = "or_" + this.or_count++;
 				  }
 				  printJasmin(node.getChildren()[i]);
-				  if(node.parent.getInst().equals("not") && i != 0) {
-					  this.or_count++;
-					  this.println("or_" + this.or_count + ":");
+				  if(this.in_or) {
+					  this.println("or_" + (this.or_count) + ":");
 				  }
-				  
 			  }
-			  if(/*this.not*/ node.parent.getInst().equals("not")) {
+			  if(node.parent.getInst().equals("not")) {
+				  this.println("end_or_" + (this.or_count) + ":");
 				  this.in_or = !this.in_or;
 				  this.current_or = prev;
+				  if(temp_while != null && temp_if != null) {
+					  this.current_loop = temp_while;
+					  this.current_if = temp_if;
+				  }
 			  }
 		  }else {
 			  this.printboolExpression(node);
@@ -399,6 +417,10 @@ public class Jasmin {
 		  
 		  IRNode condition = node.children[0];
 		  this.current_loop = loop;
+		  
+		  this.sucess_tag = loop;
+		  this.fail_tag = "end_" + loop;
+		  
 		  this.in_while_condition = true;
 		  printJasmin(condition);
 		  this.in_while_condition = false;
@@ -418,6 +440,10 @@ public class Jasmin {
 		  
 		  IRNode condition = node.children[0];
 		  this.current_if = c_if;
+		  
+		  this.sucess_tag = c_if;
+		  this.fail_tag = "else_" + c_if;
+		  
 		  this.in_if_condition = true;
 		  printJasmin(condition);
 		  this.in_if_condition = false;
@@ -444,6 +470,10 @@ public class Jasmin {
 		  
 		  IRNode condition = node;
 		  this.current_if = c_if;
+		  
+		  this.sucess_tag = c_if;
+		  this.fail_tag = "end_" + c_if;
+		  
 		  this.in_if_condition = true;
 		  printJasmin(condition);
 		  this.in_if_condition = false;
