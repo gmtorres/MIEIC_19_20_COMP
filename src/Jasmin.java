@@ -209,30 +209,48 @@ public class Jasmin {
 			  else
 				  this.println( this.getType(node.type) + "load " + node.children[0].local_var);
 		  }
-		  
 		  this.printConditions(node);
 	  }
 	  
 	  private void printConditions(IRNode node) {
-		  /*if((this.in_while_condition || this.in_if_condition) && node.type != null && node.type.equals("boolean") ) {
-			  String tag = "";
-			  if(this.in_while_condition) tag = "end_" + this.current_loop;
-			  else if(this.in_if_condition) tag = "else_" + this.current_if;
+		  if((this.in_while_condition || this.in_if_condition) && node.type != null && node.type.equals("boolean") ) {
 			  
-			  boolean last = node.isLast();
-			  if(this.not) {
-				  //this.println("ifeq not_" + this.not_count);
-				  if(this.in_or && !last)
-					  this.println("ifeq not_" + this.not_count);
+			  String op = null;
+			  String tag = this.fail_tag;
+			  
+			  //System.out.println(this.in_or + " " + this.and_in_or + " " + node.isLast());
+			  if(this.in_or) {
+				  if(node.isLast())
+					  tag = this.fail_tag;
 				  else
-					  this.println("ifne " + tag);
-			  }else {
-				  if(this.in_or && last)
-					  this.println("ifne " + this.current_or );
+					  tag = this.current_or;
+			  }if(this.and_in_or) {
+				  if(node.isLast())
+					  tag = this.current_or;
 				  else
-					  this.println("ifeq " + tag);
+					  tag = this.fail_tag;
 			  }
-		  }*/
+			    
+			  if(this.in_or && !node.isLast()) {
+				  if(this.not) op = "ifeq ";
+				  else op = "ifne ";
+			  }
+			  else if(this.and_in_or && node.isLast()) {
+				  if(this.in_or == false) {
+					  if(this.not) op = "ifeq ";
+					  else op = "ifne ";  
+				  }else {
+					  if(this.not) op = "ifne ";
+					  else op = "ifeq ";
+				  }
+			  }
+			  else {
+				  if(this.not) op = "ifne ";
+				  else op = "ifeq ";
+			  }
+			
+			  this.println(op + tag);
+		  }
 	  }
 	  
 	  private void printLoadGlobal(IRNode node) {
@@ -355,9 +373,7 @@ public class Jasmin {
 				  else
 					  tag = this.fail_tag;
 			  }
-			  
-			  
-			  
+			    
 			  if(this.in_or && !node.isLast()) {
 				  if(this.not) op = "if_icmpge ";
 				  else op = "if_icmplt ";

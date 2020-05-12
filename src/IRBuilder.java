@@ -91,7 +91,10 @@ public class IRBuilder {
 			node.setInst("&&");
 		else if(node.getInst().equals("not")){
 			node.setInst(node.children[0].getInst());
+			node.type = node.children[0].type;
 			node.children = node.children[0].children;
+			for(int a = 0; a < node.children.length; a++)
+				node.children[a].parent = node;
 			//this.propagateNot(node,i);
 			return;
 		}else if(node.getInst().equals("<") ||
@@ -123,7 +126,9 @@ public class IRBuilder {
 			IRNode child = node.children[i];
 			this.setPop(child);
 			String inst = child.getInst(); 
-			if((inst.equals("invoke_virtual") || inst.equals("invoke_static")) && !child.type.equals("void")) {
+			if((inst.equals("invoke_virtual") 
+					|| inst.equals("invoke_static"))
+					&& !child.type.equals("void")) {
 				this.addPop(child,i);
 			}
 			if(inst.equals("+") ||
