@@ -22,7 +22,9 @@ public class Jasmin {
 	  boolean in_or = false;
 	  Integer or_count = 0;
 	  boolean not = false;
-	  Integer not_count = 0;
+	  Integer and_count = 0;
+	  
+	  boolean and_in_or = false;
 	  
 	  public Jasmin(IRNode r,PrintStream ps, boolean dg) {
 		  this.root=r;
@@ -112,6 +114,9 @@ public class Jasmin {
 		  		break;
 		  	case "&&":
 		  		printAnd(r);
+		  		break;
+		  	case "||":
+		  		printOr(r);
 		  		break;
 		  	case "new_int_arr":
 		  		printNewIntArr(r);
@@ -334,31 +339,36 @@ public class Jasmin {
 			  for(int i = 0; i < node.getChildren().length; i++) {
 				  printJasmin(node.getChildren()[i]);
 			  }
-			  String tag = this.fail_tag;
-			  String op = null;
-			  //System.out.println(this.not + " " + this.in_or + " " + node.isLastInAnd() + " " + node.checkAnd());
 			  
+			  String op = null;
+			  String tag = this.fail_tag;
+			  
+			  System.out.println(this.in_or + " " + this.and_in_or + " " + node.isLast());
 			  if(this.in_or) {
-				  if(!node.isLastInAnd()) {
-					  tag = this.sucess_tag;
-					  if(this.not) op = "if_icmpge ";
-					  else op = "if_icmplt ";
-				  }else {
-					  if(this.not) op = "if_icmplt ";
-					  else op = "if_icmpge ";
-				  }
-			  }
-			  else if(this.sucess_tag != null) {
-				  //System.out.println(this.fail_tag);
-				  //System.out.println(this.sucess_tag);
-				  if(!node.isLastInAnd()) {
+				  if(node.isLast())
 					  tag = this.fail_tag;
+				  else
+					  tag = this.current_or;
+			  }if(this.and_in_or) {
+				  if(node.isLast())
+					  tag = this.current_or;
+				  else
+					  tag = this.fail_tag;
+			  }
+			  
+			  
+			  
+			  if(this.in_or && !node.isLast()) {
+				  if(this.not) op = "if_icmpge ";
+				  else op = "if_icmplt ";
+			  }
+			  else if(this.and_in_or && node.isLast()) {
+				  if(this.in_or == false) {
+					  if(this.not) op = "if_icmpge ";
+					  else op = "if_icmplt ";  
+				  }else {
 					  if(this.not) op = "if_icmplt ";
 					  else op = "if_icmpge ";
-				  }else {
-					  tag = this.sucess_tag;
-					  if(this.not) op = "if_icmpge ";
-					  else op = "if_icmplt ";
 				  }
 			  }
 			  else {
@@ -376,11 +386,11 @@ public class Jasmin {
 	  private void printNot(IRNode node) {
 		  if(this.in_if_condition || this.in_while_condition) {
 			  this.not = !this.not;
-			  int val = this.not_count++;
+			  //int val = this.not_count++;
 			  for(int i = 0; i < node.getChildren().length; i++) {
 				  printJasmin(node.getChildren()[i]);
 			  }
-			  this.println("not_" + String.valueOf(val) + ":");
+			  //this.println("not_" + String.valueOf(val) + ":");
 			  this.not = !this.not;
 		  }else {
 			  this.printboolExpression(node);
@@ -389,35 +399,54 @@ public class Jasmin {
 	  
 	  private void printAnd(IRNode node) {
 		  if(this.in_if_condition || this.in_while_condition) {
-			  String prev_succ = null;
 			  String prev_fail = null;
-			  if(node.parent.getInst().equals("not")) {
-				  this.in_or = !this.in_or;
-				  prev_fail = this.fail_tag;
-				  prev_succ = this.sucess_tag;
-				  String success = "";
-				  String fail = "";
-				  if(this.in_or == true) {
-					  fail = this.fail_tag;
-					  success = "not_" + (this.not_count - 1);
-				  }else {
-					  fail = "not_" + (this.not_count - 1);
-					  success = prev_succ;
+			  if(node.parent.getInst().equals("||")) {
+				  this.in_or = false;
+				  if(!node.isLast()) {
+					  prev_fail = this.fail_tag;
+					  this.fail_tag = "and_" + this.and_count++;
+					  this.and_in_or = true;
 				  }
-				  for(int i = 0; i < node.getChildren().length; i++) {
-					  this.sucess_tag = success;
-					  this.fail_tag = fail;
-					  printJasmin(node.getChildren()[i]);
-				  }
-				  this.in_or = !this.in_or;
-				  this.sucess_tag = prev_succ;
-				  this.fail_tag = prev_fail;
-			  }else {
-				  for(int i = 0; i < node.getChildren().length; i++) {
-					  printJasmin(node.getChildren()[i]);
-				  } 
 			  }
-
+			  for(int i = 0; i < node.getChildren().length; i++) {
+				  printJasmin(node.getChildren()[i]);
+			  } 	
+			  if(node.parent.getInst().equals("||")) {
+				  this.in_or = true;
+				  if(!node.isLast()) {
+					  this.println(this.fail_tag + ":");
+					  this.fail_tag = prev_fail;
+					  this.and_in_or = false;
+				  }
+			  }
+		  }else {
+			  this.printboolExpression(node);
+		  }
+	  }
+	  
+	  private void printOr(IRNode node) {
+		  if(this.in_if_condition || this.in_while_condition) {
+			  String jump = null;
+			  boolean was_in_and_in_or = this.and_in_or;
+			  this.in_or = true;
+			  if(was_in_and_in_or == false) {
+				  jump = "or_"+ this.or_count++;
+				  this.current_or = jump;
+			  }else {
+				  jump = this.fail_tag;
+				  this.fail_tag = this.current_or;
+				  //this.and_in_or = false;
+			  }
+			  for(int i = 0; i < node.getChildren().length; i++) {
+				  printJasmin(node.getChildren()[i]);
+			  } 
+			  if(was_in_and_in_or == false) {
+				  println(jump + ":");
+			  }else {
+				  this.fail_tag = jump;
+				  this.and_in_or = true;
+			  }
+			  this.in_or = false;
 		  }else {
 			  this.printboolExpression(node);
 		  }

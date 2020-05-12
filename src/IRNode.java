@@ -98,8 +98,13 @@ public class IRNode {
 	  }
 	  
 	  public boolean isLast() {
+		  IRNode node = this;
 		  IRNode parent = this.getParent();
-		  return parent.getChildren()[parent.getChildren().length - 1] == this;
+		  while(parent.getInst().equals("not")) {
+			  node = parent;
+			  parent = node.getParent();
+		  }
+		  return parent.getChildren()[parent.getChildren().length - 1] == node;
 	  }
 	  public boolean isLastInAnd() {
 		  IRNode node = this;

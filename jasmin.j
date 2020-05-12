@@ -17,19 +17,25 @@ istore_3
 
 iload_3
 iconst_5
-if_icmpge not_0
+if_icmpge and_0
 iconst_3
 iload_3
-if_icmpge not_1
-iload_3
+if_icmpge or_0
 iconst_2
-if_icmpge not_2
-bipush 9
 iload_3
-if_icmplt not_1
-not_2:
-not_1:
-not_0:
+if_icmplt or_0
+and_0:
+bipush 7
+iload_3
+if_icmpge or_1
+iconst_4
+iload_3
+if_icmplt else_if1
+or_1:
+iconst_5
+iload_3
+if_icmpge else_if1
+or_0:
 
 iconst_1
 

@@ -37,6 +37,9 @@ public class IRBuilder {
 			}else if(child.getInst().equals("&&")) { //se for
 				node.setInst("||");
 				node.children = child.children;
+				for(int i = 0; i < node.children.length ;i++) {
+					node.children[i].parent = node;
+				}
 				for(int i = 0; i < node.children.length;i++) {
 					child = node.children[i];
 					this.propagateNot(child,i);
@@ -44,6 +47,9 @@ public class IRBuilder {
 			}else if(child.getInst().equals("||")) { //se for
 				node.setInst("&&");
 				node.children = child.children;
+				for(int i = 0; i < node.children.length ;i++) {
+					node.children[i].parent = node;
+				}
 				for(int i = 0; i < node.children.length;i++) {
 					child = node.children[i];
 					this.propagateNot(child,i);
@@ -56,6 +62,24 @@ public class IRBuilder {
 			IRNode child = node.children[i];
 			this.simplifyBooleans(child);
 		}
+		
+		if((node.getInst().equals("&&") && node.parent.getInst().equals("&&"))
+			|| (node.getInst().equals("||") && node.parent.getInst().equals("||"))) {
+			IRNode parent = node.parent;
+			for(int i = 1; i < node.children.length;i++) {
+				IRNode child = node.children[i];
+				parent.addChild(node.children[i]);
+				node.children[i].parent = parent;
+			}
+			for(int i = 0; i < parent.children.length;i++) {
+				if(parent.children[i] == node) {
+					parent.children[i] = node.children[0];
+					parent.children[i].parent = parent;
+					break;
+				}
+			}
+		}
+		
 	}
 	
 	private void propagateNot(IRNode node, int i) {
@@ -65,18 +89,32 @@ public class IRBuilder {
 			node.setInst("||");
 		else if(node.getInst().equals("||"))
 			node.setInst("&&");
-		else if(node.getInst().equals("<")){
+		else if(node.getInst().equals("not")){
+			node.setInst(node.children[0].getInst());
+			node.children = node.children[0].children;
+			//this.propagateNot(node,i);
+			return;
+		}else if(node.getInst().equals("<") ||
+				node.getInst().equals("ldc") ||
+				node.getInst().equals("lda") ||
+				node.getInst().equals("ldg") ||
+				node.getInst().equals("ldl") ||
+				node.getInst().equals("ldp") ||
+				node.getInst().equals("invoke_static") ||
+				node.getInst().equals("invoke_virtual")){
 			IRNode newNode = new IRNode(node.parent);
 			IRNode parent = node.parent;
 			newNode.setInst("not");
 			parent.children[i] = newNode;
 			node.parent = newNode;
 			newNode.addChild(node);
-		}else if(node.getInst().equals("not")){
-			node.setInst(node.children[0].getInst());
-			node.children = node.children[0].children;
+			return;
 		}
 		
+		for(int a = 0; a < node.children.length;a++) {
+			IRNode child = node.children[a];
+			this.propagateNot(child,a);
+		}
 	}
 	
 	private void setPop(IRNode node) {
