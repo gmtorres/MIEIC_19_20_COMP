@@ -7,8 +7,9 @@ class Hello_T {
 		boolean b;
 		int i;
 		i = 0;
+		i=i+1;
 		
-		b = i > 1 || i > 2 && 3 < i;
+		io.println(i);
 		
 	}
 

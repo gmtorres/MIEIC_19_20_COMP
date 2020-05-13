@@ -109,6 +109,9 @@ public class Jasmin {
 		  	case "-":
 		  		printOperation(r);
 		  		break;
+		  	case "iinc":
+		  		printInc(r);
+		  		break;
 		  	case "<":
 		  		printLessThan(r);
 		  		break;
@@ -191,6 +194,9 @@ public class Jasmin {
 			  break;
 		  }
 		  //this.printPop(node);
+	  }
+	  private void printInc(IRNode node) {
+		  this.println("iinc " + node.children[0].local_var + " " + node.children[1].getInst());
 	  }
 	  
 	  private void printLoad(IRNode node) {

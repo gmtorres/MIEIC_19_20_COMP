@@ -16,6 +16,8 @@ public class IRBuilder {
 			this.constant_folding(root);
 		}
 		
+		this.optimizeOperations(root);
+		
 	}
 	
 	public void dump() {
@@ -251,8 +253,7 @@ public class IRBuilder {
 						res = 0;
 				}else
 					return;
-
-				
+			
 				if(opcode == 5 || opcode == 6)
 					sn.type = "boolean";
 				
@@ -265,6 +266,33 @@ public class IRBuilder {
 			}
 		}
 		
+	}
+	
+	public void optimizeOperations(IRNode node) {
+		if(node.getInst().equals("st")) {
+			IRNode lhn = node.getChildren()[0];
+			IRNode rhn = node.getChildren()[1];
+			if(rhn.getInst().equals("+") || rhn.getInst().equals("-")) {
+				IRNode rhn2 = rhn.getChildren()[0];
+				IRNode lhn2 = rhn.getChildren()[1];
+				if(rhn2.getInst().equals("ldl") 
+						&& rhn2.getChildren()[0].getInst().equals(lhn.getInst())) {
+					if(lhn2.getInst().equals("ldc")) {
+						int val = Integer.parseInt(lhn2.getChildren()[0].getInst());
+						if(val >= -127 && val <= 127) {
+							//System.out.println("inc");
+							node.setInst("iinc");
+							rhn.children = new IRNode[0];
+							rhn.setInst(lhn2.getChildren()[0].getInst());
+						}
+					}
+				}
+			}
+		}
+		
+		for(IRNode child : node.children) {
+			this.optimizeOperations(child);
+		}
 		
 	}
 	
