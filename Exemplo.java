@@ -7,8 +7,9 @@ public class Exemplo {
 		boolean c;
 		int i;
 		i = 0;
-		c = true;
-		c = i < 5 && c;
+		
+		b = !( !(i<5 && !(3 < i && 2 < i))  && !(i<5 && !(3 < i && 2 < i) && i < 5) );
+		
 	}
 	
 }
