@@ -15,7 +15,7 @@ public class Jasmin {
 	  String current_or;
 	  
 	  String sucess_tag = null;
-	  String fail_tag;
+	  String fail_tag = null;
 	  
 	  boolean in_while_condition = false;
 	  boolean in_if_condition = false;
@@ -218,33 +218,31 @@ public class Jasmin {
 			  String op = null;
 			  String tag = this.fail_tag;
 			  
-			  //System.out.println(this.in_or + " " + this.and_in_or + " " + node.isLast());
-			  if(this.in_or) {
-				  if(node.isLast())
-					  tag = this.fail_tag;
-				  else
-					  tag = this.current_or;
-			  }if(this.and_in_or) {
-				  if(node.isLast())
-					  tag = this.current_or;
+			  boolean last = node.isLast();
+			  //System.out.println(node.getInst() +"   F: "+ this.fail_tag + "  S: " + this.sucess_tag);
+			  //System.out.println("or:" + this.in_or + "   and_in_or:" + this.and_in_or + " last:" + last);
+			  if(this.in_or == true) {
+				  if(!last)
+					  tag = this.sucess_tag;
 				  else
 					  tag = this.fail_tag;
+			  }else if(this.and_in_or == true && last) {
+				  tag = this.sucess_tag;
+			  }else { 
+				  tag = this.fail_tag;
 			  }
-			    
-			  if(this.in_or && !node.isLast()) {
-				  if(this.not) op = "ifeq ";
-				  else op = "ifne ";
-			  }
-			  else if(this.and_in_or && node.isLast()) {
-				  if(this.in_or == false) {
+			  if(this.in_or == true) {
+				  if(!last) {
 					  if(this.not) op = "ifeq ";
-					  else op = "ifne ";  
+					  else op = "ifne ";
 				  }else {
 					  if(this.not) op = "ifne ";
 					  else op = "ifeq ";
 				  }
-			  }
-			  else {
+			  }else if(this.and_in_or == true && last) {
+				  if(this.not) op = "ifeq ";
+				  else op = "ifne ";
+			  }else {
 				  if(this.not) op = "ifne ";
 				  else op = "ifeq ";
 			  }
@@ -359,36 +357,38 @@ public class Jasmin {
 			  }
 			  
 			  String op = null;
-			  String tag = this.fail_tag;
+			  String tag = null;
 			  
-			  boolean last = node.isLastInAnd();
-			  
-			  System.out.println(this.in_or + " " + this.and_in_or + " " + node.isLast());
-			  if(this.in_or || this.and_in_or) {
-				  if(node.isLast())
-					  tag = this.fail_tag;
+			  boolean last = node.isLast();
+			  //System.out.println(node.getInst() +"   F: "+ this.fail_tag + "  S: " + this.sucess_tag);
+			  //System.out.println("or:" + this.in_or + "   and_in_or:" + this.and_in_or + " last:" + last);
+			  if(this.in_or == true) {
+				  if(!last)
+					  tag = this.sucess_tag;
 				  else
-					  tag = this.current_or;
+					  tag = this.fail_tag;
+			  }else if(this.and_in_or == true && last) {
+				  tag = this.sucess_tag;
+			  }else { 
+				  tag = this.fail_tag;
 			  }
-			    
-			  if(this.in_or && !node.isLast()) {
-				  if(this.not) op = "if_icmpge ";
-				  else op = "if_icmplt ";
-			  }else if(this.and_in_or && !last) {
-				  if(!node.isLast()) {
-					  if(this.not) op = "if_icmplt ";
-					  else op = "if_icmpge ";
-				  }else {
+			  if(this.in_or == true) {
+				  if(!last) {
 					  if(this.not) op = "if_icmpge ";
 					  else op = "if_icmplt ";
+				  }else {
+					  if(this.not) op = "if_icmplt ";
+					  else op = "if_icmpge ";
 				  }
-			  }
-			  else {
+			  }else if(this.and_in_or == true && last) {
+				  if(this.not) op = "if_icmpge ";
+				  else op = "if_icmplt ";
+			  }else {
 				  if(this.not) op = "if_icmplt ";
 				  else op = "if_icmpge ";
 			  }
+
 			
-			  
 			  this.println(op + tag);
 			  
 		  }else {
@@ -398,36 +398,29 @@ public class Jasmin {
 	 
 	  private void printAnd(IRNode node) {
 		  if(this.in_if_condition || this.in_while_condition) {
-			  String jump1 = null;
-			  String jump2 = null;
+			  String jump = null;
 			  String prev_fail = null;
-			  String prev_or = null;
+			  boolean prev_or = this.in_or;
 			  boolean last = node.isLast();
-			  if(node.parent.getInst().equals("||")) {
-				  this.in_or = false;
-				  this.and_in_or = true;
+			  this.in_or = false;
+			  if(node.parent.getInst().equals("||") && !last) {
+				  jump = "and_"+this.and_count++;
 				  prev_fail = this.fail_tag;
-				  prev_or = this.current_or;
-				  if(!last) {
-					  jump1 = this.current_or;
-					  jump2 = "end_and_" + this.and_count++;
-				  }else {
-					  jump1 = this.fail_tag;
-					  jump2 = this.fail_tag;
-				  }
+				  this.fail_tag = jump;
+				  this.and_in_or = true;
+				  this.in_or = false;
 			  }
+			  //System.out.println(node.getInst() +"   "+ this.fail_tag + "  " + this.sucess_tag);
 			  for(int i = 0; i < node.getChildren().length; i++) {
-				  if(jump1!=null) this.fail_tag = jump1;
-				  if(jump2!=null) this.current_or = jump2;
 				  printJasmin(node.getChildren()[i]);
 			  } 	
-			  if(node.parent.getInst().equals("||")) {
-				  this.println(jump2+":");
-				  this.in_or = true;
+			  if(node.parent.getInst().equals("||")  && !last) {
 				  this.and_in_or = false;
+				  this.in_or = true;
+				  this.println(jump+":");
 				  this.fail_tag = prev_fail;
-				  this.current_or = prev_or;
 			  }
+			  this.in_or = prev_or;
 		  }else {
 			  this.printboolExpression(node);
 		  }
@@ -435,23 +428,22 @@ public class Jasmin {
 	  
 	  private void printOr(IRNode node) {
 		  if(this.in_if_condition || this.in_while_condition) {
-			  boolean last = node.isLast();
-			  String jump = null;
-			  String prev_and = null;
-			  boolean was_in_and_in_or = this.and_in_or;
+			  String jump;
+			  String prev_suc;
 			  this.in_or = true;
-			  jump = "or_"+ this.or_count++;
-			  if(node.parent.getInst().equals("&&") && !last) {
-				  prev_and = this.current_or;
-				  if(prev_and!=null) this.fail_tag = prev_and;
-			  }
-			  this.current_or = jump;
+			  
+			  jump = "or_" + this.or_count++;
+			  prev_suc = this.sucess_tag;
+			  this.sucess_tag = jump;
+			  //System.out.println(node.getInst() +"   "+ this.fail_tag + "  " + this.sucess_tag);
 			  for(int i = 0; i < node.getChildren().length; i++) {
 				  printJasmin(node.getChildren()[i]);
-			  } 
-
-			  println(jump + ":");
+			  }
+			  
+			  this.println(jump + ":");
+			  this.sucess_tag = prev_suc;
 			  this.in_or = false;
+
 		  }else {
 			  this.printboolExpression(node);
 		  }

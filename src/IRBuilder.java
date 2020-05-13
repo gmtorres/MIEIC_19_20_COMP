@@ -3,7 +3,7 @@ public class IRBuilder {
 	
 	IRNode root = null;
 	
-	boolean constant_folding = false;
+	boolean constant_folding = true;
 	
 	public IRBuilder(SimpleNode sn) {
 		root = new IRNode(null);
