@@ -98,6 +98,7 @@ public class IRBuilder {
 			//this.propagateNot(node,i);
 			return;
 		}else if(node.getInst().equals("<") ||
+				node.getInst().equals(">") ||
 				node.getInst().equals("ldc") ||
 				node.getInst().equals("lda") ||
 				node.getInst().equals("ldg") ||
@@ -138,6 +139,7 @@ public class IRBuilder {
 					inst.equals("&&") ||
 					inst.equals("||") ||
 					inst.equals("<")||
+					inst.equals(">")||
 					inst.equals("new_object") ) {
 				this.addPop(child,i);
 			}
@@ -158,6 +160,7 @@ public class IRBuilder {
 				  !parentInst.equals("||") && 
 				  !parentInst.equals("not") && 
 				  !parentInst.equals("<") && 
+				  !parentInst.equals(">") && 
 				  !parentInst.equals("param") &&
 				  !parentInst.equals("funcParams") &&
 				  !parentInst.equals("st") &&
@@ -199,8 +202,14 @@ public class IRBuilder {
 		case "<":
 			opcode = 5;
 			break;
-		case "&&":
+		case ">":
 			opcode = 6;
+			break;
+		case "&&":
+			opcode = 7;
+			break;
+		case "||":
+			opcode = 8;
 			break;
 		}
 		
@@ -225,9 +234,24 @@ public class IRBuilder {
 					else
 						res = 0;
 				else if(opcode == 6)
-					res&=val2;
-				else
+					if(val1 > val2)
+						res = 1;
+					else
+						res = 0;
+				else if(opcode == 7)
+					if(val1 >0 && val2 > 0) {
+						res = 1;
+					}else
+						res = 0;
+
+				else if(opcode == 8) {
+					if(val1 >0 || val2 > 0) {
+						res = 1;
+					}else
+						res = 0;
+				}else
 					return;
+
 				
 				if(opcode == 5 || opcode == 6)
 					sn.type = "boolean";

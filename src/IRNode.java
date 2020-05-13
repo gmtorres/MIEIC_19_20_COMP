@@ -457,6 +457,15 @@ public class IRNode {
 		this.addChild(child);
 	}
 	
+	public void buildThis(SimpleNode sn) {
+		this.setInst("ldl");
+		IRNode child = new IRNode(this);
+		child.setInst("this");
+		child.local_var = 0;
+		this.type = sn.descriptors.getDescriptor("this").name;
+		this.addChild(child);
+	}
+	
 	public void buildIf(SimpleNode sn) {
 		
 		this.setInst("if");
@@ -584,6 +593,9 @@ public class IRNode {
 		child.getBuild(lhn);
 		
 	}
+
+	
+	
 	
 	public void buildArr_access(SimpleNode sn) {
 		this.setInst("lda");
@@ -788,6 +800,9 @@ public class IRNode {
 		case "BOOL":
 			buildBool(sn);
 			break;
+		case "THIS":
+			buildThis(sn);
+			break;
 		default:
 			//System.out.println(sn.toString());
 			int n = sn.jjtGetNumChildren();
@@ -911,7 +926,7 @@ public class IRNode {
 			this.reg_allocated.push(this.children[1].reg);
 			this.reg_allocated.push(this.children[0].reg);
 		}
-		else if(this.inst.equals("<")
+		else if(this.inst.equals("<") || this.inst.equals(">")
 			|| this.inst.equals("&&")) {
 			Integer reg1 = this.children[1].reg;
 			Integer reg0 = this.children[0].reg;

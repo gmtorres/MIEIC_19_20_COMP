@@ -112,6 +112,9 @@ public class Jasmin {
 		  	case "<":
 		  		printLessThan(r);
 		  		break;
+		  	case ">":
+		  		printGreaterThan(r);
+		  		break;
 		  	case "&&":
 		  		printAnd(r);
 		  		break;
@@ -386,6 +389,52 @@ public class Jasmin {
 			  }else {
 				  if(this.not) op = "if_icmplt ";
 				  else op = "if_icmpge ";
+			  }
+
+			
+			  this.println(op + tag);
+			  
+		  }else {
+			  this.printboolExpression(node);
+		  }
+	  }
+	  
+	  private void printGreaterThan(IRNode node) {
+		  if(this.in_if_condition || this.in_while_condition) {
+			  for(int i = 0; i < node.getChildren().length; i++) {
+				  printJasmin(node.getChildren()[i]);
+			  }
+			  
+			  String op = null;
+			  String tag = null;
+			  
+			  boolean last = node.isLast();
+			  //System.out.println(node.getInst() +"   F: "+ this.fail_tag + "  S: " + this.sucess_tag);
+			  //System.out.println("or:" + this.in_or + "   and_in_or:" + this.and_in_or + " last:" + last);
+			  if(this.in_or == true) {
+				  if(!last)
+					  tag = this.sucess_tag;
+				  else
+					  tag = this.fail_tag;
+			  }else if(this.and_in_or == true && last) {
+				  tag = this.sucess_tag;
+			  }else { 
+				  tag = this.fail_tag;
+			  }
+			  if(this.in_or == true) {
+				  if(!last) {
+					  if(this.not) op = "if_icmple ";
+					  else op = "if_icmpgt ";
+				  }else {
+					  if(this.not) op = "if_icmpgt ";
+					  else op = "if_icmple ";
+				  }
+			  }else if(this.and_in_or == true && last) {
+				  if(this.not) op = "if_icmple ";
+				  else op = "if_icmpgt ";
+			  }else {
+				  if(this.not) op = "if_icmpgt ";
+				  else op = "if_icmple ";
 			  }
 
 			

@@ -87,7 +87,9 @@ TOKEN:{
     | <MUL : "*">
     | <DIV : "/">
     | <AND : "&&">
+    | <OR : "||">
     | <LESS_THAN : "<">
+    | <GREATER_THAN : ">">
 
 
 
@@ -212,12 +214,12 @@ void Expression() #void: {} {
 
 void AndAritm() #void : {Token t1;} {
     LessAritm()
-   		(LOOKAHEAD(2) t1 = <AND> AndAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) ) *
+   		(LOOKAHEAD(2) ( t1 = <AND> | t1 = <OR> ) AndAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) ) *
  }
 
 void LessAritm() #void : {Token t1;} {
 	AddAritm() 
-   		[LOOKAHEAD(2) t1 = <LESS_THAN> AddAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) ]
+   		[LOOKAHEAD(2) (t1 = <LESS_THAN> | t1 = <GREATER_THAN>) AddAritm() {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #OPERATOR(2) ]
     	
 }
 

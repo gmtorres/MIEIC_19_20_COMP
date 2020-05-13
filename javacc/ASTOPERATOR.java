@@ -76,7 +76,7 @@ public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException{
 		  result = false;
 	  }
 	  
-	  if(this.name.equals("&&")) {
+	  if(this.name.equals("&&") || this.name.equals("||")) {
 		  if(!lhn.type.equals("boolean")) { System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": " +  lhn.type  +" operation must be boolean."); result = false; this.decrementMaxErros(); }
 		  else if(!lhn.type.equals("boolean")) { System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": " +  rhn.type  + " operation must be boolean."); result = false; this.decrementMaxErros(); }
 		  else this.type = "boolean";
@@ -84,7 +84,7 @@ public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException{
 		  if(!lhn.type.equals("int")) { System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": " + lhn.type  + " operation must be int."); result = false; this.decrementMaxErros(); }
 		  else if(!lhn.type.equals("int")) { System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": " +  rhn.type  + " operation must be int."); result = false; this.decrementMaxErros(); }
 		  else
-			  if(this.name.equals("<")) this.type = "boolean";
+			  if(this.name.equals("<") || this.name.equals(">")) this.type = "boolean";
 			  else this.type = "int";
 	  }
 	  return result;
