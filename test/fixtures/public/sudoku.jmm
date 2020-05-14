@@ -19,6 +19,17 @@ class sudoku {
     int[] line8;
     int[] line9;
     
+    int[] origLine1;
+    int[] origLine2;
+    int[] origLine3;
+    int[] origLine4;
+    int[] origLine5;
+    int[] origLine6;
+    int[] origLine7;   
+    int[] origLine8;   
+    int[] origLine9;
+
+    
     boolean canRun;
     
     
@@ -32,6 +43,16 @@ class sudoku {
     	line7 = new int[9];
     	line8 = new int[9];
     	line9 = new int[9];
+    	
+    	origLine1 = new int[9];
+    	origLine2 = new int[9];
+    	origLine3 = new int[9];
+    	origLine4 = new int[9];
+    	origLine5 = new int[9];
+    	origLine6 = new int[9];
+    	origLine7 = new int[9];
+    	origLine8 = new int[9];
+    	origLine9 = new int[9];
     	
     	canRun = true; 
     	
@@ -153,6 +174,97 @@ class sudoku {
     	line9[6] = 0;
     	line9[7] = 0;
     	line9[8] = 0;
+    	
+    	
+    	origLine1[0] = 0;
+    	origLine1[1] = 0;
+    	origLine1[2] = 0;
+    	origLine1[3] = 0;
+    	origLine1[4] = 6;
+    	origLine1[5] = 0;
+    	origLine1[6] = 8;
+    	origLine1[7] = 0;
+    	origLine1[8] = 0;
+    	
+    	origLine2[0] = 7;
+    	origLine2[1] = 1;
+    	origLine2[2] = 3;
+    	origLine2[3] = 0;
+    	origLine2[4] = 0;
+    	origLine2[5] = 0;
+    	origLine2[6] = 2;
+    	origLine2[7] = 0;
+    	origLine2[8] = 0;
+    	
+    	origLine3[0] = 5;
+    	origLine3[1] = 0;
+    	origLine3[2] = 0;
+    	origLine3[3] = 2;
+    	origLine3[4] = 0;
+    	origLine3[5] = 0;
+    	origLine3[6] = 1;
+    	origLine3[7] = 3;
+    	origLine3[8] = 9;
+    	
+    	origLine4[0] = 8;
+    	origLine4[1] = 3;
+    	origLine4[2] = 5;
+    	origLine4[3] = 0;
+    	origLine4[4] = 4;
+    	origLine4[5] = 6;
+    	origLine4[6] = 0;
+    	origLine4[7] = 0;
+    	origLine4[8] = 2;
+    	
+    	origLine5[0] = 0;
+    	origLine5[1] = 7;
+    	origLine5[2] = 0;
+    	origLine5[3] = 0;
+    	origLine5[4] = 1;
+    	origLine5[5] = 0;
+    	origLine5[6] = 0;
+    	origLine5[7] = 4;
+    	origLine5[8] = 0;
+    
+    	origLine6[0] = 4;
+    	origLine6[1] = 0;
+    	origLine6[2] = 0;
+    	origLine6[3] = 9;
+    	origLine6[4] = 3;
+    	origLine6[5] = 0;
+    	origLine6[6] = 6;
+    	origLine6[7] = 7;
+    	origLine6[8] = 5;
+    
+    	origLine7[0] = 6;
+    	origLine7[1] = 8;
+    	origLine7[2] = 2;
+    	origLine7[3] = 0;
+    	origLine7[4] = 0;
+    	origLine7[5] = 3;
+    	origLine7[6] = 0;
+    	origLine7[7] = 0;
+    	origLine7[8] = 1;
+    
+    	origLine8[0] = 0;
+    	origLine8[1] = 0;
+    	origLine8[2] = 4;
+    	origLine8[3] = 0;
+    	origLine8[4] = 0;
+    	origLine8[5] = 0;
+    	origLine8[6] = 5;
+    	origLine8[7] = 2;
+    	origLine8[8] = 3;
+    	
+    	origLine9[0] = 0;
+    	origLine9[1] = 0;
+    	origLine9[2] = 7;
+    	origLine9[3] = 0;
+    	origLine9[4] = 2;
+    	origLine9[5] = 0;
+    	origLine9[6] = 0;
+    	origLine9[7] = 0;
+    	origLine9[8] = 0;
     	}
     	
     	else if (this.eq(2,option)) {
@@ -247,6 +359,95 @@ class sudoku {
     	line9[7] = 0;
     	line9[8] = 4;
     	
+    	origLine1[0] = 0;
+    	origLine1[1] = 6;
+    	origLine1[2] = 0;
+    	origLine1[3] = 9;
+    	origLine1[4] = 0;
+    	origLine1[5] = 4;
+    	origLine1[6] = 0;
+    	origLine1[7] = 0;
+    	origLine1[8] = 1;
+    	
+    	origLine2[0] = 1;
+    	origLine2[1] = 8;
+    	origLine2[2] = 3;
+    	origLine2[3] = 0;
+    	origLine2[4] = 5;
+    	origLine2[5] = 7;
+    	origLine2[6] = 6;
+    	origLine2[7] = 4;
+    	origLine2[8] = 0;
+    	
+    	origLine3[0] = 0;
+    	origLine3[1] = 0;
+    	origLine3[2] = 4;
+    	origLine3[3] = 6;
+    	origLine3[4] = 0;
+    	origLine3[5] = 0;
+    	origLine3[6] = 0;
+    	origLine3[7] = 0;
+    	origLine3[8] = 7;
+    	
+    	origLine4[0] = 0;
+    	origLine4[1] = 2;
+    	origLine4[2] = 0;
+    	origLine4[3] = 0;
+    	origLine4[4] = 0;
+    	origLine4[5] = 6;
+    	origLine4[6] = 7;
+    	origLine4[7] = 0;
+    	origLine4[8] = 0;
+    	
+    	origLine5[0] = 6;
+    	origLine5[1] = 0;
+    	origLine5[2] = 0;
+    	origLine5[3] = 0;
+    	origLine5[4] = 0;
+    	origLine5[5] = 0;
+    	origLine5[6] = 2;
+    	origLine5[7] = 1;
+    	origLine5[8] = 0;
+    
+    	origLine6[0] = 7;
+    	origLine6[1] = 0;
+    	origLine6[2] = 0;
+    	origLine6[3] = 0;
+    	origLine6[4] = 0;
+    	origLine6[5] = 0;
+    	origLine6[6] = 0;
+    	origLine6[7] = 0;
+    	origLine6[8] = 0;
+    
+    	origLine7[0] = 5;
+    	origLine7[1] = 0;
+    	origLine7[2] = 0;
+    	origLine7[3] = 0;
+    	origLine7[4] = 7;
+    	origLine7[5] = 0;
+    	origLine7[6] = 0;
+    	origLine7[7] = 0;
+    	origLine7[8] = 2;
+    
+    	origLine8[0] = 0;
+    	origLine8[1] = 0;
+    	origLine8[2] = 0;
+    	origLine8[3] = 4;
+    	origLine8[4] = 0;
+    	origLine8[5] = 9;
+    	origLine8[6] = 0;
+    	origLine8[7] = 0;
+    	origLine8[8] = 0;
+    	
+    	origLine9[0] = 0;
+    	origLine9[1] = 0;
+    	origLine9[2] = 2;
+    	origLine9[3] = 5;
+    	origLine9[4] = 0;
+    	origLine9[5] = 0;
+    	origLine9[6] = 3;
+    	origLine9[7] = 0;
+    	origLine9[8] = 4;
     	
     	}
     	
@@ -343,9 +544,95 @@ class sudoku {
     	line9[7] = 0;
     	line9[8] = 0;
     	
+    	origLine1[0] = 4;
+    	origLine1[1] = 0;
+    	origLine1[2] = 0;
+    	origLine1[3] = 0;
+    	origLine1[4] = 0;
+    	origLine1[5] = 0;
+    	origLine1[6] = 8;
+    	origLine1[7] = 0;
+    	origLine1[8] = 0;
     	
+    	origLine2[0] = 0;
+    	origLine2[1] = 6;
+    	origLine2[2] = 0;
+    	origLine2[3] = 0;
+    	origLine2[4] = 5;
+    	origLine2[5] = 1;
+    	origLine2[6] = 0;
+    	origLine2[7] = 0;
+    	origLine2[8] = 8;
     	
+    	origLine3[0] = 0;
+    	origLine3[1] = 0;
+    	origLine3[2] = 0;
+    	origLine3[3] = 0;
+    	origLine3[4] = 0;
+    	origLine3[5] = 0;
+    	origLine3[6] = 4;
+    	origLine3[7] = 2;
+    	origLine3[8] = 0;
     	
+    	origLine4[0] = 0;
+    	origLine4[1] = 7;
+    	origLine4[2] = 4;
+    	origLine4[3] = 0;
+    	origLine4[4] = 0;
+    	origLine4[5] = 0;
+    	origLine4[6] = 0;
+    	origLine4[7] = 0;
+    	origLine4[8] = 1;
+    	
+    	origLine5[0] = 0;
+    	origLine5[1] = 0;
+    	origLine5[2] = 1;
+    	origLine5[3] = 0;
+    	origLine5[4] = 0;
+    	origLine5[5] = 7;
+    	origLine5[6] = 0;
+    	origLine5[7] = 0;
+    	origLine5[8] = 0;
+    
+    	origLine6[0] = 0;
+    	origLine6[1] = 0;
+    	origLine6[2] = 8;
+    	origLine6[3] = 8;
+    	origLine6[4] = 1;
+    	origLine6[5] = 3;
+    	origLine6[6] = 0;
+    	origLine6[7] = 0;
+    	origLine6[8] = 0;
+    
+    	origLine7[0] = 8;
+    	origLine7[1] = 0;
+    	origLine7[2] = 0;
+    	origLine7[3] = 5;
+    	origLine7[4] = 9;
+    	origLine7[5] = 0;
+    	origLine7[6] = 0;
+    	origLine7[7] = 0;
+    	origLine7[8] = 3;
+    
+    	origLine8[0] = 0;
+    	origLine8[1] = 0;
+    	origLine8[2] = 0;
+    	origLine8[3] = 0;
+    	origLine8[4] = 0;
+    	origLine8[5] = 0;
+    	origLine8[6] = 0;
+    	origLine8[7] = 0;
+    	origLine8[8] = 0;
+    	
+    	origLine9[0] = 0;
+    	origLine9[1] = 0;
+    	origLine9[2] = 0;
+    	origLine9[3] = 0;
+    	origLine9[4] = 0;
+    	origLine9[5] = 0;
+    	origLine9[6] = 0;
+    	origLine9[7] = 0;
+    	origLine9[8] = 0;
     	
     	}
     	
@@ -364,11 +651,9 @@ class sudoku {
    		
    		int i;
    		
-   		i = 0;
    		
-   		while (i < 9) {
+   		for (i = 0; i < 9; i = i + 1) {
    			io.print(line[i]);
-   			i = i + 1;  //TODO: ALTERAR PARA i++
    		}
    		
    		io.println();
@@ -535,6 +820,7 @@ class sudoku {
    		
    		int i;
    		int j;
+   		int prevJ;
    		
    		int[] arr;
    		
@@ -543,16 +829,48 @@ class sudoku {
    		
    		toRet = true;
    		
-   		sqx = col / 3;
-   		sqy = line / 3;
+   		   		
+   		if (this.ge(1, line) && this.le(3, line)) {
+   			io.print(7777);
+   			i = 1;
+   			sqy = 4;
+   		}
    		
-   		i = 3 * sqy;
-   		j = 3 * sqx;
+   		else if(this.ge(4, line) && this.le(6, line)) {
+   			i = 4;
+   			sqy = 7;
+   		}
    		
-   		while ((i < (3*sqy + 3)) && toRet) {
+   		else {
+   			i = 7;
+   			sqy = 10;
+   		}
+   		
+   		
+   		if (this.ge(0, col) && this.le(2, col)) {
+   			io.print(8888);
+   			j = 0;
+   			prevJ = 0;
+   			sqx = 3;
+   		}
+   		
+   		else if(this.ge(3, col) && this.le(5, col)) {
+   			j = 3;
+   			prevJ = 3;
+   			sqx = 6;
+   		}
+   		
+   		else {
+   			j = 6;
+   			prevJ = 6;
+   			sqx = 9;
+   		}
+   		
+   		   		
+   		while ((i < sqy ) && toRet) {
    			arr = this.getLine(i);
-   			while((j < (3*sqx + 3)) && toRet) {
-   				
+   			while((j < sqx) && toRet) {
+   			
    				if(this.eq(arr[j], option)) {
    					toRet = false;
    				}
@@ -563,6 +881,7 @@ class sudoku {
    			}
    		
    			i = i + 1;
+   			j = prevJ;
    		}
    		
    		return toRet;
@@ -586,14 +905,50 @@ class sudoku {
    	}
    	
    	
+   	
+   	public boolean validateBoard() {
+   		int i;
+   		boolean toRet;
+   		int[] arr;
+   		int j;
+   		
+   		toRet = true;
+   		i = 1;
+   		
+   		while(i < 10 && toRet) {
+   			arr = this.getLine(i);
+   			
+   			for (j = 0; j < 9; j = j + 1) {
+   				
+   				if (this.eq(0, arr[j])) {
+   					toRet = false;
+   				}
+   				else {
+   				}
+   			}
+   			
+   			j = 0;
+   			i = i + 1;
+   		}
+   	
+   		return toRet;
+   		
+   	}
+   	
+   	
    	public boolean run() {
    		
    		while(!this.setPosition()) {
    		}
    		
    		this.printBoard();
-   		
-   		//TODO: VALIDATEBOARD
+   	
+   	
+   		if(this.validateBoard()) {
+   			canRun = false;
+   		}
+   		else {
+   		}		
    		
    		return true;
    	}
