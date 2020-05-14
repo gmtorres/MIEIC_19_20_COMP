@@ -1,0 +1,268 @@
+import static io.print(int);
+import static io.println();
+import static io.println(int);
+import static io.read() int;
+import static BoardBase.wrongMove();
+import static BoardBase.placeTaken();
+import static BoardBase.printWinner(int) void;
+
+class ConnectFour {	
+	
+	int MAXROWS;
+	int MAXCOLS;
+	
+	int[] row0;
+	int[] row1;
+	int[] row2;
+	int[] row3;
+	int[] row4;
+	int[] row5;
+	
+	int currentPlayer;
+	boolean run;
+	
+	public static void main(String[] args){ 	
+		ConnectFour game;
+		
+		game = new ConnectFour();
+		
+		game.run();
+		
+	}
+	
+	public int init(){
+		
+		MAXROWS = 6;
+		MAXCOLS = 7;
+		
+		row0 = new int[7];
+		row1 = new int[7];
+		row2 = new int[7];
+		row3 = new int[7];
+		row4 = new int[7];
+		row5 = new int[7];
+		
+		run = true;
+		currentPlayer = 1;
+		
+		return 0;
+	}
+	
+	public int[] getRow(int i){
+		int[] ret;
+		
+		if(i < 1)
+			ret = row0;
+		else if(i < 2)
+			ret = row1;
+		else if(i < 3)
+			ret = row2;
+		else if(i < 4)
+			ret = row3;
+		else if(i < 5)
+			ret = row4;
+		else	
+			ret = row5;
+		
+		return ret;
+	}
+
+	
+	public int printRow(int[] r){
+		int i;
+		i = 0;
+		while(i < r.length){
+			io.print(r[i]);
+			i = i + 1;
+		}
+		io.println();
+		return 0;
+	}
+	
+	public int printBoard(){
+		int i;
+		io.println();
+		i = 0; 
+		while(i < MAXROWS){
+			this.printRow(this.getRow(i));
+			i = i + 1;
+		}
+		return 0;
+	}
+	
+	public int getMove(){
+		int i;
+		boolean valid;
+		valid = false;
+		i = 0;
+		while(!valid){
+			i = io.read();
+			if(!(!(i < 0) && !(6 < i)) ){
+				BoardBase.wrongMove();
+			}else
+				valid = true;
+		}
+		return i;
+	}
+	
+	public int putPiece(int col, int val){
+	
+		int x;
+		int [] arr;
+		boolean found;
+		
+		x = MAXROWS;
+		found = false;
+		
+		while( !(x < 0) && !found){
+			x = x - 1;
+			arr = this.getRow(x);
+			if(arr[col] < 1){
+				arr[col] = val;
+				found = true;
+			}else{}
+		}
+	
+		return x;
+	}
+	
+	public int changePlayer(){
+		if(currentPlayer < 2)
+			currentPlayer = 2;
+		else
+			currentPlayer = 1;
+		return 0;
+	}
+	
+	public boolean eq(int a, int b){
+		return !(a < b) && !(b < a);
+	}
+	
+	public int countHorizontal(int x, int y, int player){
+		int count;
+		int i;
+		int j; 
+		count = 1;
+		i = x - 1;
+		j = y;
+		while( !(i < 0) && this.eq(this.getRow(j)[i] , player)){
+			count = count + 1;
+			i = i - 1;
+		}
+		i = x + 1;
+		while( i < MAXCOLS  && this.eq(this.getRow(j)[i] , player)){
+			count = count + 1;
+			i = i + 1;
+		}
+		return count;
+	}
+	
+	public int countVertical(int x, int y, int player){
+		int count;
+		int i;
+		int j; 
+		count = 1;
+		i = x;
+		j = y-1;
+		while( !(j < 0) && this.eq(this.getRow(j)[i] , player)){
+			count = count + 1;
+			j = j - 1;
+		}
+		j = y + 1;
+		while( j < MAXROWS  && this.eq(this.getRow(j)[i] , player)){
+			count = count + 1;
+			j = j + 1;
+		}
+		return count;
+	}
+	
+	public int countDiagonal1(int x, int y, int player){
+		int count;
+		int i;
+		int j; 
+		count = 1;
+		i = x - 1;
+		j = y - 1;
+		while( !(j < 0) && !(i < 0) && this.eq(this.getRow(j)[i] , player)){
+			count = count + 1;
+			j = j - 1;
+			i = i - 1;
+		}
+		i = x + 1;
+		j = y + 1;
+		while( j < MAXROWS && i < MAXCOLS && this.eq(this.getRow(j)[i] , player)){
+			count = count + 1;
+			j = j + 1;
+			i = i + 1;
+		}
+		return count;
+	}
+	
+	public int countDiagonal2(int x, int y, int player){
+		int count;
+		int i;
+		int j; 
+		count = 1;
+		i = x + 1;
+		j = y - 1;
+		while( !(j < 0) && i < MAXCOLS && this.eq(this.getRow(j)[i] , player)){
+			count = count + 1;
+			j = j - 1;
+			i = i + 1;
+		}
+		i = x - 1;
+		j = y + 1;
+		while( j < MAXROWS && !(i < 0) && this.eq(this.getRow(j)[i] , player)){
+			count = count + 1;
+			j = j + 1;
+			i = i - 1;
+		}
+		return count;
+	}
+	
+	public boolean gameOver(int x, int y, int player){
+		boolean gameover;
+		
+		gameover = false;
+
+		if(!(this.countHorizontal(x,y,player) < 4))
+			gameover = true;
+		else if(!(this.countVertical(x,y,player) < 4))
+			gameover = true;
+		else if(!(this.countDiagonal1(x,y,player) < 4))
+			gameover = true;
+		else if(!(this.countDiagonal2(x,y,player) < 4))
+			gameover = true;
+		else{}
+		
+		return gameover;
+	}
+	
+	
+	public int run(){
+		int y;
+		int x;
+		this.init();
+		while(run){
+			this.printBoard();
+			
+			x = this.getMove();
+			y = this.putPiece(x,currentPlayer);
+			while(x < 0){
+				BoardBase.placeTaken();
+				x = this.getMove();
+				y = this.putPiece(x,currentPlayer);
+			}
+			
+			run = !this.gameOver(x,y,currentPlayer);
+			this.changePlayer();
+			
+		}
+		this.printBoard();
+		this.changePlayer();
+		BoardBase.printWinner(currentPlayer);
+		return 0;
+	}
+
+	
+ }

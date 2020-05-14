@@ -51,9 +51,27 @@ class ASTARRAY_ACESS extends SimpleNode {
 				  }
 			  }else
 				  lhn.type = s.getType().getName();
+			  
+			  if(s.getType().content == null) {
+				  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Simbol " + lhn.name + " must be an array.");
+				  this.decrementMaxErros();
+				  return false;
+			  }
 		  }
+		  
 		  this.type = lhn.type;
-	  }else return false;
+	  }else if(lhn.toString().equals("FUNCTION")) {
+		  if(this.descriptors.getDescriptor(lhn.type).content == null) {
+			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Fucntion " + lhn.name + " must be an array.");
+			  this.decrementMaxErros();
+			  return false;
+		  }
+	  }
+	  else {
+		  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Not suported");
+		  this.decrementMaxErros();
+		  return false;
+	  }
 	  
 	  if(this.jjtGetNumChildren() == 2) {
 		  SimpleNode rhn  = (SimpleNode) this.children[1];
