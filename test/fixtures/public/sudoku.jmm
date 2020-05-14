@@ -1,0 +1,629 @@
+import static io.println() void;
+import static io.print(int) void;
+import static io.read() int;
+import static ioPlus.requestNumber() int;
+import static BoardBase.wrongMove();
+import static BoardBase.placeTaken();
+
+
+
+class sudoku {
+
+    int[] line1;
+    int[] line2;
+    int[] line3;
+    int[] line4;
+    int[] line5;
+    int[] line6;
+    int[] line7;
+    int[] line8;
+    int[] line9;
+    
+    boolean canRun;
+    
+    
+    public boolean init(int option) {
+    	line1 = new int[9];
+    	line2 = new int[9];
+    	line3 = new int[9];
+    	line4 = new int[9];
+    	line5 = new int[9];
+    	line6 = new int[9];
+    	line7 = new int[9];
+    	line8 = new int[9];
+    	line9 = new int[9];
+    	
+    	canRun = true; 
+    	
+    	this.setLines(option);
+    	
+    	this.printBoard();
+
+    	return true;
+ 	}
+    
+    
+    public static void main(String[] args) {
+   		
+   		sudoku s;
+   		int option;
+   		
+   		option = ioPlus.requestNumber();
+   		
+   		s = new sudoku();
+   		
+   		s.init(option);
+   		
+   		while(s.canRun()) {
+   			s.run();
+   		}
+
+    }
+    
+    public boolean setLines(int option) {
+    	
+    	if(this.eq(1,option)) {
+    	
+    	line1[0] = 0;
+    	line1[1] = 0;
+    	line1[2] = 0;
+    	line1[3] = 0;
+    	line1[4] = 6;
+    	line1[5] = 0;
+    	line1[6] = 8;
+    	line1[7] = 0;
+    	line1[8] = 0;
+    	
+    	line2[0] = 7;
+    	line2[1] = 1;
+    	line2[2] = 3;
+    	line2[3] = 0;
+    	line2[4] = 0;
+    	line2[5] = 0;
+    	line2[6] = 2;
+    	line2[7] = 0;
+    	line2[8] = 0;
+    	
+    	line3[0] = 5;
+    	line3[1] = 0;
+    	line3[2] = 0;
+    	line3[3] = 2;
+    	line3[4] = 0;
+    	line3[5] = 0;
+    	line3[6] = 1;
+    	line3[7] = 3;
+    	line3[8] = 9;
+    	
+    	line4[0] = 8;
+    	line4[1] = 3;
+    	line4[2] = 5;
+    	line4[3] = 0;
+    	line4[4] = 4;
+    	line4[5] = 6;
+    	line4[6] = 0;
+    	line4[7] = 0;
+    	line4[8] = 2;
+    	
+    	line5[0] = 0;
+    	line5[1] = 7;
+    	line5[2] = 0;
+    	line5[3] = 0;
+    	line5[4] = 1;
+    	line5[5] = 0;
+    	line5[6] = 0;
+    	line5[7] = 4;
+    	line5[8] = 0;
+    
+    	line6[0] = 4;
+    	line6[1] = 0;
+    	line6[2] = 0;
+    	line6[3] = 9;
+    	line6[4] = 3;
+    	line6[5] = 0;
+    	line6[6] = 6;
+    	line6[7] = 7;
+    	line6[8] = 5;
+    
+    	line7[0] = 6;
+    	line7[1] = 8;
+    	line7[2] = 2;
+    	line7[3] = 0;
+    	line7[4] = 0;
+    	line7[5] = 3;
+    	line7[6] = 0;
+    	line7[7] = 0;
+    	line7[8] = 1;
+    
+    	line8[0] = 0;
+    	line8[1] = 0;
+    	line8[2] = 4;
+    	line8[3] = 0;
+    	line8[4] = 0;
+    	line8[5] = 0;
+    	line8[6] = 5;
+    	line8[7] = 2;
+    	line8[8] = 3;
+    	
+    	line9[0] = 0;
+    	line9[1] = 0;
+    	line9[2] = 7;
+    	line9[3] = 0;
+    	line9[4] = 2;
+    	line9[5] = 0;
+    	line9[6] = 0;
+    	line9[7] = 0;
+    	line9[8] = 0;
+    	}
+    	
+    	else if (this.eq(2,option)) {
+    	
+    	line1[0] = 0;
+    	line1[1] = 6;
+    	line1[2] = 0;
+    	line1[3] = 9;
+    	line1[4] = 0;
+    	line1[5] = 4;
+    	line1[6] = 0;
+    	line1[7] = 0;
+    	line1[8] = 1;
+    	
+    	line2[0] = 1;
+    	line2[1] = 8;
+    	line2[2] = 3;
+    	line2[3] = 0;
+    	line2[4] = 5;
+    	line2[5] = 7;
+    	line2[6] = 6;
+    	line2[7] = 4;
+    	line2[8] = 0;
+    	
+    	line3[0] = 0;
+    	line3[1] = 0;
+    	line3[2] = 4;
+    	line3[3] = 6;
+    	line3[4] = 0;
+    	line3[5] = 0;
+    	line3[6] = 0;
+    	line3[7] = 0;
+    	line3[8] = 7;
+    	
+    	line4[0] = 0;
+    	line4[1] = 2;
+    	line4[2] = 0;
+    	line4[3] = 0;
+    	line4[4] = 0;
+    	line4[5] = 6;
+    	line4[6] = 7;
+    	line4[7] = 0;
+    	line4[8] = 0;
+    	
+    	line5[0] = 6;
+    	line5[1] = 0;
+    	line5[2] = 0;
+    	line5[3] = 0;
+    	line5[4] = 0;
+    	line5[5] = 0;
+    	line5[6] = 2;
+    	line5[7] = 1;
+    	line5[8] = 0;
+    
+    	line6[0] = 7;
+    	line6[1] = 0;
+    	line6[2] = 0;
+    	line6[3] = 0;
+    	line6[4] = 0;
+    	line6[5] = 0;
+    	line6[6] = 0;
+    	line6[7] = 0;
+    	line6[8] = 0;
+    
+    	line7[0] = 5;
+    	line7[1] = 0;
+    	line7[2] = 0;
+    	line7[3] = 0;
+    	line7[4] = 7;
+    	line7[5] = 0;
+    	line7[6] = 0;
+    	line7[7] = 0;
+    	line7[8] = 2;
+    
+    	line8[0] = 0;
+    	line8[1] = 0;
+    	line8[2] = 0;
+    	line8[3] = 4;
+    	line8[4] = 0;
+    	line8[5] = 9;
+    	line8[6] = 0;
+    	line8[7] = 0;
+    	line8[8] = 0;
+    	
+    	line9[0] = 0;
+    	line9[1] = 0;
+    	line9[2] = 2;
+    	line9[3] = 5;
+    	line9[4] = 0;
+    	line9[5] = 0;
+    	line9[6] = 3;
+    	line9[7] = 0;
+    	line9[8] = 4;
+    	
+    	
+    	}
+    	
+    	
+    	else {
+    	
+    	line1[0] = 4;
+    	line1[1] = 0;
+    	line1[2] = 0;
+    	line1[3] = 0;
+    	line1[4] = 0;
+    	line1[5] = 0;
+    	line1[6] = 8;
+    	line1[7] = 0;
+    	line1[8] = 0;
+    	
+    	line2[0] = 0;
+    	line2[1] = 6;
+    	line2[2] = 0;
+    	line2[3] = 0;
+    	line2[4] = 5;
+    	line2[5] = 1;
+    	line2[6] = 0;
+    	line2[7] = 0;
+    	line2[8] = 8;
+    	
+    	line3[0] = 0;
+    	line3[1] = 0;
+    	line3[2] = 0;
+    	line3[3] = 0;
+    	line3[4] = 0;
+    	line3[5] = 0;
+    	line3[6] = 4;
+    	line3[7] = 2;
+    	line3[8] = 0;
+    	
+    	line4[0] = 0;
+    	line4[1] = 7;
+    	line4[2] = 4;
+    	line4[3] = 0;
+    	line4[4] = 0;
+    	line4[5] = 0;
+    	line4[6] = 0;
+    	line4[7] = 0;
+    	line4[8] = 1;
+    	
+    	line5[0] = 0;
+    	line5[1] = 0;
+    	line5[2] = 1;
+    	line5[3] = 0;
+    	line5[4] = 0;
+    	line5[5] = 7;
+    	line5[6] = 0;
+    	line5[7] = 0;
+    	line5[8] = 0;
+    
+    	line6[0] = 0;
+    	line6[1] = 0;
+    	line6[2] = 8;
+    	line6[3] = 8;
+    	line6[4] = 1;
+    	line6[5] = 3;
+    	line6[6] = 0;
+    	line6[7] = 0;
+    	line6[8] = 0;
+    
+    	line7[0] = 8;
+    	line7[1] = 0;
+    	line7[2] = 0;
+    	line7[3] = 5;
+    	line7[4] = 9;
+    	line7[5] = 0;
+    	line7[6] = 0;
+    	line7[7] = 0;
+    	line7[8] = 3;
+    
+    	line8[0] = 0;
+    	line8[1] = 0;
+    	line8[2] = 0;
+    	line8[3] = 0;
+    	line8[4] = 0;
+    	line8[5] = 0;
+    	line8[6] = 0;
+    	line8[7] = 0;
+    	line8[8] = 0;
+    	
+    	line9[0] = 0;
+    	line9[1] = 0;
+    	line9[2] = 0;
+    	line9[3] = 0;
+    	line9[4] = 0;
+    	line9[5] = 0;
+    	line9[6] = 0;
+    	line9[7] = 0;
+    	line9[8] = 0;
+    	
+    	
+    	
+    	
+    	
+    	}
+    	
+    
+    	
+    	return true;
+    
+    }
+    
+    public boolean canRun() {
+    	return canRun;
+    }
+    
+   	
+   	public boolean printLine(int[] line) {
+   		
+   		int i;
+   		
+   		i = 0;
+   		
+   		while (i < 9) {
+   			io.print(line[i]);
+   			i = i + 1;  //TODO: ALTERAR PARA i++
+   		}
+   		
+   		io.println();
+   		
+   		return true;
+   	}
+   	
+   	public boolean printBoard() {
+   		
+   		this.printLine(line1);
+   		this.printLine(line2);
+   		this.printLine(line3);
+   		this.printLine(line4);
+   		this.printLine(line5);
+   		this.printLine(line6);
+   		this.printLine(line7);
+   		this.printLine(line8);
+   		this.printLine(line9);
+   		
+   		return true;
+   	}
+   	
+   	
+   	public int[] getLine(int line) {
+   		int[] arr;
+   		
+   		if (this.eq(1,line)) {
+   			arr = line1;
+   		}
+   		else if (this.eq(2,line)) {
+   			arr = line2;
+   		}
+   		else if (this.eq(3,line)) {
+   			arr = line3;
+   		}
+   		else if (this.eq(4,line)) {
+   			arr = line4;
+   		}
+   		else if (this.eq(5,line)) {
+   			arr = line5;
+   		}
+   		else if (this.eq(6,line)) {
+   			arr = line6;
+   		}
+   		else if (this.eq(7,line)) {
+   			arr = line7;
+   		}
+   		else if (this.eq(8,line)) {
+   			arr = line8;
+   		}
+   		else {
+   			arr = line9;
+   		}
+   		
+   		return arr;
+   		
+   	}
+   	
+   	
+   	public boolean setLine(int line, int col, int option) {
+   		int[] arr;
+   		arr = this.getLine(line);
+   		
+   		arr[col] = option;
+   		
+   		return true;
+   	}
+   	
+   	
+   	public boolean setPosition() {
+   		boolean toRet;
+   		
+   		int opt;
+   		int line;
+   		int col;
+   		
+   		opt = ioPlus.requestNumber();
+   		line = ioPlus.requestNumber();
+   		col = ioPlus.requestNumber();
+   		
+   		col = col - 1;
+   		
+   		if (this.validateInput(opt) && this.validateInput(line) && this.validateInput(col)) {
+   			if (this.validatePlay(line, col, opt)) {
+   				this.setLine(line, col, opt);
+   				toRet = true;
+   			}
+   			else {
+   				toRet = false;
+   			}
+   		}
+   		
+   		else {
+   			toRet = false;
+   		}
+   		   		
+   		return toRet;
+   	}
+   	
+   	
+   	public boolean validatePlay(int line, int col, int option) {
+   		boolean toRet;
+   		int[] arr;
+   		int i;
+   		
+   		i = 0;
+   		toRet = true;
+   		arr = this.getLine(line);
+   		
+   		if(this.eq(arr[col],0)) {  //TODO: ALTERAR
+   			
+   			if (this.validateSquare(line, col, option) && this.validateColumn(col, option)) {
+   				while(i < 9 && toRet) {
+   					if(this.eq(arr[i], option)) {
+   						BoardBase.wrongMove();
+   						toRet = false;
+   					}
+   					else {
+   					}
+   					
+   					i = i + 1;
+   				}
+   				
+   			}
+   			else {
+   				BoardBase.wrongMove();
+   				toRet = false;
+   			}
+   		}
+   		else {
+   			BoardBase.placeTaken();
+   			toRet = false;
+   		}  
+   		
+   		return toRet; 
+   	}
+   	
+   	
+   	public boolean validateColumn(int column, int option) {
+   		boolean toRet;
+   		int i;
+   		int[] arr;
+   		
+   		i = 1;
+   		toRet = true;
+   		
+   		while (i < 10 && toRet) {
+   			arr = this.getLine(i);
+   			if (this.eq(arr[column], option)) {
+   				toRet = false;
+   			}
+   			else {
+   			}
+   			
+   			i = i + 1;
+   		}
+   		
+   		return toRet;
+   	}
+   	
+   	
+   	public boolean validateSquare(int line, int col, int option) {
+   		boolean toRet;
+   		
+   		int i;
+   		int j;
+   		
+   		int[] arr;
+   		
+   		int sqx;
+   		int sqy;
+   		
+   		toRet = true;
+   		
+   		sqx = col / 3;
+   		sqy = line / 3;
+   		
+   		i = 3 * sqy;
+   		j = 3 * sqx;
+   		
+   		while ((i < (3*sqy + 3)) && toRet) {
+   			arr = this.getLine(i);
+   			while((j < (3*sqx + 3)) && toRet) {
+   				
+   				if(this.eq(arr[j], option)) {
+   					toRet = false;
+   				}
+   				else {
+   				}
+   				
+   				j = j + 1;
+   			}
+   		
+   			i = i + 1;
+   		}
+   		
+   		return toRet;
+   	}
+   	
+   	
+   	
+   	
+   	
+   	public boolean validateInput(int toValidate) {
+   		boolean res;
+   		if (this.lt(1,toValidate) || this.gt(9,toValidate)) {
+   			res = true;
+   		}
+   		else {
+   			BoardBase.wrongMove();
+   			res = false;
+   		}
+   		
+   		return res;
+   	}
+   	
+   	
+   	public boolean run() {
+   		
+   		while(!this.setPosition()) {
+   		}
+   		
+   		this.printBoard();
+   		
+   		//TODO: VALIDATEBOARD
+   		
+   		return true;
+   	}
+   	
+   	
+   	
+   	
+   	public boolean eq(int a, int b) {
+		return (!this.lt(a, b) && !this.lt(b, a));
+	}
+	
+	public boolean ne(int a, int b) {
+		return (!this.eq(a, b));
+	}
+	
+    public boolean lt(int a, int b) {
+		return (a < b);
+    }
+    
+    public boolean le(int a, int b) {
+		return !(!this.lt(a, b) && !this.eq(a, b));
+    }
+    
+    public boolean gt(int a, int b) {
+		return (a > b);
+    }
+    
+    public boolean ge(int a, int b) {
+		return !(!this.gt(a, b) && !this.eq(a, b));
+	}
+    
+    
+}
