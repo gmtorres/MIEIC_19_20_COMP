@@ -6,10 +6,9 @@ class Hello_T {
 	public static void main(String[] args){ 	
 		boolean b;
 		int i;
-		i = 0;
-		i=i+1;
-		
-		io.println(i);
+		for(i = 10; 0 < i ; i = i -1){
+			io.println(i);
+		}
 		
 	}
 

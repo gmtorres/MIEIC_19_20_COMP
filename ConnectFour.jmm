@@ -1,7 +1,7 @@
 import static io.print(int);
 import static io.println();
 import static io.println(int);
-import static io.read() int;
+import static ioPlus.requestNumber() int;
 import static BoardBase.wrongMove();
 import static BoardBase.placeTaken();
 import static BoardBase.printWinner(int) void;
@@ -25,12 +25,11 @@ class ConnectFour {
 		ConnectFour game;
 		
 		game = new ConnectFour();
-		
 		game.run();
 		
 	}
 	
-	public int init(){
+	public ConnectFour init(){
 		
 		MAXROWS = 6;
 		MAXCOLS = 7;
@@ -45,7 +44,7 @@ class ConnectFour {
 		run = true;
 		currentPlayer = 1;
 		
-		return 0;
+		return this;
 	}
 	
 	public int[] getRow(int i){
@@ -96,7 +95,7 @@ class ConnectFour {
 		valid = false;
 		i = 0;
 		while(!valid){
-			i = io.read();
+			i = ioPlus.requestNumber();
 			if(!(!(i < 0) && !(6 < i)) ){
 				BoardBase.wrongMove();
 			}else
@@ -248,7 +247,7 @@ class ConnectFour {
 			
 			x = this.getMove();
 			y = this.putPiece(x,currentPlayer);
-			while(x < 0){
+			while(y < 0){
 				BoardBase.placeTaken();
 				x = this.getMove();
 				y = this.putPiece(x,currentPlayer);

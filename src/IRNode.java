@@ -351,6 +351,42 @@ public class IRNode {
 		}
 	}
 	
+	public void buildFor(SimpleNode sn) {
+		SimpleNode ass = (SimpleNode)(sn.jjtGetChild(0)).jjtGetChild(0); //ASSIGN
+		this.getBuild(ass);
+		IRNode newWhile = new IRNode(this.parent);
+		newWhile.setInst("while");
+		parent.addChild(newWhile);
+		
+		SimpleNode cond = (SimpleNode)(sn.jjtGetChild(1)).jjtGetChild(0); //CONDITION
+		IRNode var = new IRNode(newWhile);
+		newWhile.addChild(var);
+		var.getBuild(cond);
+		
+		SimpleNode incNode = (SimpleNode)sn.jjtGetChild(2);
+		
+		SimpleNode rhn = (SimpleNode)sn.jjtGetChild(3);
+		SimpleNode node = rhn;
+		
+		if (rhn.toString().equals("BODY")) {
+			SimpleNode rhnChild = (SimpleNode)rhn.jjtGetChild(0);
+			if (rhnChild.toString().equals("CODE_BLOCK")) {
+				node = rhnChild;
+			}
+		}
+		else
+			return;
+		for(int a = 0; a < node.jjtGetNumChildren(); a++) {
+			SimpleNode node2 = (SimpleNode)node.jjtGetChild(a);
+			IRNode child2 = new IRNode(newWhile);
+			newWhile.addChild(child2);
+			child2.getBuild(node2);
+		}
+		IRNode inc = new IRNode(newWhile);
+		newWhile.addChild(inc);
+		inc.getBuild(incNode);
+	}
+	
 	public void buildAssign(SimpleNode sn) {
 		if(sn.jjtGetNumChildren() == 0)
 			return;
@@ -772,6 +808,9 @@ public class IRNode {
 			break;
 		case "WHILE":
 			buildWhile(sn);
+			break;
+		case "FOR":
+			buildFor(sn);
 			break;
 		case "IF_STATEMENT":
 			buildIf(sn);

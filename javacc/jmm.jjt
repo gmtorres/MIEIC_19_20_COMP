@@ -91,7 +91,7 @@ TOKEN:{
     | <LESS_THAN : "<">
     | <GREATER_THAN : ">">
 
-
+	|<FOR: "for">
 
     | <IDENTIFIER: ["A"-"Z" , "a"-"z", "_", "$"] (["0"-"9" ,"A"-"Z" , "a"-"z" , "_", "$"])*>
     | <INTEGERLITERAL: (["0"-"9"])+ >
@@ -170,6 +170,7 @@ void Statement() #void: {Token t1;} {
     | If()
     
     | While()
+    | For()
     
     |  LOOKAHEAD(2)( t1 = <IDENTIFIER>  { jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #IDENTIFIER 
         [ <SQUARE_BRACE_OPEN> ( Expression() #EXPRESSION ) <SQUARE_BRACE_CLOSE> ] 
@@ -187,6 +188,21 @@ void If() #IF_STATEMENT: {} {
 
 void Condition() #CONDITION: {} {
 	Expression() #EXPRESSION
+}
+
+void For() #void: {Token t1;} {
+    (<FOR> <ROUND_BRACE_OPEN>
+    	[( t1 = <IDENTIFIER>  { jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #IDENTIFIER 
+        [ <SQUARE_BRACE_OPEN> ( Expression() #EXPRESSION ) <SQUARE_BRACE_CLOSE> ] 
+      	) #VAR
+        <EQUALS> ( Expression() #EXPRESSION )  #ASSIGN_VAR(2) ] #FOR_ASSIGN <SEMICOLON>
+        Condition() <SEMICOLON>
+        [( t1 = <IDENTIFIER>  { jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #IDENTIFIER 
+        [ <SQUARE_BRACE_OPEN> ( Expression() #EXPRESSION ) <SQUARE_BRACE_CLOSE> ] 
+      	) #VAR
+        <EQUALS> ( Expression() #EXPRESSION )  #ASSIGN_VAR(2)] #INCREMENT
+        <ROUND_BRACE_CLOSE>
+        Statement()#BODY) #FOR
 }
 
 void While() #void: {} {
