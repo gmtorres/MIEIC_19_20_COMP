@@ -43,6 +43,8 @@ class ASTVAR_DEC extends SimpleNode {
 			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Duplicate simbol " + this.name);
 			  this.decrementMaxErros();
 			  result = false; 
+		  }else {
+			  //System.out.println("Simbol " + this.name + " added.");
 		  }
 	  }
 	   

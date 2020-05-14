@@ -61,17 +61,23 @@ class ASTFUNCTION extends SimpleNode {
 					objs.add(lhn.name);
 			}
 		}
+		String params = "";
+		for(int i = 0; i < rhn.jjtGetNumChildren();i++) {
+			SimpleNode rhnc = (SimpleNode) rhn.children[i];
+			params+=((SimpleNode)rhnc.children[0]).type+",";
+		}
+		System.out.println(params);
 		ArrayList<Function> f = new ArrayList<Function>();
 		for(int i = 0; i < objs.size();i++)
-			if(this.functionTable.isFunctionHere( objs.get(i),this.name,rhn.jjtGetNumChildren()))
-				f.add(this.functionTable.getFunction(objs.get(i),this.name,rhn.jjtGetNumChildren()));
+			if(this.functionTable.isFunctionHere( objs.get(i),this.name,params))
+				f.add(this.functionTable.getFunction(objs.get(i),this.name,params));
 		int i = 0;
 		for(;i<f.size();i++) {
 			//this.type = f.get(i).getType();
 			List<Descriptor> listDesc = f.get(i).getDescriptors();
 			if (listDesc.size() != rhn.jjtGetNumChildren()) {
 				if(objs.size() == 1)
-					System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong number of parameters in function " + lhn.name + "." + this.name);
+					System.out.println("1Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong number of parameters in function " + lhn.name + "." + this.name);
 				continue;
 			}
 			else {
@@ -80,7 +86,7 @@ class ASTFUNCTION extends SimpleNode {
 					SimpleNode rhnc = (SimpleNode) rhn.children[ii];
 					if(!(listDesc.get(ii).getName().equals(((SimpleNode)rhnc.children[0]).type))) {
 						if(objs.size() == 1)
-							System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong argument type: " + ((SimpleNode)rhnc.children[0]).type + " should be " + listDesc.get(ii).getName());
+							System.out.println("2Error on line " + this.lineNo + ", column " + this.columnNo + ": Wrong argument type: " + ((SimpleNode)rhnc.children[0]).type + " should be " + listDesc.get(ii).getName());
 						break;
 					}
 				}
@@ -97,7 +103,7 @@ class ASTFUNCTION extends SimpleNode {
 		}
 		if(i == f.size()) {
 			result = false;
-			String toPrint = "Error on line " + this.lineNo + ", column " + this.columnNo + ": Function ";
+			String toPrint = "3Error on line " + this.lineNo + ", column " + this.columnNo + ": Function ";
 			if(request_static)
 				toPrint+= "static ";
 			toPrint+=  lhn.name + "." + this.name+"(";

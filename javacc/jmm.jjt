@@ -80,6 +80,8 @@ TOKEN:{
     | <SEMICOLON : ";">
     | <DOT : ".">
     | <COMMA : ",">
+    
+   
 
     | <EQUALS : "=">
     | <ADD : "+">
@@ -92,9 +94,10 @@ TOKEN:{
     | <GREATER_THAN : ">">
 
 	|<FOR: "for">
-
+	
     | <IDENTIFIER: ["A"-"Z" , "a"-"z", "_", "$"] (["0"-"9" ,"A"-"Z" , "a"-"z" , "_", "$"])*>
     | <INTEGERLITERAL: (["0"-"9"])+ >
+    | <TEXTO : "\"" (["0"-"9" ,"A"-"Z" , "a"-"z" , "_", "$" , " "])* "\"">
 }
 
 
@@ -161,6 +164,7 @@ String Type() #void: {Token t1; String s1 = "";} {
     | t1 = <BOOL> {  return t1.image; }
     | t1 = <IDENTIFIER> {  return t1.image; }
     | t1 = <VOID> {  return t1.image; } 
+    | t1 = <STRING> {  return t1.image; } 
 }
 
 void Statement() #void: {Token t1;} {
@@ -280,6 +284,7 @@ void ExpTerminal() #void : {Token t1;} {
     | t1 =  <THIS> {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #THIS
     | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
     |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #TYPE <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
+    |  ( t1 = <TEXTO> | t1 = <IDENTIFIER>) {  jjtThis.name = t1.image; jjtThis.type = "String"; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #STRING 
     )
     [ extendTerminal() ]
     | ( <NOT> ExpTerminal() )  #NOT_EXPRESSION(1)

@@ -101,6 +101,7 @@ public class IRBuilder {
 			return;
 		}else if(node.getInst().equals("<") ||
 				node.getInst().equals(">") ||
+				node.getInst().equals("lds") ||
 				node.getInst().equals("ldc") ||
 				node.getInst().equals("lda") ||
 				node.getInst().equals("ldg") ||
@@ -276,7 +277,7 @@ public class IRBuilder {
 			if(rhn.getInst().equals("+") || rhn.getInst().equals("-")) {
 				IRNode rhn2 = rhn.getChildren()[0];
 				IRNode lhn2 = rhn.getChildren()[1];
-				if(rhn2.getInst().equals("ldl") 
+				if((rhn2.getInst().equals("ldl") || rhn2.getInst().equals("ldp")) 
 						&& rhn2.getChildren()[0].getInst().equals(lhn.getInst())) {
 					if(lhn2.getInst().equals("ldc")) {
 						int val = Integer.parseInt(lhn2.getChildren()[0].getInst());

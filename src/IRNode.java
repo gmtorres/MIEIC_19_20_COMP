@@ -502,6 +502,14 @@ public class IRNode {
 		this.addChild(child);
 	}
 	
+	public void buildString(SimpleNode sn) {
+		this.setInst("lds");
+		IRNode child = new IRNode(this);
+		child.setInst(sn.name);
+		this.addChild(child);
+		this.type = sn.type;
+	}
+	
 	public void buildIf(SimpleNode sn) {
 		
 		this.setInst("if");
@@ -696,11 +704,18 @@ public class IRNode {
 				this.setInst("invoke_static");
 			}
 		}
+		String params = "";
+		for(int i = 0; i < rhn.jjtGetNumChildren();i++) {
+			SimpleNode rhnc = (SimpleNode) rhn.children[i];
+			System.out.println(((SimpleNode)rhnc.children[0]).type);
+			params+=((SimpleNode)rhnc.children[0]).type+",";
+		}
+		
 		ArrayList<Function> f = new ArrayList<Function>();
 		ArrayList<String> o = new ArrayList<String>();
 		for(int i = 0; i < objs.size();i++)
-			if(sn.functionTable.isFunctionHere(objs.get(i),sn.name,rhn.jjtGetNumChildren())) {
-				f.add(sn.functionTable.getFunction(objs.get(i),sn.name,rhn.jjtGetNumChildren()));
+			if(sn.functionTable.isFunctionHere(objs.get(i),sn.name,params)) {
+				f.add(sn.functionTable.getFunction(objs.get(i),sn.name,params));
 				o.add(objs.get(i));
 			}
 		
@@ -842,6 +857,9 @@ public class IRNode {
 		case "THIS":
 			buildThis(sn);
 			break;
+		case "STRING":
+			buildString(sn);
+			break;
 		default:
 			//System.out.println(sn.toString());
 			int n = sn.jjtGetNumChildren();
@@ -915,7 +933,8 @@ public class IRNode {
 		else if(this.inst.equals("ldl")
 			|| this.inst.equals("ldp")
 			|| this.inst.equals("ldg")
-			|| this.inst.equals("ldc")) {
+			|| this.inst.equals("ldc")
+			|| this.inst.equals("lds")) {
 			this.num_reg = 1;
 			this.reg = this.reg_allocated.pop();
 			this.max_op_stack = max(this.max_op_stack,this.maxReg - this.reg_allocated.size());

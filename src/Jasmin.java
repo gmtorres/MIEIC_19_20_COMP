@@ -92,6 +92,9 @@ public class Jasmin {
 		  	case "stg":
 		  		printStoreGlobal(r);
 		  		break;
+		  	case "lds":
+		  		printString(r);
+		  		break;
 		  	case "ldc":
 		  	case "ldl":
 		  	case "ldp":
@@ -197,6 +200,10 @@ public class Jasmin {
 	  }
 	  private void printInc(IRNode node) {
 		  this.println("iinc " + node.children[0].local_var + " " + node.children[1].getInst());
+	  }
+	  
+	  private void printString(IRNode node) {
+		  this.println("ldc " + node.children[0].getInst());
 	  }
 	  
 	  private void printLoad(IRNode node) {
