@@ -33,7 +33,7 @@ class ASTNEW_IDENTIFIER extends SimpleNode {
 	  SimpleNode rhn  = (SimpleNode) this.children[1];
 	  
 	  Descriptor d = this.descriptors.getDescriptor(lhn.name);
-	  
+	  //System.out.println(lhn.name);
 	  if(d == null) {
 		  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Type " + lhn.name + " is not known.");
 		  this.decrementMaxErros();
@@ -44,6 +44,7 @@ class ASTNEW_IDENTIFIER extends SimpleNode {
 		  int i = 0;
 		  for(; i < L.size();i++) {
 			  List<Descriptor> listDesc = L.get(i);
+			  //System.out.println(listDesc.size() + "  " + rhn.jjtGetNumChildren());
 			  if (listDesc.size() != rhn.jjtGetNumChildren()) {
 				  if(L.size() == 1) {
 					  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Wrong number of parameters in type " + lhn.name);

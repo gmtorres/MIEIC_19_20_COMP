@@ -13,6 +13,8 @@ public class IRNode {
 	//max satck needed for function
 	static Integer max_op_stack = 0;
 	
+	static boolean hasConstructor = false;
+	
 	static {
 		for(int i = maxReg; i > 0; i--) {
 			reg_allocated.push(i);
@@ -181,7 +183,7 @@ public class IRNode {
 		
 		if(sn.jjtGetNumChildren() == 0) {
 			IRNode child = new IRNode(this);
-			child.setInst("Object");
+			child.setInst("java/lang/Object");
 			this.addChild(child);
 			return;
 		}
@@ -197,13 +199,15 @@ public class IRNode {
 			i = 1;
 		}else {
 			IRNode child = new IRNode(this);
-			child.setInst("Object");
+			child.setInst("java/lang/Object");
 			this.addChild(child);
 		}
 		
 		IRNode fields = new IRNode(this);
 		fields.setInst("fields");
 		this.addChild(fields);
+		
+		IRNode.hasConstructor = SimpleNode.hasConstructor;
 		
 		for(; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
@@ -246,10 +250,16 @@ public class IRNode {
 		IRNode statements = new IRNode(this);
 		statements.setInst("statements");
 		this.addChild(statements);
-		
-		IRNode type = new IRNode(this);
-		type.setInst(sn.type);
-		method_spec.addChild(type);
+		//System.out.println()
+		if(((SimpleNode)sn.jjtGetChild(0)).toString().equals("CONSTRUCTOR")) {
+			IRNode type = new IRNode(this);
+			type.setInst("void");
+			method_spec.addChild(type);
+		}else {
+			IRNode type = new IRNode(this);
+			type.setInst(sn.type);
+			method_spec.addChild(type);
+		}
 		
 		IRNode pub = new IRNode(this);
 		pub.setInst("public");
@@ -260,26 +270,42 @@ public class IRNode {
 			stat.setInst("static");
 			access_spec.addChild(stat);
 		}
+		if(((SimpleNode)sn.jjtGetChild(0)).toString().equals("CONSTRUCTOR")) {
+			IRNode name = new IRNode(this);
+			name.setInst("<init>");
+			method_spec.addChild(name);
+			IRNode superC = new IRNode(statements);
+			statements.addChild(superC);
+			superC.setInst("super");
+			IRNode obj = new IRNode(superC);
+			superC.addChild(obj);
+			obj.setInst(this.parent.children[1].getInst());
+		}else {
+			IRNode name = new IRNode(this);
+			name.setInst(sn.name);
+			method_spec.addChild(name);
+		}
 		
-		IRNode name = new IRNode(this);
-		name.setInst(sn.name);
-		method_spec.addChild(name);
 		
-		if(sn.jjtGetNumChildren() == 0)
+		SimpleNode root = sn;
+		if(((SimpleNode)root.jjtGetChild(0)).toString().equals("CONSTRUCTOR"))
+			root = (SimpleNode)sn.jjtGetChild(0);
+		
+		if(root.jjtGetNumChildren() == 0)
 			return;
-		int n = sn.jjtGetNumChildren();
+		int n = root.jjtGetNumChildren();
 		
-		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
+		SimpleNode lhn = (SimpleNode)root.jjtGetChild(0);
 
 		for(int i = 0; i < n; i++) {
-			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);
+			SimpleNode node = (SimpleNode)root.jjtGetChild(i);
 			
 			IRNode child = new IRNode(this);
 			
 			if(node.toString().equals("ARGUMENT")) {	
 				arguments_specs.addChild(child); 
 				child.local_var =arguments_specs.children.length;
-				sn.simbolTable.getSimbol(node.name).local_var = child.local_var;
+				root.simbolTable.getSimbol(node.name).local_var = child.local_var;
 				child.buildArgument(node);
 			}else if(node.toString().equals("METHOD_BODY")) {
 				//child.buildMethodBody( node ); 
@@ -919,6 +945,9 @@ public class IRNode {
 			this.children[0].reg = this.reg_allocated.pop();
 		}else if(this.inst.equals("stg")) {
 			this.children[0].reg = this.reg_allocated.pop();
+		}else if(this.inst.equals("new_object")) {
+			this.reg = this.reg_allocated.pop();
+			this.children[0].reg = this.reg_allocated.pop();
 		}
 		
 		int n = this.children.length;
@@ -929,6 +958,9 @@ public class IRNode {
 		if(this.inst.equals("method")) {
 			this.op_stack = this.max_op_stack;
 			this.resetStack();
+		}
+		else if(this.inst.equals("super")) {
+			this.max_op_stack = max(this.max_op_stack,this.maxReg - this.reg_allocated.size()+3);
 		}
 		else if(this.inst.equals("ldl")
 			|| this.inst.equals("ldp")
@@ -949,15 +981,16 @@ public class IRNode {
 			this.reg = this.reg_allocated.pop();
 		}
 		else if(this.inst.equals("new_object")) {
+			//this.children[0].reg = this.reg_allocated.pop();
+			//this.children[0].reg = this.reg_allocated.pop();
+			//this.reg = this.reg_allocated.pop();
+			this.max_op_stack = max(this.max_op_stack,this.maxReg - this.reg_allocated.size());
 			IRNode rhn = this.children[1];
 			for(int i = rhn.children.length-1; i >= 0 ;i--) {
 				this.reg_allocated.push(rhn.children[i].reg);
 			}
-			//this.children[0].reg = this.reg_allocated.pop();
-			this.reg = this.reg_allocated.pop();
-			this.children[0].reg = this.reg_allocated.pop();
-			this.max_op_stack = max(this.max_op_stack,this.maxReg - this.reg_allocated.size());
 			this.reg_allocated.push(this.children[0].reg);
+			System.out.println(this.reg_allocated.peek());
 		}
 		else if(this.inst.equals("+")
 			|| this.inst.equals("-")
@@ -985,7 +1018,7 @@ public class IRNode {
 			this.reg_allocated.push(this.children[0].reg);
 		}
 		else if(this.inst.equals("<") || this.inst.equals(">")
-			|| this.inst.equals("&&")) {
+				|| this.inst.equals("&&") || this.inst.equals("||")) {
 			Integer reg1 = this.children[1].reg;
 			Integer reg0 = this.children[0].reg;
 			if(reg1 != null ) this.reg_allocated.push(this.children[1].reg);

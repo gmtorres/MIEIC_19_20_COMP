@@ -130,18 +130,27 @@ void ClassDeclaration() #CLASS_DECL: {Token t1;} {
 
 void MethodDeclaration() #METHOD: {Token t1,t2,t3;String s1;} {
     <PUBLIC>
-    (    s1 = Type() { jjtThis.type = s1;} t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } 
-            <ROUND_BRACE_OPEN> ( [ Argument() ( <COMMA> Argument() )* ] )  <ROUND_BRACE_CLOSE> 
-            ( <CURLY_BRACE_OPEN> 
-	            MethodBody()
-	            <RETURN> (Expression() #EXPRESSION) #RETURN_EXPRESSION <SEMICOLON>
-        	<CURLY_BRACE_CLOSE> ) #METHOD_BODY
+    (    s1 = Type() { jjtThis.type = s1;} 
+    		(
+	    		t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } 
+	            <ROUND_BRACE_OPEN> ( [ Argument() ( <COMMA> Argument() )* ] )  <ROUND_BRACE_CLOSE> 
+	            ( <CURLY_BRACE_OPEN> 
+		            MethodBody()
+		            <RETURN> (Expression() #EXPRESSION) #RETURN_EXPRESSION <SEMICOLON>
+	        	<CURLY_BRACE_CLOSE> ) #METHOD_BODY
+        	|
+        		(<ROUND_BRACE_OPEN> ( [ Argument() ( <COMMA> Argument() )* ] )  <ROUND_BRACE_CLOSE> 
+	            ( <CURLY_BRACE_OPEN> 
+		            MethodBody()
+	        	<CURLY_BRACE_CLOSE> ) #METHOD_BODY) #CONSTRUCTOR
+        	)
     | 
         <STATIC> <VOID> t1 = <MAIN> {  jjtThis.name = t1.image; jjtThis.type = "void"; jjtThis.is_static = true; }
         	<ROUND_BRACE_OPEN> ( <STRING> <SQUARE_BRACE_OPEN> <SQUARE_BRACE_CLOSE> t1 = <IDENTIFIER> {  jjtThis.type = "String[]" ; jjtThis.name = t1.image; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } ) #ARGUMENT <ROUND_BRACE_CLOSE> 
 			( <CURLY_BRACE_OPEN> 
             	MethodBody()
         	<CURLY_BRACE_CLOSE> ) #METHOD_BODY
+    	
     )
     
 }
@@ -284,7 +293,7 @@ void ExpTerminal() #void : {Token t1;} {
     | t1 =  <THIS> {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #THIS
     | <NEW>( ( <INT> <SQUARE_BRACE_OPEN> Expression() #EXPRESSION <SQUARE_BRACE_CLOSE> ) #NEW_INT_ARR
     |  (t1 = <IDENTIFIER> {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #TYPE <ROUND_BRACE_OPEN> ( [ LOOKAHEAD(2) ( (Expression() #EXPRESSION) #PARAM)  (<COMMA> (Expression()#EXPRESSION) #PARAM )* ] ) #PARAMS <ROUND_BRACE_CLOSE>) #NEW_IDENTIFIER )
-    |  ( t1 = <TEXTO> | t1 = <IDENTIFIER>) {  jjtThis.name = t1.image; jjtThis.type = "String"; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #STRING 
+    |  t1 = <TEXTO> {  jjtThis.name = t1.image; jjtThis.type = "String"; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #STRING 
     )
     [ extendTerminal() ]
     | ( <NOT> ExpTerminal() )  #NOT_EXPRESSION(1)

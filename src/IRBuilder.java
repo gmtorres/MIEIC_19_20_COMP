@@ -3,18 +3,19 @@ public class IRBuilder {
 	
 	IRNode root = null;
 	
-	boolean constant_folding = true;
+	boolean constant_folding = false;
 	
 	public IRBuilder(SimpleNode sn) {
 		root = new IRNode(null);
 		root.build(sn);
 		this.simplifyBooleans(root);
 		this.setPop(root);
-		root.setRegisters();
 		
 		if(this.constant_folding) {
 			this.constant_folding(root);
 		}
+		
+		root.setRegisters();
 		
 		this.optimizeOperations(root);
 		

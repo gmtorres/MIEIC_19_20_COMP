@@ -37,17 +37,35 @@ class ASTMETHOD extends SimpleNode {
 	this.simbolTable.setParam(true);
 
 	List<Descriptor> listDesc = new ArrayList<>();
-
-	for(int i = 0; i < this.jjtGetNumChildren() - 1; i++) {
-
-		listDesc.add( new Descriptor(((SimpleNode)this.children[i]).type, this.simbolTable)); 
-	}
+	if(this.children[0].toString().equals("CONSTRUCTOR")) {
+		for(int i = 0; i < this.children[0].jjtGetNumChildren() - 1; i++) {
+			listDesc.add( new Descriptor(((SimpleNode)((SimpleNode)this.children[0]).children[i]).type, this.simbolTable)); 
+		}
+	}else
+		for(int i = 0; i < this.jjtGetNumChildren() - 1; i++) {
+			listDesc.add( new Descriptor(((SimpleNode)this.children[i]).type, this.simbolTable)); 
+		}
 	
+	String name = null;
+	if(this.children[0].toString().equals("CONSTRUCTOR")) {
+		//System.out.println(this.type + "  " + listDesc.size());
+		if(!this.type.equals(((SimpleNode)this.jjtGetParent()).name)) {
+			System.out.println("Constructor does not match class name.");
+		    this.decrementMaxErros();
+		    return false;
+		}
+		name = "<init>";
+		hasConstructor = true;
+		Descriptor ds = this.descriptors.getDescriptor(this.type);
+		ds.addParams(listDesc);
+		ds = this.descriptors.getDescriptor("this");
+		ds.addParams(listDesc);
+	}else
+		name = this.name;
 
-	
 	//if (this.functionTable.addFunction(this.type,this.descriptors.getDescriptor("this").name, this.name, this.simbolTable, this.is_static) == false) {
-	if (this.functionTable.addFunction(this.type,this.descriptors.getDescriptor("this").name, this.name, this.simbolTable, this.is_static, listDesc) == false) {
-	    System.out.println(/*"Line " + this.lineNo + ": "+*/ "Error adding function" + this.type + " " + this.name);
+	if (this.functionTable.addFunction(this.type,this.descriptors.getDescriptor("this").name, name, this.simbolTable, this.is_static, listDesc) == false) {
+	    System.out.println(/*"Line " + this.lineNo + ": "+*/ "Error adding function " + this.type + " " + name + ", duplicate method.");
 	    this.decrementMaxErros();
 	    result = false;
 	  }

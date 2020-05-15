@@ -151,6 +151,9 @@ public class Jasmin {
 		  	case "return":
 		  		printReturn(r);
 		  		break;
+		  	case "super":
+		  		printSuper(r);
+		  		break;
 		  	case "pop":
 		  		printPop(r);
 		  		break;
@@ -611,15 +614,11 @@ public class Jasmin {
 		  
 		  toPrint = ".super ";
 		  String obj;
-		  if (r.getChildren()[1].getInst().equals("Object")) {
-			  obj = "java/lang/Object";
-		  }
-		  else {
-			  obj= r.getChildren()[1].getInst();
-		  }
+		  obj= r.getChildren()[1].getInst();
+
 		  this.println(toPrint + obj);
 		  
-		  boolean change = false;
+		  boolean change = IRNode.hasConstructor;
 		  for(int i = 2; i < r.getChildren().length; i++) {
 			  IRNode n = r.getChildren()[i];
 			  if(change == false && n.getInst().equals("method")) {
@@ -627,6 +626,8 @@ public class Jasmin {
 				  this.println("\n.method public <init>()V");
 				  this.println("aload_0");
 				  this.println("invokenonvirtual " + obj + "/<init>()V");
+				  //this.println("iconst_1");
+				  //this.println("invokestatic " + "io.println(I)V");
 				  this.println("return");
 				  this.println(".end method");
 			  }
@@ -778,6 +779,11 @@ public class Jasmin {
 			  toPrint += name + " " + retType(r.getChildren()[i].getIRType());
 			  this.println(toPrint);
 		  }
+	  }
+	  
+	  private void printSuper(IRNode r) {
+		  this.println("aload_0");
+		  this.println("invokenonvirtual " + r.children[0].getInst() + "/<init>()V");
 	  }
 	  
 	  

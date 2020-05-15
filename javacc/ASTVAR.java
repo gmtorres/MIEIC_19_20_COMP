@@ -101,6 +101,20 @@ public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException {
 		  }
 		  else this.type = d.content.getName();
 	  }
+	  
+	  String scope = this.simbolTable.getScope(lhn.name);
+	  //System.out.println(scope);
+	  if(scope.equals("global")) {
+		  SimpleNode method = (SimpleNode)this.jjtGetParent();
+		  while(!method.toString().equals("METHOD")) {
+			  method = (SimpleNode)method.jjtGetParent();
+		  }
+		  if(method.is_static) {
+			  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Non static variable \"" + lhn.name +"\" cannot be refereced from a static context");
+			  this.decrementMaxErros();
+			  return false;
+		  }
+	  }
 	  	  
 	  return result;
   }

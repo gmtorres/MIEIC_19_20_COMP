@@ -7,6 +7,7 @@ class ASTProgram extends SimpleNode {
   public ASTProgram(int id) {
     super(id);
     this.has_scope = true;
+    hasConstructor = false;
   }
 
   public ASTProgram(Jmm p, int id) {

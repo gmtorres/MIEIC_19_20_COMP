@@ -25,6 +25,11 @@ class ASTEXPRESSION extends SimpleNode {
 		  if(result == false)
 			  return false;
 		  
+		  SimpleNode method = (SimpleNode)this.jjtGetParent();
+		  while(!method.toString().equals("METHOD")) {
+			  method = (SimpleNode)method.jjtGetParent();
+		  }
+		  
 		  SimpleNode lhn  = (SimpleNode) this.children[0];
 		  this.lineNo = lhn.lineNo;
 		  this.columnNo = lhn.columnNo;
@@ -51,7 +56,15 @@ class ASTEXPRESSION extends SimpleNode {
 						  return false;
 					  }
 				  }
-					  lhn.type = s.getType().getName();
+				  String scope = this.simbolTable.getScope(lhn.name);
+				  if(scope.equals("global")) {
+					  if(method.is_static) {
+						  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Non static variable \"" + lhn.name +"\" cannot be refereced from a static context");
+						  this.decrementMaxErros();
+						  return false;
+					  }
+				  }
+				  lhn.type = s.getType().getName();
 			  }
 		  }
 		  

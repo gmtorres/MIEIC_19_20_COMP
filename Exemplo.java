@@ -1,6 +1,11 @@
 
 public class Exemplo {
 	
+	public Exemplo() {
+		
+	}
+	
+	
 	public static void main(String[] args){ 	
 		boolean b;
 		int i;
@@ -12,6 +17,10 @@ public class Exemplo {
 			io.println(i);
 		}	
 		str1 = "ola2";
+		
+	}
+	
+	public Exemplo(int a) {
 		
 	}
 	

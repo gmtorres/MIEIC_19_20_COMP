@@ -1,25 +1,25 @@
 import static io.println(int);
 import static io.println(String);
 class Hello_T {	
-
+	
+	int b;
+	
+	public Hello_T(int a){
+		b = a;
+	}
+	
 	
 	public static void main(String[] args){ 	
 		boolean b;
-		String str;
-		int i;
-		Hello_T obj;
-		obj = new Hello_T();
-		i = 0;
-		str = "ola";
-		io.println(i+1);
-		io.println(str);
-		io.println("siga");
-		io.println(obj.print("aaaaaaaaaaaaaa"));
+		int f;
+		Hello_T e;
+		f = 4;
+		e = new Hello_T(f);
+		io.println(e.get());
 	}
 	
-	public String print(String str){
-		io.println(str);
-		return "oi oi";
+	public int get(){
+		return b;
 	}
 
 	

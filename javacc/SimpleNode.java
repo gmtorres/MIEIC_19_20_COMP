@@ -28,8 +28,11 @@ class SimpleNode implements Node {
   //public DescriptorTable descriptorsTable = null;
   static Integer max_semantic_errors;
   
+  static boolean hasConstructor;
+  
   static {
 	  max_semantic_errors = 10;
+	  hasConstructor = false;
   }
 
   public SimpleNode(int i) {

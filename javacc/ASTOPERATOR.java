@@ -23,6 +23,11 @@ public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException{
 		  }
 	  }
 	  
+	  SimpleNode method = (SimpleNode)this.jjtGetParent();
+	  while(!method.toString().equals("METHOD")) {
+		  method = (SimpleNode)method.jjtGetParent();
+	  }
+	  
 	  SimpleNode lhn  = (SimpleNode) this.children[0];
 	  SimpleNode rhn  = (SimpleNode) this.children[1];
 	  if(lhn.toString().equals("IDENTIFIER")) {
@@ -43,7 +48,15 @@ public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException{
 				  return false;
 			  }
 		  }
-			  lhn.type = s.getType().getName();
+		  String scope = this.simbolTable.getScope(lhn.name);
+		  if(scope.equals("global")) {
+			  if(method.is_static) {
+				  System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo + ": Non static variable \"" + lhn.name +"\" cannot be refereced from a static context");
+				  this.decrementMaxErros();
+				  return false;
+			  }
+		  }
+		  lhn.type = s.getType().getName();
 	  }
 	  if(rhn.toString().equals("IDENTIFIER")) {
 		  Simbol s = this.simbolTable.getSimbol(rhn.name);
@@ -61,7 +74,15 @@ public boolean doSemanticAnalysis(StringBuilder info) throws SemanticException{
 					  return false;
 				  }
 		  }
-			  rhn.type = s.getType().getName();
+		  String scope = this.simbolTable.getScope(rhn.name);
+		  if(scope.equals("global")) {
+			  if(method.is_static) {
+				  System.out.println("Error on line " + rhn.lineNo + ", column " + rhn.columnNo + ": Non static variable \"" + rhn.name +"\" cannot be refereced from a static context");
+				  this.decrementMaxErros();
+				  return false;
+			  }
+		  }
+		  rhn.type = s.getType().getName();
 		  
 	  }
 	  

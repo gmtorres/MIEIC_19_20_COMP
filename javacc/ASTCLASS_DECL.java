@@ -34,11 +34,8 @@ class ASTCLASS_DECL extends SimpleNode {
 	  this.simbolTable.setGlobal(true);
 	  
 	  this.descriptors.addDescriptor( "this", this.name, this.simbolTable);
-	  Descriptor ds = this.descriptors.getDescriptor("this");
-	  ds.addParams(new ArrayList<Descriptor>());
 	  this.descriptors.addDescriptor( this.name, this.name, this.simbolTable);
-	  ds = this.descriptors.getDescriptor(this.name);
-	  ds.addParams(new ArrayList<Descriptor>());
+
 	  
 	  if(this.children != null) {
 		  SimpleNode lhn  = (SimpleNode) this.children[0];
@@ -64,6 +61,13 @@ class ASTCLASS_DECL extends SimpleNode {
 			  boolean r = ((SimpleNode) node).createTable();
 			  result = result && r;
 		  }
+	  }
+	  
+	  if(hasConstructor == false) {
+		  Descriptor ds = this.descriptors.getDescriptor("this");
+		  ds.addParams(new ArrayList<Descriptor>());
+		  ds = this.descriptors.getDescriptor(this.name);
+		  ds.addParams(new ArrayList<Descriptor>());
 	  }
 
 	  return result;

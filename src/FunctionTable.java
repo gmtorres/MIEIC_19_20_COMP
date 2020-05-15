@@ -15,9 +15,9 @@ public class FunctionTable {
         this.parentClass = parentClass;
     }
 
-    boolean isFunctionHere(String object ,String name, int no) {
+    /*boolean isFunctionHere(String object ,String name, int no) {
 		return functions.get(object +"."+ name+"@"+no) != null;
-    }
+    }*/
     boolean isFunctionHere(String object ,String name, String params) {
 		return functions.get(object +"."+ name+"@"+params) != null;
     }
@@ -39,10 +39,10 @@ public class FunctionTable {
     boolean addFunction(String return_type, String object, String name, SimbolTable st, boolean stFlag, List<Descriptor> list) {
         //TODO: Questao das 2 funcoes com mesmo nome
         Function f = new Function(return_type, object, name, st, stFlag, list);
-        if(this.isFunctionHere(object, name, list.size()))
+        if(this.isFunctionHere(object, name, getParamsString(list)))
         	return false;
         //functions.put(object +"."+ name + "@"+list.size(), f);
-        System.out.println(object +"."+ name + "@"+getParamsString(list));
+        //System.out.println(object +"."+ name + "@"+getParamsString(list));
         functions.put(object +"."+ name + "@"+getParamsString(list), f);
         return true;
     }
@@ -54,12 +54,12 @@ public class FunctionTable {
         return true;
     }
 */
-    Function getFunction(String object ,String name, int no) {
+    /*Function getFunction(String object ,String name, int no) {
         if (isFunctionHere(object,name,no)) {
             return this.functions.get(object +"."+ name+"@"+no);
         }
         else return null;
-    }
+    }*/
     Function getFunction(String object ,String name, String params) {
         if (isFunctionHere(object,name,params)) {
             return this.functions.get(object +"."+ name+"@"+params);
