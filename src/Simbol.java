@@ -35,4 +35,8 @@ public class Simbol {
     	return assignType;
     }
     
+    public String getName() {
+    	return identifier;
+    }
+    
 }

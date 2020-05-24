@@ -32,6 +32,7 @@ public class IRNode {
 	
 	//local var index
 	Integer local_var = null;
+	Simbol simbol = null;
 	
 	//stack of locals, available on method
 	Integer locals_stack = null;
@@ -84,7 +85,7 @@ public class IRNode {
 	      System.arraycopy(children, i, c, i+1, children.length-(i));
 	      c[i] = n;
 	      for(int a = 0; a < c.length;a++) {
-	    	  System.out.println(c[a].getInst());
+	    	  //System.out.println(c[a].getInst());
 	      }
 	      children = c;
 
@@ -308,7 +309,9 @@ public class IRNode {
 			if(node.toString().equals("ARGUMENT")) {	
 				arguments_specs.addChild(child); 
 				child.local_var =arguments_specs.children.length;
-				root.simbolTable.getSimbol(node.name).local_var = child.local_var;
+				Simbol s = root.simbolTable.getSimbol(node.name);
+				child.simbol = s;
+				s.local_var = child.local_var;
 				child.buildArgument(node);
 			}else if(node.toString().equals("METHOD_BODY")) {
 				//child.buildMethodBody( node ); 
@@ -345,6 +348,7 @@ public class IRNode {
 	public void buildVarDec(SimpleNode sn) {
 		this.setInst(sn.name);
 		sn.simbolTable.getSimbol(sn.name).local_var = this.local_var;
+		this.simbol = sn.simbolTable.getSimbol(sn.name);
 		this.setIRType(sn.type);
 	}
 	
@@ -426,6 +430,7 @@ public class IRNode {
 		IRNode var = new IRNode(this);
 		Simbol s = sn.simbolTable.getSimbol(((SimpleNode)lhn.jjtGetChild(0)).name);
 		var.local_var = s.local_var;
+		var.simbol = s;
 		if(lhn.jjtGetNumChildren() == 1) {
 			String scope = sn.simbolTable.getScope(((SimpleNode)lhn.jjtGetChild(0)).name);
 			if(scope.equals("global"))
@@ -518,6 +523,7 @@ public class IRNode {
 		child.setInst(sn.name);
 		Simbol s = sn.simbolTable.getSimbol(sn.name);
 		child.local_var = s.local_var;
+		child.simbol = s;
 		this.type = s.getType().name;
 		this.addChild(child);
 	}
@@ -736,7 +742,7 @@ public class IRNode {
 		String params = "";
 		for(int i = 0; i < rhn.jjtGetNumChildren();i++) {
 			SimpleNode rhnc = (SimpleNode) rhn.children[i];
-			System.out.println(((SimpleNode)rhnc.children[0]).type);
+			//System.out.println(((SimpleNode)rhnc.children[0]).type);
 			params+=((SimpleNode)rhnc.children[0]).type+",";
 		}
 		
@@ -797,6 +803,7 @@ public class IRNode {
 							load.setInst("ldl");
 						}
 						var.local_var = local;
+						var.simbol = s;
 						load.type = s.getType().name;
 					}
 				}
@@ -822,7 +829,7 @@ public class IRNode {
 		}
 		for(i = 0; i < rhn.jjtGetNumChildren(); ++i) {
 			SimpleNode node = (SimpleNode)rhn.jjtGetChild(i);
-			System.out.println(node.toString());
+			//System.out.println(node.toString());
 			IRNode param = new IRNode(this);
 			this.addChild(param);
 			param.getBuild(node);
@@ -993,7 +1000,7 @@ public class IRNode {
 				this.reg_allocated.push(rhn.children[i].reg);
 			}
 			this.reg_allocated.push(this.children[0].reg);
-			System.out.println(this.reg_allocated.peek());
+			//System.out.println(this.reg_allocated.peek());
 		}
 		else if(this.inst.equals("+")
 			|| this.inst.equals("-")
