@@ -1,0 +1,100 @@
+import static io.println(int);
+import ListNode;
+import ListNode.setData(int) boolean;
+import ListNode.getData() int;
+import ListNode.setSuccessor(ListNode) ListNode;
+import ListNode.hasSuccessor() boolean;
+import ListNode.getSuccessor() ListNode;
+import ListNode.removeSuccessor() ListNode;
+
+class List {	
+	
+	ListNode head;
+	boolean hasHead;
+	
+	int size;
+	
+	public static void main(String[] args){ 	
+		
+		List l;
+		l = new List();
+		l.push_back(1);
+		io.println(l.getTail().getData());
+		l.push_back(2);
+		io.println(l.getTail().getData());
+		l.push_back(3);
+		io.println(l.getTail().getData());
+		io.println(l.pop_back().getData());
+		io.println(l.pop_back().getData());
+	}	
+
+	public ListNode push_back(int d){
+		ListNode node;
+		ListNode temp;
+		node = new ListNode();
+		node.setData(d);
+		
+		if(!hasHead){
+			this.setHead(node);
+			size = 0;
+		}else{
+			temp = this.getTail();
+			temp.setSuccessor(node);
+		}
+			
+		return node;
+	}
+	
+	public ListNode pop_back(){
+		ListNode node;
+		node = this.getHead();
+		while(node.getSuccessor().hasSuccessor())
+			node = node.getSuccessor();
+		size = size - 1;
+		return node.removeSuccessor();
+	}
+	
+	public ListNode getTail(){
+		ListNode node;
+		node = this.getHead();
+		while(node.hasSuccessor())
+			node = node.getSuccessor();
+		return node;
+	}
+	
+	public boolean printList(){
+		ListNode node;
+		node = this.getHead();
+		io.println(node.getData());
+		while(node.hasSuccessor()){
+			node = node.getSuccessor();
+			io.println(node.getData());
+		}
+		return true;
+	}
+
+	public boolean setHead(ListNode node){
+		head = node;
+		hasHead = true;
+		return true;
+	}
+	
+	public ListNode getHead(){
+		return head;
+	}
+	
+	public int getSize(){
+		return size;
+	}
+	
+	public int insert(int index, int d){
+		
+		return 0;
+	}
+	
+	public get insert(int index){
+		
+		return 0;
+	}
+	
+ }

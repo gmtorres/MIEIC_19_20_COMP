@@ -3,19 +3,16 @@ import static io.println(String);
 class Hello_T {	
 	
 	int b;
-	
-	public Hello_T(int a){
-		b = a;
-	}
-	
+
 	
 	public static void main(String[] args){ 	
 		boolean b;
 		int f;
 		Hello_T e;
 		f = 4;
-		e = new Hello_T(f);
+		e = new Hello_T();
 		io.println(e.get());
+		io.println("ola");
 	}
 	
 	public int get(){

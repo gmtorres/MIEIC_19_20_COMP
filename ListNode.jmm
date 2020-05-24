@@ -1,0 +1,39 @@
+import static io.println(int);
+
+class ListNode {	
+
+	ListNode successor;
+	boolean hasSuccessor;
+	int data;
+	
+	public ListNode setSuccessor(ListNode suc){
+		successor = suc;
+		hasSuccessor = true;
+		return this;
+	}
+	
+	public ListNode removeSuccessor(){
+		ListNode node;
+		node = successor;
+		hasSuccessor = false;
+		return node;
+	}
+	
+	public boolean hasSuccessor(){
+		return hasSuccessor;
+	}
+	
+	public ListNode getSuccessor(){
+		return successor;
+	}
+	
+	public boolean setData(int d){
+		data = d;
+		return true;
+	}
+	
+	public int getData(){
+		return data;
+	}
+	
+ }
