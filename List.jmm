@@ -24,8 +24,11 @@ class List {
 		io.println(l.getTail().getData());
 		l.push_back(3);
 		io.println(l.getTail().getData());
+		l.insert(2,5);
 		io.println(l.pop_back().getData());
 		io.println(l.pop_back().getData());
+		io.println(l.pop_back().getData());
+
 	}	
 
 	public ListNode push_back(int d){
@@ -88,13 +91,62 @@ class List {
 	}
 	
 	public int insert(int index, int d){
-		
+ 	
+	ListNode newNode;
+	ListNode node;
+
+	 newNode = new ListNode();
+ 	 newNode.setData(d);
+
+    // insert as the new head?
+    if (this.eq(index,0)) {
+        // The 1st case.
+        newNode.setSuccessor(this.getHead());
+        this.setHead(newNode);
+    } else {
+        // The 2nd case.
+        // start from the head:
+        node = this.getHead();
+        // find position just before the expected one:
+		index=index-1;
+        while (index > 0) {
+            node = node.getSuccessor();
+			index=index-1;
+        }
+        // insert the new node:
+        newNode.setSuccessor(node.getSuccessor());
+        node.setSuccessor(newNode);
+    }
 		return 0;
 	}
 	
 	public int get(int index){
 		
 		return 0;
+	}
+
+	public boolean eq(int a, int b) {
+		return (!this.lt(a, b) && !this.lt(b, a));
+	}
+	
+	public boolean ne(int a, int b) {
+		return (!this.eq(a, b));
+	}
+	
+    public boolean lt(int a, int b) {
+		return (a < b);
+    }
+    
+    public boolean le(int a, int b) {
+		return !(!this.lt(a, b) && !this.eq(a, b));
+    }
+    
+    public boolean gt(int a, int b) {
+		return (a > b);
+    }
+    
+    public boolean ge(int a, int b) {
+		return !(!this.gt(a, b) && !this.eq(a, b));
 	}
 	
  }

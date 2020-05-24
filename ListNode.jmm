@@ -35,5 +35,6 @@ class ListNode {
 	public int getData(){
 		return data;
 	}
+		public static void main(String[] args){ 	}
 	
  }
