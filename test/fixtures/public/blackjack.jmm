@@ -1,3 +1,7 @@
+//You have your cards (2 numbers displayed) and the dealer cards (1 card displayed). 
+//You can ask for a card by pressing 1, or stand by pressing 2. If you get more than a total of 21 (summing the value of the cards, you lose). 
+//Also, when standing, if you get closer to 21 than the dealer, you win, otherwise, you lose (exception made when the dealer sum is above 21).
+
 import static io.println() void;
 import static MathUtils.random(int,int) int; //lowerLimit,upperLimit
 import static io.print(int) void;
