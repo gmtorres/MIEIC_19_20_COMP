@@ -1,6 +1,11 @@
 import static io.println(int);
 import static io.println(String) void;
 class Hello_T {	
+<<<<<<< HEAD
+=======
+	
+	int b;
+>>>>>>> 5c9a467a7506d6e79c0751f2aab1e84a650f959d
 
 	
 	public static void main(String[] args){ 	
@@ -10,6 +15,7 @@ class Hello_T {
 		
 		f = 4;
 		e = new Hello_T();
+<<<<<<< HEAD
 		b = true;
 		
 		io.println(e.get());
@@ -29,6 +35,10 @@ class Hello_T {
 		
 		io.println("ola");
 		
+=======
+		io.println(e.get());
+		io.println("ola");
+>>>>>>> 5c9a467a7506d6e79c0751f2aab1e84a650f959d
 	}
 	
 	public int get(){

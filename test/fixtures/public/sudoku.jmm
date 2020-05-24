@@ -1,5 +1,7 @@
 import static io.println() void;
+import static io.println(String) void;
 import static io.print(int) void;
+import static io.print(String) void;
 import static io.read() int;
 import static ioPlus.requestNumber() int;
 import static BoardBase.wrongMove();
@@ -28,7 +30,6 @@ class sudoku {
     int[] origLine7;   
     int[] origLine8;   
     int[] origLine9;
-
     
     boolean canRun;
     
@@ -53,7 +54,7 @@ class sudoku {
     	origLine7 = new int[9];
     	origLine8 = new int[9];
     	origLine9 = new int[9];
-    	
+    	    	
     	canRun = true; 
     	
     	this.setLines(option);
@@ -69,6 +70,7 @@ class sudoku {
    		sudoku s;
    		int option;
    		
+   		io.println("Insert game difficulty 1 Easy 2 Medium 3 Hard");
    		option = ioPlus.requestNumber();
    		
    		s = new sudoku();
@@ -78,6 +80,7 @@ class sudoku {
    		while(s.canRun()) {
    			s.run();
    		}
+   		
 
     }
     
@@ -730,8 +733,11 @@ class sudoku {
    		int line;
    		int col;
    		
+   		io.println("choose a number from 1 to 9 for your option");
    		opt = ioPlus.requestNumber();
+   		io.print("choose a line from 1 to 9 VERTICAL");
    		line = ioPlus.requestNumber();
+   		io.print("choose a column from 1 to 9 HORIZONTAL");
    		col = ioPlus.requestNumber();
    		
    		col = col - 1;
@@ -946,6 +952,7 @@ class sudoku {
    	
    		if(this.validateBoard()) {
    			canRun = false;
+   			io.println("Game over");
    		}
    		else {
    		}		

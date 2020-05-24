@@ -1,0 +1,215 @@
+//You have your cards (2 numbers displayed) and the dealer cards (1 card displayed). 
+//You can ask for a card by pressing 1, or stand by pressing 2. If you get more than a total of 21 (summing the value of the cards, you lose). 
+//Also, when standing, if you get closer to 21 than the dealer, you win, otherwise, you lose (exception made when the dealer sum is above 21).
+
+import static io.println() void;
+import static MathUtils.random(int,int) int; //lowerLimit,upperLimit
+import static io.print(int) void;
+import static ioPlus.requestNumber() int;
+
+
+class blackjack {
+
+	int[] cards;
+	int[] dealerCards;
+	int numCards;
+	int numCardsDealer;
+	int input;
+	boolean game;
+	
+
+	public boolean init() {
+    	
+    	
+    	cards = new int[12];
+    	dealerCards = new int[2];
+    	numCards = 2;
+    	numCardsDealer = 2;
+    	input = 0;
+    	game = true;
+    	
+    	    	
+    	this.setCards();
+    	this.setDealerCards();
+    	
+    	this.printCards(0);
+
+    	return true;
+ 	}
+ 	
+ 	
+ 	public static void main(String[] args) {
+   		
+   		blackjack b;
+   		   		
+   		b = new blackjack();
+   		
+   		b.init();
+   		
+   		while(b.game()) {
+   			b.run();
+   		}
+   		
+    }
+    
+    public boolean setCards() {
+    	cards[0] = MathUtils.random(1,10);
+    	cards[1] = MathUtils.random(1,11);  	
+    	return true;
+    }
+
+	public boolean setDealerCards() {
+		dealerCards[0] = MathUtils.random(1,11);
+		dealerCards[1] = MathUtils.random(1,10);
+		
+		return true;
+	}	
+	
+	public boolean printCards(int opt) {
+		int i;
+		int j;
+		int toShow;
+		
+		i = 0;
+		j = 0;
+		
+		if(this.eq(1,opt)) {
+			toShow = 1;
+		}
+		else {
+			toShow = 0;
+		}
+		
+		while(i < numCards) {
+			io.print(cards[i]);
+			io.println();
+			i = i +1;
+		}
+		
+		
+		while(j < (numCardsDealer - 1 + toShow)) {
+			io.println();
+			io.print(dealerCards[j]);
+			j = j + 1;
+		}
+		
+		return true;
+	}
+	
+	
+	public boolean askCard() {
+		int i;
+		int card;
+		
+		i = numCards;
+		card = MathUtils.random(1,11);
+		
+		cards[i] = card;
+		numCards = numCards + 1;
+		
+		return true;
+	}
+	
+	public int evaluate(int option) {
+		int i;
+		int sum;
+		i = 0;
+		sum = 0;
+		
+		if (this.eq(option, 1)) {
+			while(i < numCards) {
+				sum = sum + cards[i];
+				i = i + 1;
+			}
+		}
+		
+		else if(this.eq(option, 2)) {
+			while(i < numCardsDealer) {
+				sum = sum + dealerCards[i];
+				i = i + 1;
+			}
+		}
+		else {}
+		return sum;
+	}
+	
+	public boolean askInput() {
+		boolean toRet;
+		int option;
+   		   		
+		toRet = true;
+		io.println();
+		option = ioPlus.requestNumber();
+		
+		input = option;
+		
+		if (this.ne(option, 1) && this.ne(option, 2)) {
+			toRet = false;
+		}
+		else{
+		}
+		
+		return toRet;
+	}
+	
+	
+	public boolean game() {
+		return game;
+	}
+		
+	
+	public boolean run() {
+   		   	
+   		while(!this.askInput()) {
+   		}
+   		
+   		if (this.eq(input, 1)) {
+			this.askCard();
+			this.printCards(0);
+			if (this.gt(this.evaluate(1), 21)) {
+				game = false;
+			}
+			else {}
+			input = 0;
+		}
+		
+		else if(this.eq(input, 2)) {
+			this.printCards(1);
+			if (this.gt(this.evaluate(2), 21)) {
+				game = false;
+			}
+			else if (this.le(this.evaluate(2), 21)) {
+				game = false;
+			}
+			
+			else {
+				
+			}
+			input = 0;
+		}
+		else {
+		}
+   			
+   		return true;
+   	}
+	
+	public boolean eq(int a, int b) {
+		return (!this.lt(a, b) && !this.lt(b, a));
+	}
+	
+	public boolean ne(int a, int b) {
+		return (!this.eq(a, b));
+	}
+	
+	public boolean lt(int a, int b) {
+		return (a < b);
+    }
+    
+    public boolean gt(int a, int b) {
+		return (a > b);
+    }
+    
+     public boolean le(int a, int b) {
+		return !(!this.lt(a, b) && !this.eq(a, b));
+    }
+}
