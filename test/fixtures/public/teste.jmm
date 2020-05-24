@@ -1,22 +1,38 @@
 import static io.println(int);
-import static io.println(String);
+import static io.println(String) void;
 class Hello_T {	
-	
-	int b;
 
 	
 	public static void main(String[] args){ 	
 		boolean b;
 		int f;
 		Hello_T e;
+		
 		f = 4;
 		e = new Hello_T();
+		b = true;
+		
 		io.println(e.get());
 		io.println("ola");
+		
+		while(f < 5){
+			f = f + 1;
+		}
+		
+		io.println("ola");
+		
+		if(f < 5){
+			b = true;
+		}else{
+			b = false;
+		}
+		
+		io.println("ola");
+		
 	}
 	
 	public int get(){
-		return b;
+		return 1;
 	}
 
 	

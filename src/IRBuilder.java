@@ -3,6 +3,8 @@ public class IRBuilder {
 	
 	IRNode root = null;
 	
+	//CFGNode[] cfg_methods = null;
+	
 	boolean constant_folding = false;
 	
 	public IRBuilder(SimpleNode sn) {
@@ -14,6 +16,15 @@ public class IRBuilder {
 		if(this.constant_folding) {
 			this.constant_folding(root);
 		}
+		
+		/*cfg_methods = new CFGNode[root.children[0].children.length - 3]; // number of methods
+		
+		for(int i = 0; i < cfg_methods.length;i++) {
+			cfg_methods[i] = new CFGNode();
+			cfg_methods[i].buildCFG(root.children[0].children[3 + i].children[4]);
+			cfg_methods[i].printCFG();
+		}
+		*/
 		
 		root.setRegisters();
 		

@@ -185,6 +185,9 @@ public class IRNode {
 			IRNode child = new IRNode(this);
 			child.setInst("java/lang/Object");
 			this.addChild(child);
+			IRNode fields = new IRNode(this);
+			fields.setInst("fields");
+			this.addChild(fields);
 			return;
 		}
 		int n = sn.jjtGetNumChildren();

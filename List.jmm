@@ -92,7 +92,7 @@ class List {
 		return 0;
 	}
 	
-	public get insert(int index){
+	public int get(int index){
 		
 		return 0;
 	}
