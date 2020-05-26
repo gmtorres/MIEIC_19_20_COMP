@@ -25,15 +25,20 @@ class List {
 		l.push_back(2);
 		l.push_back(3);
 		l.printList();
+		io.println("Insert in position 2");
 		l.insert(2,5);
 		l.printList();
+		io.println("Pop");
 		l.pop_back();
 		l.printList();
+		io.println("Remove from position 1");
 		l.remove(1);
 		l.printList();
+		io.println("Get element at position 1");
 		io.println(l.get(1).getData());
 		l.push_back(3);
 		l.printList();
+		io.println("Get index of 5");
 		io.print(l.indexOf(5));
 
 	}	
@@ -128,7 +133,7 @@ class List {
 		ListNode current;
 		int i;
 		current =  new ListNode();
-		if(index < 0 || index > size || this.eq(index,size)){}
+		if(!(index > 0 && index < size) && !(this.eq(index,size))){}
 		else{
 			current = this.getHead();
 			for (i = 0; i < index; i=i+1) {
@@ -144,7 +149,7 @@ class List {
 		boolean b;
 
 		current = new ListNode();
-		if (index < 0 || index > size || this.eq(index,size)) {
+		if (!(index > 0 && index < size) && !(this.eq(index,size))) {
 			b = false;
 		} else {
 	
