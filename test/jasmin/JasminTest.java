@@ -30,7 +30,7 @@ public class JasminTest {
 
 	@Test
     public void testSimple() {
-		JasminUtils.testJmm("fixtures/public/Simple.jmm", "20");
+		JasminUtils.testJmm("fixtures/public/Simple.jmm", "30");
     }
 	
 
