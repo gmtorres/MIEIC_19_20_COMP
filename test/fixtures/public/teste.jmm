@@ -1,49 +1,29 @@
 import static io.println(int);
 import static io.println(String) void;
 class Hello_T {	
-<<<<<<< HEAD
-=======
-	
-	int b;
->>>>>>> 5c9a467a7506d6e79c0751f2aab1e84a650f959d
 
-	
 	public static void main(String[] args){ 	
-		boolean b;
-		int f;
-		Hello_T e;
+		int a;
+		int b;
+		b = 0;
+		a = 0;
 		
-		f = 4;
-		e = new Hello_T();
-<<<<<<< HEAD
-		b = true;
-		
-		io.println(e.get());
-		io.println("ola");
-		
-		while(f < 5){
-			f = f + 1;
-		}
-		
-		io.println("ola");
-		
-		if(f < 5){
-			b = true;
-		}else{
-			b = false;
-		}
-		
-		io.println("ola");
-		
-=======
-		io.println(e.get());
-		io.println("ola");
->>>>>>> 5c9a467a7506d6e79c0751f2aab1e84a650f959d
+	
 	}
 	
-	public int get(){
-		return 1;
+	public int sum(int[] arr, int N){
+		int sum;
+		int i;
+		int t1;
+		sum = 0;
+		i = 0;
+		while( i < N ){
+			t1 = arr[i];
+			sum = sum + t1;
+			i = i + 1;
+		}
+		return sum;
 	}
-
+	
 	
  }

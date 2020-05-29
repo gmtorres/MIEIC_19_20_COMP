@@ -21,10 +21,8 @@ public class IRBuilder {
 		
 		for(int i = 0; i < cfg_methods.length;i++) {
 			cfg_methods[i] = new CFGNode();
-			cfg_methods[i].buildCFG(root.children[0].children[3 + i].children[4]);
-			cfg_methods[i].setUseDef(cfg_methods[i]);
-			cfg_methods[i].printCFG();
-			System.out.println("");
+			cfg_methods[i].buildCFG(root.children[0].children[3 + i]);
+			
 		}
 		
 		

@@ -54,11 +54,11 @@ public class Main {
 
 	        IRBuilder ir = new IRBuilder(root);
 	        System.out.println("\n--------------*****************-----------------	\n\n");
-	        //ir.dump();
+	        ir.dump();
 	        
-	        System.out.println("\n--------------*****************-----------------	\n");
+	       /* System.out.println("\n--------------*****************-----------------	\n");
 	        
-	        /*PrintStream file;
+	        PrintStream file;
 	        try{
 	        	//file = new PrintStream(new File(parts[0] + ".j"));
 	        	file = new PrintStream(new File("jasmin.j"));
