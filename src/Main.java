@@ -56,7 +56,7 @@ public class Main {
 	        System.out.println("\n--------------*****************-----------------	\n\n");
 	        ir.dump();
 	        
-	       /* System.out.println("\n--------------*****************-----------------	\n");
+	        System.out.println("\n--------------*****************-----------------	\n");
 	        
 	        PrintStream file;
 	        try{
@@ -67,7 +67,7 @@ public class Main {
 	        	return;
 	        }
 	       
-	        Jasmin j = new Jasmin(ir.root,file,true);*/
+	        Jasmin j = new Jasmin(ir.root,file,true);
 
 
     }
