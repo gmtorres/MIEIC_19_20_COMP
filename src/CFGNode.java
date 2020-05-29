@@ -17,6 +17,8 @@ public class CFGNode {
 	List<Simbol> in = new ArrayList<Simbol>();
 	List<Simbol> out = new ArrayList<Simbol>();
 	
+	List<LiveRange> ranges = new ArrayList<LiveRange>();
+	
 	public CFGNode() {
 		
 	}
@@ -97,23 +99,27 @@ public class CFGNode {
 	
 	public void buildCFG(IRNode method) {
 		IRNode args= method.children[2];
+		this.line = -1;
+		this.correspondent = method;
 		for(IRNode arg : args.children) {
 			this.addToList(this.def, arg.simbol);
 		}
 		this.buildBase(method.children[4]);
 		this.setUseDef(this);
-		this.print();
+		//this.print();
 		this.livenessAnalysis();
-		this.print();
+		//System.out.println("\n\n");
+		//this.print();
 		System.out.println("");
 	}
 	
 	private void buildBase(IRNode method) {
-		
+		CFGNode statements = new CFGNode();
+		this.addSucessor(statements);
 		
 		Integer l = 0;
 		//System.out.println("CFG" + method.getInst());
-		CFGNode cfg = this;
+		CFGNode cfg = statements;
 		for(int i = 0; i < method.children.length;i++) {
 			if(method.children[i].getInst().equals("while")) {
 				l = cfg.buildWhile(method.children[i], l);
@@ -134,7 +140,7 @@ public class CFGNode {
 				cfg = suc;
 			} 
 		}
-		this.last = cfg;
+		//this.last = cfg;
 	}
 	
 	public int buildWhile(IRNode loop, Integer l) {
@@ -297,9 +303,9 @@ public class CFGNode {
 		
 		List<CFGNode> stack = buildStack(this);
 		
-		for(CFGNode n : stack) {
+		/*for(CFGNode n : stack) {
 			System.out.println(n.line);
-		}
+		}*/
 		
 		boolean completed = true;
 		
@@ -319,8 +325,168 @@ public class CFGNode {
 			}		
 		}while(completed == false);
 		
+		for(int i = stack.size() -1; i >= 0; i--) {
+			CFGNode n = stack.get(i);
+			for(Simbol s : n.out) {
+				int a = i-1;
+				for(;a>=0 && stack.get(a).in.indexOf(s) != -1;a--) {
+					
+				}
+				//System.out.println(s);
+				addToRanges(new LiveRange(s,n.line,stack.get(a+1).line));
+			}
+		}
+		/*for(LiveRange range : this.ranges) {
+			System.out.println(range);
+		}*/
+		//System.out.println("\n\n\n\n");
+		
+		for(int i = 0; i < ranges.size(); i++) {
+			LiveRange n = ranges.get(i);
+			for(int a = i +1;a < ranges.size();a++) {
+				LiveRange next = ranges.get(a);
+				if(n.intersect(next))
+					n.addInterference(next);
+			}
+		}
+		
+		/*for(LiveRange range : this.ranges) {
+			System.out.println(range);
+		}*/
+		
+		List<LiveRange> stackRange = new ArrayList<LiveRange>();
+		int k = 3;
+		while(stackRange.size() != this.ranges.size()) {
+			int old_size = stackRange.size();
+			
+			for(int i = 0; i < this.ranges.size();i++) {
+				LiveRange range = this.ranges.get(i);
+				if(range.on_stack)
+					continue;
+				if(range.degree() < k) {
+					range.on_stack = true;
+					stackRange.add(range);
+				}
+				
+			}
+			
+			if(old_size == stackRange.size()) {
+				System.out.println("COULD NOT HAVE SO FEW REGISTERS");
+				return;
+			}
+		}
+		
+		for(int i = stackRange.size() -1; i>=0 ; i--) {
+			LiveRange range = stackRange.get(i);
+			int color = 0;
+			for(; color < k; color++) {
+				if(range.color == null && range.checkColor(color)) {
+					range.color = color;
+					break;
+				}
+			}
+			if(color == k){
+				System.out.println("COULD NOT COLOR WITH SO FEW REGISTERS");
+				return;
+			}
+		}
+		
+		for(int a = 0; a < this.out.size();a++) {
+			Simbol outS = this.out.get(a);
+			for(int b = 0; b < this.ranges.size();b++) {
+				LiveRange range = this.ranges.get(b);
+				if(range.s == outS) {
+					if(range.color != a) {
+						//System.out.println("Tenho que trocar  " + outS);
+						Integer switch1 = a;
+						Integer switch2 = range.color;
+						for(int c = 0; c < this.ranges.size();c++) {
+							LiveRange range_t = this.ranges.get(c);
+							if(range_t.color == switch1)
+								range_t.color = switch2;
+							else if(range_t.color == switch2)
+								range_t.color = switch1;
+						}
+					}
+					break;
+				}
+			}
+		}
+		
+		for(LiveRange range : stackRange) {
+			System.out.println(range);
+		}
+		
 		
 		
 	}
+	
+	private void addToRanges(LiveRange r) {
+		for(LiveRange range : this.ranges) {
+			if(range.s != r.s)
+				continue;
+			if(range.intersect(r))
+				return;
+		}
+		this.ranges.add(r);
+	}
+	
+	
+	
+	class LiveRange{
+		Simbol s;
+		int begin;
+		int end;
+		
+		List<LiveRange> interferences = new ArrayList<LiveRange>();
+		
+		boolean on_stack = false;
+		
+		Integer color = null;
+		
+		public void addInterference(LiveRange range) {
+			this.interferences.add(range);
+			range.interferences.add(this);
+		}
+		
+		public int degree() {
+			int d = 0;
+			for(LiveRange range : this.interferences)
+				if(range.on_stack == false)
+					d++;
+			return d;
+		}
+		
+		public boolean checkColor(int c) {
+			for(LiveRange range : this.interferences) {
+				if(range.color == null)
+					continue;
+				if(range.color == c)
+					return false;
+			}
+			return true;
+		}
+		
+		
+		public LiveRange(Simbol simbol, int b, int e) {
+			this.s = simbol;
+			this.begin = b;
+			this.end = e;
+		}
+		public boolean intersect(LiveRange range) {
+			if(range.begin >= this.begin && range.begin < this.end)
+				return true;
+			return false;
+		}
+		public String toString() {
+			String str = this.s + "\t" + begin + "\t" + end +"\tregister: " + this.color +"    interferences:     ";
+			for(LiveRange r : this.interferences)
+				str+= r.s + ", ";
+			
+			return str;
+		}
+	}
+
 
 }
+

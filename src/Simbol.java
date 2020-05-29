@@ -12,6 +12,7 @@ public class Simbol {
     
     public Integer local_var = null;
     public Integer size = null;
+
     
     Simbol(Descriptor tp , String id , boolean init){
     	this.type = tp;

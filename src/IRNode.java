@@ -15,6 +15,8 @@ public class IRNode {
 	
 	static boolean hasConstructor = false;
 	
+	static boolean setRegisters = true;
+	
 	static {
 		for(int i = maxReg; i > 0; i--) {
 			reg_allocated.push(i);
@@ -308,10 +310,10 @@ public class IRNode {
 			
 			if(node.toString().equals("ARGUMENT")) {	
 				arguments_specs.addChild(child); 
-				child.local_var =arguments_specs.children.length;
+				if(setRegisters) child.local_var = arguments_specs.children.length;
 				Simbol s = root.simbolTable.getSimbol(node.name);
 				child.simbol = s;
-				s.local_var = child.local_var;
+				if(setRegisters) s.local_var = child.local_var;
 				child.buildArgument(node);
 			}else if(node.toString().equals("METHOD_BODY")) {
 				//child.buildMethodBody( node ); 
@@ -321,7 +323,7 @@ public class IRNode {
 					if(node2.toString().equals("VAR_DEC")) {
 						IRNode child2 = new IRNode(locals);
 						locals.addChild(child2);
-						child2.local_var =arguments_specs.children.length + locals.children.length;
+						if(setRegisters) child2.local_var =arguments_specs.children.length + locals.children.length;
 						child2.buildVarDec(node2);
 					}else {
 						IRNode child2 = new IRNode(statements);
@@ -347,7 +349,7 @@ public class IRNode {
 	
 	public void buildVarDec(SimpleNode sn) {
 		this.setInst(sn.name);
-		sn.simbolTable.getSimbol(sn.name).local_var = this.local_var;
+		if(setRegisters) sn.simbolTable.getSimbol(sn.name).local_var = this.local_var;
 		this.simbol = sn.simbolTable.getSimbol(sn.name);
 		this.setIRType(sn.type);
 	}
@@ -429,7 +431,7 @@ public class IRNode {
 		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);
 		IRNode var = new IRNode(this);
 		Simbol s = sn.simbolTable.getSimbol(((SimpleNode)lhn.jjtGetChild(0)).name);
-		var.local_var = s.local_var;
+		if(setRegisters) var.local_var = s.local_var;
 		var.simbol = s;
 		if(lhn.jjtGetNumChildren() == 1) {
 			String scope = sn.simbolTable.getScope(((SimpleNode)lhn.jjtGetChild(0)).name);
@@ -522,7 +524,7 @@ public class IRNode {
 		IRNode child = new IRNode(this);
 		child.setInst(sn.name);
 		Simbol s = sn.simbolTable.getSimbol(sn.name);
-		child.local_var = s.local_var;
+		if(setRegisters) child.local_var = s.local_var;
 		child.simbol = s;
 		this.type = s.getType().name;
 		this.addChild(child);
