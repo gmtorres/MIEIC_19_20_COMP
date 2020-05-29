@@ -1,4 +1,7 @@
 import static io.println(int);
+import static io.println(String);
+import static io.print(String);
+import static io.print(int);
 import ListNode;
 import ListNode.setData(int) boolean;
 import ListNode.getData() int;
@@ -19,15 +22,24 @@ class List {
 		List l;
 		l = new List();
 		l.push_back(1);
-		io.println(l.getTail().getData());
 		l.push_back(2);
-		io.println(l.getTail().getData());
 		l.push_back(3);
-		io.println(l.getTail().getData());
+		l.printList();
+		io.println("Insert in position 2");
 		l.insert(2,5);
-		io.println(l.pop_back().getData());
-		io.println(l.pop_back().getData());
-		io.println(l.pop_back().getData());
+		l.printList();
+		io.println("Pop");
+		l.pop_back();
+		l.printList();
+		io.println("Remove from position 1");
+		l.remove(1);
+		l.printList();
+		io.println("Get element at position 1");
+		io.println(l.get(1).getData());
+		l.push_back(3);
+		l.printList();
+		io.println("Get index of 5");
+		io.print(l.indexOf(5));
 
 	}	
 
@@ -39,12 +51,13 @@ class List {
 		
 		if(!hasHead){
 			this.setHead(node);
-			size = 0;
+			size = 1;
 		}else{
 			temp = this.getTail();
 			temp.setSuccessor(node);
 		}
-			
+		size = size + 1;
+
 		return node;
 	}
 	
@@ -68,11 +81,13 @@ class List {
 	public boolean printList(){
 		ListNode node;
 		node = this.getHead();
-		io.println(node.getData());
+		io.print("List ");
+		io.print(node.getData());
 		while(node.hasSuccessor()){
 			node = node.getSuccessor();
-			io.println(node.getData());
+			io.print(node.getData());
 		}
+		io.println(" ");
 		return true;
 	}
 
@@ -98,55 +113,84 @@ class List {
 	 newNode = new ListNode();
  	 newNode.setData(d);
 
-    // insert as the new head?
     if (this.eq(index,0)) {
-        // The 1st case.
         newNode.setSuccessor(this.getHead());
         this.setHead(newNode);
     } else {
-        // The 2nd case.
-        // start from the head:
         node = this.getHead();
-        // find position just before the expected one:
 		index=index-1;
         while (index > 0) {
             node = node.getSuccessor();
 			index=index-1;
         }
-        // insert the new node:
         newNode.setSuccessor(node.getSuccessor());
         node.setSuccessor(newNode);
     }
 		return 0;
 	}
 	
-	public int get(int index){
-		
-		return 0;
+	public ListNode get(int index){
+		ListNode current;
+		int i;
+		current =  new ListNode();
+		if(!(index > 0 && index < size) && !(this.eq(index,size))){}
+		else{
+			current = this.getHead();
+			for (i = 0; i < index; i=i+1) {
+				current = current.getSuccessor();
+			}
+		}
+		return current;
 	}
 
+	public boolean remove (int index) {
+		ListNode current;
+		int i;
+		boolean b;
+
+		current = new ListNode();
+		if (!(index > 0 && index < size) && !(this.eq(index,size))) {
+			b = false;
+		} else {
+	
+			current = this.getHead();
+			for  (i = 0; i < index - 1; i=i+1) {
+				current = current.getSuccessor(); 
+			}
+			current.setSuccessor(current.getSuccessor().getSuccessor());
+			size=size-1;
+
+			b=true;
+		}
+		return b;
+
+	}
+
+ 	public int indexOf(int node) {
+        ListNode current;
+		int n;
+		int value;
+		int index;
+		current = this.getHead();
+		index = 0;
+		n=0;
+
+        while (index < this.getSize()) {
+            if (this.eq(current.getData(),node)) {
+                n = index;
+            }else{}
+            index=index+1;
+            current = current.getSuccessor();
+        }
+        return n;
+    }
 	public boolean eq(int a, int b) {
 		return (!this.lt(a, b) && !this.lt(b, a));
-	}
-	
-	public boolean ne(int a, int b) {
-		return (!this.eq(a, b));
 	}
 	
     public boolean lt(int a, int b) {
 		return (a < b);
     }
     
-    public boolean le(int a, int b) {
-		return !(!this.lt(a, b) && !this.eq(a, b));
-    }
-    
-    public boolean gt(int a, int b) {
-		return (a > b);
-    }
-    
-    public boolean ge(int a, int b) {
-		return !(!this.gt(a, b) && !this.eq(a, b));
-	}
 	
  }
