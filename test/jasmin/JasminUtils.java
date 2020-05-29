@@ -110,6 +110,11 @@ public class JasminUtils {
         Function<InputStream, String> stderr = new StreamToString(printOutput, storeOutput, OutputType.StdErr);
 
         ProcessOutput<String, String> output = SpecsSystem.runProcess(builder, stdout, stderr, stdin, TIMEOUT_NS);
+		
+		if(output.isError()) {
+			throw new RuntimeException("There was a problem when executing the command " + command + ", please check the output");
+		}
+		
         return new ProcessOutputAsString(output.getReturnValue(), output.getStdOut(), output.getStdErr());
     }
 
@@ -161,11 +166,14 @@ public class JasminUtils {
 		//File classFile = new File("jvm/HelloWorld.class");
 		File classFile = classFiles.get(0);
 		
-		// Buid classpath
-		String classpath = JasminUtils.getTestClasspath().stream().collect(Collectors.joining(File.pathSeparator));
-
 		// Add folder of the class file
-		classpath += File.pathSeparator + classFile.getParentFile().getAbsolutePath();
+		String classpath = classFile.getParentFile().getAbsolutePath();
+		
+		// Buid test classpath
+		String testClasspath = JasminUtils.getTestClasspath().stream().collect(Collectors.joining(File.pathSeparator));
+		if(!testClasspath.isEmpty()) {
+			classpath += File.pathSeparator + testClasspath;
+		}
 		
 		var command = Arrays.asList("java", "-cp", classpath, SpecsIo.removeExtension(classFile.getName()));
 		System.out.println("Executing " + command.stream().collect(Collectors.joining(" ")));

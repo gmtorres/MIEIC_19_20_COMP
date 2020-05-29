@@ -38,7 +38,7 @@ public class Quicksort {
     public boolean quicksort(int[] L, int lo, int hi) {
         int p;
 
-        if (!(lo < hi)) {
+        if (lo < hi) {
             p = this.partition(L, lo, hi);
 
             this.quicksort(L, lo, p - 1);
@@ -58,8 +58,8 @@ public class Quicksort {
         i = lo;
         j = lo;
 
-        while (!(j < hi)) {
-            if (!(L[j] < p)) {
+        while (j < hi) {
+            if (L[j] < p) {
                 tmp = L[i];
                 L[i] = L[j];
                 L[j] = tmp;
