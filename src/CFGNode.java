@@ -70,7 +70,7 @@ public class CFGNode {
 	private void setUse(CFGNode n,IRNode node) {
 		for(IRNode child : node.children)
 			setUse(n,child);
-		if(node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
+		if(node.getInst().equals("sta") || node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
 			n.addToList(n.use,node.children[0].simbol);
 		}
 	}
@@ -286,7 +286,6 @@ public class CFGNode {
 	public void livenessAnalysis() {
 		
 		List<CFGNode> stack = buildStack(this);
-		System.out.println(this.is_static);
 		if(this.is_static == false) {
 			this.addToList(stack.get(0).use,this.def.get(0));
 		}
@@ -343,7 +342,7 @@ public class CFGNode {
 		}*/
 		
 		List<LiveRange> stackRange = new ArrayList<LiveRange>();
-		int k = 6;
+		int k = 10;
 		
 		if(k < this.def.size()){
 			System.out.println("Less registries than arguments");
@@ -392,7 +391,7 @@ public class CFGNode {
 				if(range.s == outS) {
 					int def_p = this.def.indexOf(outS);
 					if(range.color != def_p) {
-						System.out.println("Tenho que trocar  " + outS + "  " + def_p + " por " + range.color);
+						//System.out.println("Tenho que trocar  " + outS + "  " + def_p + " por " + range.color);
 						Integer switch1 = def_p;
 						Integer switch2 = range.color;
 						for(int c = 0; c < this.ranges.size();c++) {
@@ -430,8 +429,7 @@ public class CFGNode {
 			Integer line = node.line;
 			IRNode irNode = node.correspondent;
 			String inst = irNode.getInst();
-			System.out.println(inst);
-			if(inst.equals("st"))
+			if(inst.equals("st") || inst.equals("sta"))
 				irNode.children[0].local_var = -1;
 			allocRegisters_Aux(ranges,irNode,line);
 				
@@ -441,22 +439,16 @@ public class CFGNode {
 	private void allocRegisters_Aux(List<LiveRange> ranges, IRNode node, int line) {
 		for(IRNode child : node.children)
 			allocRegisters_Aux(ranges,child,line);
-		if(node.getInst().equals("st") || node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
+		if(node.getInst().equals("st") || node.getInst().equals("sta") || node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
 			int register = -1;
 			IRNode child = node.children[0];
 			for(int i = 0; i < ranges.size();i++) {
 				LiveRange range = ranges.get(i);
 				if(range.s == child.simbol) {
-					System.out.println("Allocate register " + range);
-					System.out.println("line " + line);
-					System.out.println(range.begin + "  " + line + "  " + range.end);
 					if(range.begin<=line && line<=range.end) {
-						System.out.println("assign");
+						
 						register = range.color;
-					}/*else {
-						System.out.println("NO ASSIGN " + range.begin + "  " + line + "  " + range.end);
-						System.out.println((range.begin>=line) + " " + (line<=range.end));
-					}*/
+					}
 				}
 			}
 			System.out.println("register => " + register);

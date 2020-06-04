@@ -1,26 +1,52 @@
 import static io.println(int);
 import static io.println(String) void;
+import static BoardBase.sameArray(int[]) boolean;
+import static BoardBase.printBoard(int[],int[],int[]) void; 
+import static BoardBase.printWinner(int) void;
+import static BoardBase.playerTurn(int) int[];
+import static BoardBase.wrongMove();
+import static BoardBase.placeTaken();
 class Hello_T {	
 
 	int foo;
+	
+	public boolean inbounds(int row, int column) {
+    	return true;
+   	}
+	public boolean Move(int row, int column) {
+    	return true;
+  	}
 
 	public static void main(String[] args){ 	
-		int a;
-		int b;
-		Hello_T e;
-		b = 0;
-		a = b;
-		e = new Hello_T();
-		io.println(e.sum(1,1,1,1,1));
+		// Create the TicTacToe object.
+	    Hello_T mygame;
+	    int win;
+	    boolean done;
+	    int[] move;
+	    int player;
+	    
+	    player = 0;
+	    mygame = new Hello_T();
+
+	    while (true ) {
+		      done = false;
+		      while(!done){
+		      move = BoardBase.playerTurn(player);   		
+		      if (!mygame.inbounds(move[0],move[1])) 
+		        BoardBase.wrongMove();
+		      else {
+		        if (!mygame.Move(move[0],move[1]))
+		           BoardBase.placeTaken();
+		        else
+		          done = true;
+		      } 
+		   }	
+	    }
+   	}
 	
-	}
 	
 	
-	
-	
-	
-	
-	
+	/*
 	public int sum(int a, int b, int c, int d, int e){
 		int v1;
 		int v2;
@@ -42,6 +68,6 @@ class Hello_T {
 		foo = t;
 		return t;
 	}
-	
+	*/
 	
  }

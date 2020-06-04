@@ -54,7 +54,7 @@ public class Main {
 
 	        IRBuilder ir = new IRBuilder(root);
 	        System.out.println("\n--------------*****************-----------------	\n\n");
-	        //ir.dump();
+	        ir.dump();
 	        
 	        System.out.println("\n--------------*****************-----------------	\n");
 	        
