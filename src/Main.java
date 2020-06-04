@@ -31,7 +31,7 @@ public class Main {
 
 
         	ASTProgram root = myJmm.Program();
-	        root.dump("");
+	        //root.dump("");
 
 	        if(myJmm.failed == true) {
 	        	throw new ParseException();
@@ -54,7 +54,7 @@ public class Main {
 
 	        IRBuilder ir = new IRBuilder(root);
 	        System.out.println("\n--------------*****************-----------------	\n\n");
-	        ir.dump();
+	        /*ir.dump();
 	        
 	        System.out.println("\n--------------*****************-----------------	\n");
 	        
@@ -67,7 +67,7 @@ public class Main {
 	        	return;
 	        }
 	       
-	        Jasmin j = new Jasmin(ir.root,file,true);
+	        Jasmin j = new Jasmin(ir.root,file,true);*/
 
 
     }

@@ -15,7 +15,7 @@ public class IRNode {
 	
 	static boolean hasConstructor = false;
 	
-	static boolean setRegisters = false;
+	static boolean setRegisters = true;
 	
 	static {
 		for(int i = maxReg; i > 0; i--) {

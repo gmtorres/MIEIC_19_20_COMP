@@ -32,33 +32,33 @@ ireturn
 	.limit locals 6
 
 iconst_0
-istore_3
+istore 5
 
 new Hello_T
 dup
 invokespecial Hello_T/<init>()V
-astore_2
+astore_1
 
 loop1:
 iconst_1
 ifeq end_loop1
 
 iconst_0
-istore_1
+istore_3
 
 loop2:
-iload_1
+iload_3
 ifne end_loop2
 
-iload_3
+iload 5
 invokestatic	BoardBase.playerTurn(I)[I
-astore_0
+astore 4
 
-aload_2
-aload_0
+aload_1
+aload 4
 iconst_0
 iaload
-aload_0
+aload 4
 iconst_1
 iaload
 invokevirtual Hello_T.inbounds(II)Z
@@ -69,11 +69,11 @@ invokestatic	BoardBase.wrongMove()V
 goto end_if1
 
 else_if1:
-aload_2
-aload_-1
+aload_1
+aload 4
 iconst_0
 iaload
-aload_-1
+aload 4
 iconst_1
 iaload
 invokevirtual Hello_T.Move(II)Z
@@ -85,7 +85,7 @@ goto end_if2
 
 else_if2:
 iconst_1
-istore_0
+istore_3
 
 end_if2:
 
