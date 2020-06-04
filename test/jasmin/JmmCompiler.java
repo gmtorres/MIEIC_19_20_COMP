@@ -7,6 +7,7 @@ import pt.up.fe.specs.util.SpecsIo;
 public class JmmCompiler {
 	
     private static String CLASS_WITH_MAIN = "Main";	
+    
 
 	
 	/**

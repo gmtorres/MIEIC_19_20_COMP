@@ -63,14 +63,14 @@ class TicTacToe {
     boolean mov;
     if(!(row < 0) && !(0 < row) ){
         mov = this.MoveRow(row0,column);
-        this.printArr(row0);
+        
     }else if (!(row < 1) && !(1 < row)){
         mov = this.MoveRow(row1,column);
-        this.printArr(row1);
+        
     }
     else if (!(row < 2) && !(2 < row)){
         mov = this.MoveRow(row2,column);
-        this.printArr(row2);
+        
     }else{
         mov = false;
     }

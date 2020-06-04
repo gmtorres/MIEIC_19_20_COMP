@@ -275,6 +275,14 @@ public class IRNode {
 			IRNode stat = new IRNode(this);
 			stat.setInst("static");
 			access_spec.addChild(stat);
+		}else { // se não static, tem o "this"
+			IRNode child = new IRNode(this);
+			arguments_specs.addChild(child);
+			if(setRegisters) child.local_var = 0;
+			Simbol s = sn.simbolTable.getSimbol("this");
+			child.simbol = s;
+			if(setRegisters) s.local_var = child.local_var;
+			child.inst = s.getName();
 		}
 		if(((SimpleNode)sn.jjtGetChild(0)).toString().equals("CONSTRUCTOR")) {
 			IRNode name = new IRNode(this);
@@ -310,7 +318,7 @@ public class IRNode {
 			
 			if(node.toString().equals("ARGUMENT")) {	
 				arguments_specs.addChild(child); 
-				if(setRegisters) child.local_var = arguments_specs.children.length;
+				if(setRegisters) child.local_var = arguments_specs.children.length - 1;
 				Simbol s = root.simbolTable.getSimbol(node.name);
 				child.simbol = s;
 				if(setRegisters) s.local_var = child.local_var;
@@ -323,7 +331,7 @@ public class IRNode {
 					if(node2.toString().equals("VAR_DEC")) {
 						IRNode child2 = new IRNode(locals);
 						locals.addChild(child2);
-						if(setRegisters) child2.local_var =arguments_specs.children.length + locals.children.length;
+						if(setRegisters) child2.local_var =arguments_specs.children.length + locals.children.length - 1	;
 						child2.buildVarDec(node2);
 					}else {
 						IRNode child2 = new IRNode(statements);
@@ -535,6 +543,7 @@ public class IRNode {
 		IRNode child = new IRNode(this);
 		child.setInst("this");
 		child.local_var = 0;
+		child.simbol = sn.simbolTable.getSimbol("this");
 		this.type = sn.descriptors.getDescriptor("this").name;
 		this.addChild(child);
 	}
@@ -795,6 +804,7 @@ public class IRNode {
 					if(lhn.name.equals("this")) {
 						load.setInst("ldl");
 						var.local_var = 0;
+						var.simbol = sn.simbolTable.getSimbol("this");
 						load.type = "this";
 					}else {
 						Simbol s = sn.simbolTable.getSimbol(lhn.name);

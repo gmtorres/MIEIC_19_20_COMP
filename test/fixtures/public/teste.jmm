@@ -2,6 +2,8 @@ import static io.println(int);
 import static io.println(String) void;
 class Hello_T {	
 
+	int foo;
+
 	public static void main(String[] args){ 	
 		int a;
 		int b;
@@ -23,6 +25,7 @@ class Hello_T {
 		int v3;
 		int v4;
 		v1 = a + b;
+		this.set(d);
 		c = v1 + d;
 		v2 = b * 2;
 		v3 = v1 + v2;
@@ -31,6 +34,11 @@ class Hello_T {
 		e= v4 * b;
 		b = d;
 		return 1;
+	}
+	
+	public int set(int t){
+		foo = t;
+		return t;
 	}
 	
 	

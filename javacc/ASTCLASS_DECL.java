@@ -52,6 +52,8 @@ class ASTCLASS_DECL extends SimpleNode {
 		  }
 	  }
 	  
+	  this.simbolTable.addSimbol(this.descriptors.getDescriptor("this"),"this",true);
+	  
 	  
 	  boolean result = true;
 	  	  

@@ -8,11 +8,11 @@ public class Main {
 
     public static void main(String args[]) throws ParseException, SemanticException {   
     		
-    		String[] parts = args[0].split("\\.");
+    		/*String[] parts = args[0].split("\\.");
     		if(!parts[1].equals("jmm")) {
     			System.out.println("Can only parse jmm files");
     			System.exit(0);
-    		}
+    		}*/
 
 		
             System.out.println("TESTE:");
@@ -56,7 +56,7 @@ public class Main {
 	        System.out.println("\n--------------*****************-----------------	\n\n");
 	        ir.dump();
 	        
-	        System.out.println("\n--------------*****************-----------------	\n");
+	        /*System.out.println("\n--------------*****************-----------------	\n");
 	        
 	        PrintStream file;
 	        try{
@@ -67,7 +67,7 @@ public class Main {
 	        	return;
 	        }
 	       
-	        Jasmin j = new Jasmin(ir.root,file,true);
+	        Jasmin j = new Jasmin(ir.root,file,true);*/
 
 
     }

@@ -23,35 +23,6 @@ public class CFGNode {
 		
 	}
 	
-	private List<Simbol> diffList(List<Simbol> l1,List<Simbol> l2){
-		List<Simbol> l = new ArrayList<Simbol>();
-		for(int i=0;i<l1.size();i++) {
-			if(l2.indexOf(l1.get(i)) == -1)
-				l.add(l1.get(i));
-		}
-		return l;
-	}
-	
-	private List<Simbol> unionList(List<Simbol> l1,List<Simbol> l2){
-		List<Simbol> l = new ArrayList<Simbol>();
-		for(int i=0;i<l1.size();i++) {
-				l.add(l1.get(i));
-		}
-		for(int i=0;i<l2.size();i++) {
-			if(l.indexOf(l2.get(i)) == -1)
-				l.add(l2.get(i));
-		}
-		return l;
-	}
-	private boolean compareList(List<Simbol> l1, List<Simbol> l2) {
-		if(l1.size() != l2.size())
-			return false;
-		for(int i=0; i < l1.size();i++) {
-			if(l2.indexOf(l1.get(i)) == -1)
-				return false;
-		}
-		return true;
-	}
 	
 	public void addToList(List<Simbol> l,Simbol d) {
 		if(l.indexOf(d) != -1)
@@ -110,6 +81,7 @@ public class CFGNode {
 		this.livenessAnalysis();
 		//System.out.println("\n\n");
 		//this.print();
+			
 		System.out.println("");
 	}
 	
@@ -350,11 +322,11 @@ public class CFGNode {
 			}
 		}
 		
-		/*for(LiveRange range : this.ranges) {
+		for(LiveRange range : this.ranges) {
 			System.out.println(range);
-		}*/
+		}
 		
-		List<LiveRange> stackRange = new ArrayList<LiveRange>();
+		/*List<LiveRange> stackRange = new ArrayList<LiveRange>();
 		int k = 3;
 		while(stackRange.size() != this.ranges.size()) {
 			int old_size = stackRange.size();
@@ -415,11 +387,44 @@ public class CFGNode {
 		
 		for(LiveRange range : stackRange) {
 			System.out.println(range);
-		}
+		}*/
 		
 		
 		
 	}
+	
+	
+	
+	private List<Simbol> diffList(List<Simbol> l1,List<Simbol> l2){
+		List<Simbol> l = new ArrayList<Simbol>();
+		for(int i=0;i<l1.size();i++) {
+			if(l2.indexOf(l1.get(i)) == -1)
+				l.add(l1.get(i));
+		}
+		return l;
+	}
+	
+	private List<Simbol> unionList(List<Simbol> l1,List<Simbol> l2){
+		List<Simbol> l = new ArrayList<Simbol>();
+		for(int i=0;i<l1.size();i++) {
+				l.add(l1.get(i));
+		}
+		for(int i=0;i<l2.size();i++) {
+			if(l.indexOf(l2.get(i)) == -1)
+				l.add(l2.get(i));
+		}
+		return l;
+	}
+	private boolean compareList(List<Simbol> l1, List<Simbol> l2) {
+		if(l1.size() != l2.size())
+			return false;
+		for(int i=0; i < l1.size();i++) {
+			if(l2.indexOf(l1.get(i)) == -1)
+				return false;
+		}
+		return true;
+	}
+	
 	
 	private void addToRanges(LiveRange r) {
 		for(LiveRange range : this.ranges) {
@@ -430,6 +435,8 @@ public class CFGNode {
 		}
 		this.ranges.add(r);
 	}
+	
+	
 	
 	
 	
