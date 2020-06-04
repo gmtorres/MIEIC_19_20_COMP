@@ -317,7 +317,9 @@ public class Jasmin {
 		  }
 		  IRNode lhn = node.children[0];
 		  Integer local_var = lhn.local_var;
-		  if(local_var < 4)
+		  if(local_var == -1)
+			  this.println("pop");
+		  else if(local_var < 4)
 			  this.println(this.getType(node.type) + "store_" + local_var);
 		  else
 			  this.println(this.getType(node.type) + "store " + local_var);
@@ -648,6 +650,9 @@ public class Jasmin {
 		  
 
 		  for (int i= 0; i < ((r.getChildren()[2]).getChildren().length); i++) {
+			  String inst = r.getChildren()[2].getChildren()[i].getInst();
+			  if(inst.equals("this"))
+				  continue;
 			  toPrint += retType(r.getChildren()[2].getChildren()[i].getInst());
 			  if(i != r.getChildren()[2].getChildren().length - 1)
 				  toPrint +="";

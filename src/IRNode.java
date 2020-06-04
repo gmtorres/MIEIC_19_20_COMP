@@ -15,7 +15,7 @@ public class IRNode {
 	
 	static boolean hasConstructor = false;
 	
-	static boolean setRegisters = true;
+	static boolean setRegisters = false;
 	
 	static {
 		for(int i = maxReg; i > 0; i--) {
@@ -348,7 +348,7 @@ public class IRNode {
 		//System.out.println(arguments_specs.children.length + "  " + locals.children.length);
 		this.locals_stack = arguments_specs.children.length + locals.children.length;
 		//if(!sn.is_static) 
-			this.locals_stack +=1;
+			//this.locals_stack +=1;
 	}
 	
 	public void buildArgument(SimpleNode sn) {
@@ -808,8 +808,9 @@ public class IRNode {
 						load.type = "this";
 					}else {
 						Simbol s = sn.simbolTable.getSimbol(lhn.name);
+						String scope = sn.simbolTable.getScope(lhn.name);
 						Integer local = s.local_var;
-						if(local == null) {
+						if(scope.equals("global")) {
 							load.setInst("ldg");
 						}else {
 							load.setInst("ldl");
