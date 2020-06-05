@@ -25,8 +25,9 @@ class Hello_T {
 	    int[] move;
 	    int player;
 	    
-	    player = 0;
 	    mygame = new Hello_T();
+	    /*
+	    player = 0;
 
 		while (true ) {
 		  while(false){
@@ -40,7 +41,8 @@ class Hello_T {
 		          done = true;
 		      } 
 		   }	
-		}
+		}*/
+		io.println(e.sum(1,1,1,1,1));
    	}
 	
 	public int sum2(int []A, int N){
