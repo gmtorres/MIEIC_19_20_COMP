@@ -21,16 +21,23 @@ public class CFGNode {
 	
 	boolean visited = false;
 	
+	boolean constant_folding = false;
+	
 	public CFGNode() {
 		
 	}
 	
 	public void buildCFG(IRNode method, Integer registers, List<String> opt) throws RegisterAllocationException {
+		if(opt.indexOf("cf") != -1) {
+			this.constant_folding = true;
+			this.constant_folding(method);
+		}
 		if(opt.indexOf("o") != -1)
 			this.constantPropagation(method);
 		if(registers != null)
 			this.registerOptimization(method, registers);
 		//System.out.println("");
+		
 	}
 	
 	private void constantPropagation(IRNode method) {
@@ -57,13 +64,15 @@ public class CFGNode {
 		for(IRNode child : method.children) {
 			String inst = child.getInst();
 			if(inst.equals("st")) {
+				substituteConstant(child,values);
+				if(this.constant_folding)
+					this.constant_folding(child);
 				if(child.children[1].getInst().equals("ldc")) {
 					Simbol s = child.children[0].simbol;
 					String value = child.children[1].children[0].getInst();
 					s.value = Integer.parseInt(value);
 					addToValues(values,s);
 				}
-				substituteConstant(child,values);
 			}else if(inst.equals("if")) {
 				doConstantPropagationIf(child,values);
 			}else if(inst.equals("while")) {
@@ -120,6 +129,86 @@ public class CFGNode {
 			getAllDefAux(child,defs);
 		if(node.getInst().equals("st"))
 			this.addToValues(defs, node.children[0].simbol);
+	}
+	
+	private void constant_folding(IRNode sn) {
+		
+		for(IRNode child : sn.children) {
+			this.constant_folding(child);
+		}
+		int opcode = 0;
+		switch(sn.getInst()) {
+		case "+":
+			opcode = 1;
+			break;
+		case "-":
+			opcode = 2;
+			break;
+		case "*":
+			opcode = 3;
+			break;
+		case "/":
+			opcode = 4;
+			break;
+		case "<":
+			opcode = 5;
+			break;
+		case ">":
+			opcode = 6;
+			break;
+		case "&&":
+			opcode = 7;
+			break;
+		case "||":
+			opcode = 8;
+			break;
+		}	
+		if(opcode > 0) {
+			IRNode lhn = sn.children[0];
+			IRNode rhn = sn.children[1];
+			if(lhn.getInst().equals("ldc") && rhn.getInst().equals("ldc")) {
+				int val1 = Integer.parseInt(lhn.children[0].getInst());
+				int val2 = Integer.parseInt(rhn.children[0].getInst());
+				int res = val1;
+				if(opcode == 1)
+					res+=val2;
+				else if(opcode == 2)
+					res-=val2;
+				else if(opcode == 3)
+					res*=val2;
+				else if(opcode == 4)
+					res/=val2;
+				else if(opcode == 5)
+					if(val1 < val2)
+						res = 1;
+					else
+						res = 0;
+				else if(opcode == 6)
+					if(val1 > val2)
+						res = 1;
+					else
+						res = 0;
+				else if(opcode == 7)
+					if(val1 >0 && val2 > 0) {
+						res = 1;
+					}else
+						res = 0;
+				else if(opcode == 8) {
+					if(val1 >0 || val2 > 0) {
+						res = 1;
+					}else
+						res = 0;
+				}else
+					return;
+				if(opcode == 5 || opcode == 6)
+					sn.type = "boolean";		
+				sn.setInst("ldc");
+				sn.resetChildren();
+				IRNode child = new IRNode(sn);
+				sn.addChild(child);
+				child.setInst(String.valueOf(res));
+			}
+		}
 	}
 	
 	private void registerOptimization(IRNode method, Integer registers) throws RegisterAllocationException  {

@@ -229,8 +229,7 @@ public class IRBuilder {
 		case "||":
 			opcode = 8;
 			break;
-		}
-		
+		}	
 		if(opcode > 0) {
 			IRNode lhn = sn.children[0];
 			IRNode rhn = sn.children[1];
@@ -261,7 +260,6 @@ public class IRBuilder {
 						res = 1;
 					}else
 						res = 0;
-
 				else if(opcode == 8) {
 					if(val1 >0 || val2 > 0) {
 						res = 1;
@@ -269,10 +267,8 @@ public class IRBuilder {
 						res = 0;
 				}else
 					return;
-			
 				if(opcode == 5 || opcode == 6)
-					sn.type = "boolean";
-				
+					sn.type = "boolean";		
 				sn.setInst("ldc");
 				sn.resetChildren();
 				IRNode child = new IRNode(sn);
