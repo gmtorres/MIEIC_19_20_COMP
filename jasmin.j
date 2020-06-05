@@ -1,7 +1,7 @@
-.class public FindMaximum
+.class public Hello_T
 .super java/lang/Object
 
-.field test_arr [I
+.field foo I
 
 .method public <init>()V
 aload_0
@@ -9,130 +9,52 @@ invokenonvirtual java/lang/Object/<init>()V
 return
 .end method
 
-.method public find_maximum([I)I
-	.limit stack 3
-	.limit locals 5
-
-iconst_1
-istore_2
-
-aload_1
-iconst_0
-iaload
-istore 4
-
-iload_2
-aload_1
-arraylength
-if_icmpge end_loop1
-begin_loop1:
-
-aload_1
-iload_2
-iaload
-istore_3
-
-iload 4
-iload_3
-if_icmpge else_if1
-
-iload_3
-istore 4
-
-goto end_if1
-
-else_if1:
-end_if1:
-
-iload_2
-iconst_1
-iadd
-istore_2
-
-iload_2
-aload_1
-arraylength
-if_icmplt begin_loop1
-end_loop1:
-
-iload 4
-ireturn
-
-.end method
-
-.method public build_test_arr()I
-	.limit stack 3
-	.limit locals 1
-
-aload_0
-iconst_5
-newarray int
-putfield FindMaximum/test_arr [I
-
-aload_0
-getfield FindMaximum/test_arr [I
-iconst_0
-bipush 14
-iastore
-
-aload_0
-getfield FindMaximum/test_arr [I
-iconst_1
-bipush 28
-iastore
-
-aload_0
-getfield FindMaximum/test_arr [I
-iconst_2
-iconst_0
-iastore
-
-aload_0
-getfield FindMaximum/test_arr [I
-iconst_3
-bipush -5
-iastore
-
-aload_0
-getfield FindMaximum/test_arr [I
-iconst_4
-bipush 12
-iastore
-
-iconst_0
-ireturn
-
-.end method
-
-.method public get_array()[I
-	.limit stack 1
-	.limit locals 1
-
-aload_0
-getfield FindMaximum/test_arr [I
-areturn
-
-.end method
-
 .method public static main([Ljava/lang/String;)V
 	.limit stack 2
-	.limit locals 2
+	.limit locals 4
 
-new FindMaximum
+new Hello_T
 dup
-invokespecial FindMaximum/<init>()V
-astore_0
-
-aload_0
-invokevirtual FindMaximum.build_test_arr()I
-
+invokespecial Hello_T/<init>()V
 pop
 
-aload_0
-aload_0
-invokevirtual FindMaximum.get_array()[I
-invokevirtual FindMaximum.find_maximum([I)I
-invokestatic	ioPlus.printResult(I)V
+bipush -5
+istore_0
+
+iload_0
+ifgt end_loop1
+begin_loop1:
+
+iload_0
+invokestatic	io.println(I)V
+
+iload_0
+iconst_1
+iadd
+istore_0
+
+iload_0
+ifle begin_loop1
+end_loop1:
+
+iconst_5
+istore_0
+
+iload_0
+ifle end_loop2
+begin_loop2:
+
+iload_0
+invokestatic	io.println(I)V
+
+iload_0
+iconst_1
+isub
+istore_0
+
+iload_0
+ifgt begin_loop2
+end_loop2:
 
 	return
 .end method

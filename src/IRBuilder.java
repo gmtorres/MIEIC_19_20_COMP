@@ -7,23 +7,31 @@ public class IRBuilder {
 	
 	CFGNode[] cfg_methods = null;
 	
-	boolean constant_folding = false;
-	
 	public IRBuilder(SimpleNode sn, Integer registers, List<String> opt) throws RegisterAllocationException 
 	{
 		root = new IRNode(null);
 		root.build(sn);
 		this.simplifyBooleans(root);
 		
-		if(this.constant_folding) {
-			this.constant_folding(root);
-		}
-		
 		cfg_methods = new CFGNode[root.children[0].children.length - 3]; // number of methods
-		
-		for(int i = 0; i < cfg_methods.length;i++) {
-			cfg_methods[i] = new CFGNode();
-			cfg_methods[i].buildCFG(root.children[0].children[3 + i], registers,opt);
+		int i = 0;
+		try {
+			for(; i < cfg_methods.length;i++) {
+				cfg_methods[i] = new CFGNode();
+				cfg_methods[i].buildCFG(root.children[0].children[3 + i], registers,opt);
+			}
+		}catch(RegisterAllocationException e1) {
+			RegisterAllocationException e = e1;
+			for(; i < cfg_methods.length;i++) {
+				try {
+					cfg_methods[i] = new CFGNode();
+					cfg_methods[i].buildCFG(root.children[0].children[3 + i], registers,opt);
+				}catch(RegisterAllocationException e2) {
+					if(e2.k > e.k)
+						e = e2;
+				}
+			}
+			throw e;
 		}
 		
 		this.setPop(root);
@@ -99,7 +107,7 @@ public class IRBuilder {
 	}
 	
 	public static void propagateNot(IRNode node, int i) {
-		System.out.println(node.getInst() + " " + i);
+		//System.out.println(node.getInst() + " " + i);
 		
 		if(node.getInst().equals("&&"))
 			node.setInst("||");

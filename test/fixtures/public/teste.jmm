@@ -21,10 +21,16 @@ class Hello_T {
 		//io.println(mygame.sum(1,1,1,1,1));
 		//io.println(mygame.test(5));
 		//io.println(mygame.sum(1,3));
-		a = 0;
-		while(a<10){
+		a = 0 - 5;
+		while(0 > a){
 			io.println(a);
 			a = a + 1;
+		}
+		
+		a = 5;
+		while(a > 0){
+			io.println(a);
+			a = a - 1;
 		}
    	}
    	/*

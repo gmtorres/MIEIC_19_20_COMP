@@ -545,93 +545,117 @@ public class CFGNode {
 			}
 		}
 		
-		/*for(LiveRange range : this.ranges) {
+		for(LiveRange range : this.ranges) {
 			System.out.println(range);
-		}*/
+		}
 		if(k != null) {
-			// do not count with register 0, for this
-			k = k+1;
-			List<LiveRange> stackRange = new ArrayList<LiveRange>();
-			/*
-			 * The number of registers needs to be greater or equal to the number of arguments of the functions
-			 */
-			if(k < this.def.size()){
-				throw new RegisterAllocationException("Less registers than arguments");
-			}
-			
-			/*
-			 * Stack registers for coloring
-			 */
-			while(stackRange.size() != this.ranges.size()) {
-				int old_size = stackRange.size();
-				
-				for(int i = 0; i < this.ranges.size();i++) {
-					LiveRange range = this.ranges.get(i);
-					if(range.on_stack)
-						continue;
-					if(range.degree() < k) {
-						range.on_stack = true;
-						stackRange.add(range);
-					}
-					
-				}
-				
-				if(old_size == stackRange.size()) {
-					throw new RegisterAllocationException("Few registers for interference graph");
-				}
-			}
-			/*
-			 * Color registers
-			 */
-			for(int i = stackRange.size() -1; i>=0 ; i--) {
-				LiveRange range = stackRange.get(i);
-				int color = 0;
-				for(; color < k; color++) {
-					if(range.color == null && range.checkColor(color)) {
-						range.color = color;
-						break;
+			try {
+				colorRegisters(stack,k);
+			}catch(RegisterAllocationException e1) {
+				boolean found = false;
+				while(!found) {
+					k++;
+					try {
+						colorRegisters(stack,k);
+						found = true;
+					}catch(RegisterAllocationException e2) {
 					}
 				}
-				if(color == k){
-					throw new RegisterAllocationException("Few registers for allocations");
-				}
+				throw new RegisterAllocationException("Not enough registers to store variables, " + k + " needed for method " + this.correspondent.children[1].children[1].getInst(),k);
 			}
-			/*
-			 * Order registers in correct order, this first and the order the arguments appear
-			 */
-			for(int a = 0; a < this.out.size();a++) {
-				Simbol outS = this.out.get(a);
-				for(int b = 0; b < this.ranges.size();b++) {
-					LiveRange range = this.ranges.get(b);
-					if(range.s == outS) {
-						int def_p = this.def.indexOf(outS);
-						if(range.color != def_p) {
-							//System.out.println("Tenho que trocar  " + outS + "  " + def_p + " por " + range.color);
-							Integer switch1 = def_p;
-							Integer switch2 = range.color;
-							for(int c = 0; c < this.ranges.size();c++) {
-								LiveRange range_t = this.ranges.get(c);
-								if(range_t.color == switch1)
-									range_t.color = switch2;
-								else if(range_t.color == switch2)
-									range_t.color = switch1;
-							}
-						}
-						break;
-					}
-				}
-			}
-			
-			// print for show
-			for(LiveRange range : stackRange) {
-				System.out.println(range);
-			}
-
-			//allocate registers in each statement accordinly to the ranges
-			this.allocRegisters(ranges, stack);
 		}
 		
 		
+	}
+	
+	private void colorRegisters(List<CFGNode> stack,Integer k) throws RegisterAllocationException{
+		// do not count with register 0, for this
+		k = k+1;
+		List<LiveRange> stackRange = new ArrayList<LiveRange>();
+		/*
+		 * The number of registers needs to be greater or equal to the number of arguments of the functions
+		 */
+		if(k < this.def.size()){
+			throw new RegisterAllocationException("Less registers than arguments",k);
+		}
+		
+		/*
+		 * Clear ranges
+		 */
+		for(LiveRange range : this.ranges) {
+			range.on_stack = false;
+			range.color = null;
+		}
+		/*
+		 * Stack registers for coloring
+		 */
+		while(stackRange.size() != this.ranges.size()) {
+			int old_size = stackRange.size();
+			
+			for(int i = 0; i < this.ranges.size();i++) {
+				LiveRange range = this.ranges.get(i);
+				if(range.on_stack)
+					continue;
+				if(range.degree() < k) {
+					range.on_stack = true;
+					stackRange.add(range);
+				}
+				
+			}
+			
+			if(old_size == stackRange.size()) {
+				throw new RegisterAllocationException("Few registers for interference graph",k);
+			}
+		}
+		/*
+		 * Color registers
+		 */
+		for(int i = stackRange.size() -1; i>=0 ; i--) {
+			LiveRange range = stackRange.get(i);
+			int color = 0;
+			for(; color < k; color++) {
+				if(range.color == null && range.checkColor(color)) {
+					range.color = color;
+					break;
+				}
+			}
+			if(color == k){
+				throw new RegisterAllocationException("Few registers for allocations",k);
+			}
+		}
+		/*
+		 * Order registers in correct order, this first and the order the arguments appear
+		 */
+		for(int a = 0; a < this.out.size();a++) {
+			Simbol outS = this.out.get(a);
+			for(int b = 0; b < this.ranges.size();b++) {
+				LiveRange range = this.ranges.get(b);
+				if(range.s == outS) {
+					int def_p = this.def.indexOf(outS);
+					if(range.color != def_p) {
+						//System.out.println("Tenho que trocar  " + outS + "  " + def_p + " por " + range.color);
+						Integer switch1 = def_p;
+						Integer switch2 = range.color;
+						for(int c = 0; c < this.ranges.size();c++) {
+							LiveRange range_t = this.ranges.get(c);
+							if(range_t.color == switch1)
+								range_t.color = switch2;
+							else if(range_t.color == switch2)
+								range_t.color = switch1;
+						}
+					}
+					break;
+				}
+			}
+		}
+		
+		// print for show
+		for(LiveRange range : stackRange) {
+			System.out.println(range);
+		}
+
+		//allocate registers in each statement accordinly to the ranges
+		this.allocRegisters(ranges, stack);
 	}
 	
 	private void allocRegisters(List<LiveRange> ranges, List<CFGNode> stack) {

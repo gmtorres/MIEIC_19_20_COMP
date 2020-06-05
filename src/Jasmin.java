@@ -384,16 +384,25 @@ public class Jasmin {
 	  }
 	  private void printLessThan(IRNode node) {
 		  if(this.in_if_condition || this.in_while_condition) {
-			  for(int i = 0; i < node.getChildren().length; i++) {
-				  printJasmin(node.getChildren()[i]);
+			  int zero = 0;
+			  if(node.children[0].getInst().equals("ldc")
+					  && node.children[0].children[0].getInst().equals("0")) {
+				  zero = 1;
+				  printJasmin(node.getChildren()[1]);
+			  }else if(node.children[1].getInst().equals("ldc")
+					  && node.children[1].children[0].getInst().equals("0")) {
+				  zero = 2;
+				  printJasmin(node.getChildren()[0]);
+			  }else {
+				  for(int i = 0; i < node.getChildren().length; i++) {
+					  printJasmin(node.getChildren()[i]);
+				  }
 			  }
 			  
 			  String op = null;
 			  String tag = null;
 			  
 			  boolean last = node.isLast();
-			  //System.out.println(node.getInst() +"   F: "+ this.fail_tag + "  S: " + this.sucess_tag);
-			  //System.out.println("or:" + this.in_or + "   and_in_or:" + this.and_in_or + " last:" + last);
 			  if(this.in_or == true) {
 				  if(!last)
 					  tag = this.sucess_tag;
@@ -419,7 +428,21 @@ public class Jasmin {
 				  if(this.not) op = "if_icmplt ";
 				  else op = "if_icmpge ";
 			  }
-
+			  if(zero != 0) {
+				  if(zero == 1) {
+					  if(op.equals("if_icmplt ")) {
+						  op = "ifge ";
+					  }else if(op.equals("if_icmpge ")) {
+						  op = "iflt ";
+					  }
+				  }else if(zero == 2) {
+					  if(op.equals("if_icmplt ")) {
+						  op = "iflt ";
+					  }else if(op.equals("if_icmpge ")) {
+						  op = "ifge ";
+					  }
+				  }
+			  }
 			
 			  this.println(op + tag);
 			  
@@ -430,8 +453,19 @@ public class Jasmin {
 	  
 	  private void printGreaterThan(IRNode node) {
 		  if(this.in_if_condition || this.in_while_condition) {
-			  for(int i = 0; i < node.getChildren().length; i++) {
-				  printJasmin(node.getChildren()[i]);
+			  int zero = 0;
+			  if(node.children[0].getInst().equals("ldc")
+					  && node.children[0].children[0].getInst().equals("0")) {
+				  zero = 1;
+				  printJasmin(node.getChildren()[1]);
+			  }else if(node.children[1].getInst().equals("ldc")
+					  && node.children[1].children[0].getInst().equals("0")) {
+				  zero = 2;
+				  printJasmin(node.getChildren()[0]);
+			  }else {
+				  for(int i = 0; i < node.getChildren().length; i++) {
+					  printJasmin(node.getChildren()[i]);
+				  }
 			  }
 			  
 			  String op = null;
@@ -465,7 +499,22 @@ public class Jasmin {
 				  if(this.not) op = "if_icmpgt ";
 				  else op = "if_icmple ";
 			  }
-
+			  
+			  if(zero != 0) {
+				  if(zero == 1) {
+					  if(op.equals("if_icmple ")) {
+						  op = "ifgt ";
+					  }else if(op.equals("if_icmpgt ")) {
+						  op = "ifle ";
+					  }
+				  }else if(zero == 2) {
+					  if(op.equals("if_icmple ")) {
+						  op = "ifle ";
+					  }else if(op.equals("if_icmpgt ")) {
+						  op = "ifgt ";
+					  }
+				  }
+			  }
 			
 			  this.println(op + tag);
 			  
