@@ -15,6 +15,9 @@ class Hello_T {
 	    Hello_T mygame;
 	    int a;
 	    int b;
+	    int d;
+	    int e;
+	    int f;
 	    
 	    mygame = new Hello_T();
 
@@ -23,6 +26,9 @@ class Hello_T {
 		//io.println(mygame.sum(1,3));
 		a = 0 - 5;
 		b = 0;
+		d = 16;
+		e = 5;
+		f = 3;
 		while(0 > a){
 			io.println(a);
 			a = a + 1;
@@ -37,6 +43,15 @@ class Hello_T {
 			a = a - 1;
 		}
 		io.println(b);
+		
+		d = d/4;
+		e = e * 2;
+		f = 64 * f;
+		
+		io.println(d);
+		io.println(e);
+		io.println(f);
+		
    	}
    	/*
    	public int prop(int a){
