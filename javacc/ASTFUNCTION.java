@@ -66,7 +66,7 @@ class ASTFUNCTION extends SimpleNode {
 			SimpleNode rhnc = (SimpleNode) rhn.children[i];
 			params+=((SimpleNode)rhnc.children[0]).type+",";
 		}
-		System.out.println(params);
+		//System.out.println(params);
 		ArrayList<Function> f = new ArrayList<Function>();
 		for(int i = 0; i < objs.size();i++)
 			if(this.functionTable.isFunctionHere( objs.get(i),this.name,params))

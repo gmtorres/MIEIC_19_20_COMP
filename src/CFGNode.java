@@ -19,11 +19,110 @@ public class CFGNode {
 	
 	List<LiveRange> ranges = new ArrayList<LiveRange>();
 	
+	boolean visited = false;
+	
 	public CFGNode() {
 		
 	}
 	
-	public void buildCFG(IRNode method) {
+	public void buildCFG(IRNode method, Integer registers, List<String> opt) throws RegisterAllocationException {
+		if(opt.indexOf("o") != -1)
+			this.constantPropagation(method);
+		if(registers != null)
+			this.registerOptimization(method, registers);
+		//System.out.println("");
+	}
+	
+	private void constantPropagation(IRNode method) {
+		List<Simbol> values = new ArrayList<Simbol>();
+		IRNode statements = method.children[4];
+		
+		doConstantPropagation(statements,values);
+		
+	}
+	
+	private void addToValues(List<Simbol> values, Simbol s) {
+		if(values.indexOf(s) == -1)
+			values.add(s);
+	}
+	private void removeFromValues(List<Simbol> values, Simbol s) {
+		values.remove(s);
+	}
+	private void removeFromValues(List<Simbol> values, List<Simbol> def) {
+		for(Simbol s : def)
+			values.remove(s);
+	}
+	
+	private void doConstantPropagation(IRNode method, List<Simbol> values) {
+		for(IRNode child : method.children) {
+			String inst = child.getInst();
+			if(inst.equals("st")) {
+				if(child.children[1].getInst().equals("ldc")) {
+					Simbol s = child.children[0].simbol;
+					String value = child.children[1].children[0].getInst();
+					s.value = Integer.parseInt(value);
+					addToValues(values,s);
+				}
+				substituteConstant(child,values);
+			}else if(inst.equals("if")) {
+				doConstantPropagationIf(child,values);
+			}else if(inst.equals("while")) {
+				doConstantPropagationWhile(child,values);
+			}else 
+				substituteConstant(child,values);
+		}
+		//System.out.println(values);
+	}
+	
+	private void doConstantPropagationWhile(IRNode loop, List<Simbol> values) {
+		List<Simbol> def = this.getAllDefs(loop);
+		this.removeFromValues(values, def);
+		doConstantPropagation(loop,values);
+		this.removeFromValues(values, def);
+	}
+	
+	private void doConstantPropagationIf(IRNode branch, List<Simbol> values) {
+		List<Simbol> def = this.getAllDefs(branch);
+		doConstantPropagation(branch.children[0],values);
+		List<Simbol> temp_values = new ArrayList<Simbol>(values);
+		List<Integer> prev_values = new ArrayList<Integer>();
+		for(Simbol s : temp_values)
+			prev_values.add(new Integer(s.value));
+		doConstantPropagation(branch.children[1],temp_values);
+		temp_values = new ArrayList<Simbol>(values);
+		for(int i = 0; i < temp_values.size();i++)
+			temp_values.get(i).value = prev_values.get(i);
+		doConstantPropagation(branch.children[2],temp_values);
+		this.removeFromValues(values, def);
+	}
+	
+	private void substituteConstant(IRNode statement,List<Simbol> values) {
+		for(IRNode child : statement.children)
+			substituteConstant(child,values);
+		String inst = statement.getInst();
+		if(inst.equals("ldl") || inst.equals("ldp")) {
+			Simbol s = statement.children[0].simbol;
+			if(values.indexOf(s) != -1) {
+				statement.setInst("ldc");
+				statement.children[0].setInst(String.valueOf(s.value));
+			}
+		}
+	}
+	
+	private List<Simbol> getAllDefs(IRNode node){
+		List<Simbol> defs = new ArrayList<Simbol>();
+		this.getAllDefAux(node, defs);
+		return defs;
+	}
+	
+	private void getAllDefAux(IRNode node, List<Simbol> defs){
+		for(IRNode child : node.children)
+			getAllDefAux(child,defs);
+		if(node.getInst().equals("st"))
+			this.addToValues(defs, node.children[0].simbol);
+	}
+	
+	private void registerOptimization(IRNode method, Integer registers) throws RegisterAllocationException  {
 		IRNode args= method.children[2];
 		this.line = -1;
 		this.correspondent = method;
@@ -34,12 +133,12 @@ public class CFGNode {
 		}
 		this.buildBase(method.children[4]);
 		this.setUseDef(this.sucessors[0]);
-		//this.print();
-		this.livenessAnalysis();
-		System.out.println("\n\n");
-		//this.print();
-			
+
 		System.out.println("");
+		System.out.println(method.children[1].children[1].getInst());
+		this.livenessAnalysis(registers);
+		System.out.println("\n");
+		this.print();
 	}
 	
 	
@@ -266,6 +365,11 @@ public class CFGNode {
 		addToStack(stack,n);
 	}
 	
+	private void resetVisited(List<CFGNode> stack) {
+		for(CFGNode node : stack)
+			node.visited = false;
+	}
+	
 	private List<CFGNode> buildStack(CFGNode n){
 		List<CFGNode> stack = new ArrayList<CFGNode>();
 		buildStackAux(stack,n);
@@ -275,26 +379,30 @@ public class CFGNode {
 	private Integer getMaxDepth(CFGNode node, Simbol s) {
 		if(node == null)
 			return null;
+		node.visited = true;
 		int depth = node.line;
 		for(CFGNode sucessor : node.sucessors) {
-			if(sucessor.line <= node.line)
+			if(/*sucessor.line <= node.line*/ sucessor.visited)
 				continue;
 			if(sucessor.in.indexOf(s) == -1)
 				continue;
 			Integer t = getMaxDepth(sucessor,s);
-			if(t != null && t > depth)
+			/*if(t != null && t > depth)*/
 				depth = t;
 		}
 		return depth;
 	}
 	
-	public void livenessAnalysis() {
+	public void livenessAnalysis(Integer k) throws RegisterAllocationException {
 		
 		List<CFGNode> stack = buildStack(this);
+		// add this in case it is not static
 		if(this.is_static == false)
 			this.addToList(stack.get(0).use,this.def.get(0));
 		boolean completed = true;
-		
+		/*
+		 * Build use and def lists
+		 */
 		do {
 			completed = true;
 			for(CFGNode n : stack) {
@@ -309,35 +417,31 @@ public class CFGNode {
 			}		
 		}while(completed == false);
 		
-		System.out.println("\n\n");
-		this.print();
-		System.out.println("\n\n");
-		
+		/*
+		 * Compute ranges of each variable, from the moment they are defined to the moment they are used, 
+		 * keeping coerence between ranges and registers
+		 */
 		for(int i = stack.size() -1; i >= 0; i--) {
 			CFGNode n = stack.get(i);
 			for(Simbol s : n.out) {
-				if(n.in.indexOf(s) != -1)
-					continue;
-				Integer depth = this.getMaxDepth(n, s);
-				if(depth == null) {
-					System.out.println("Null " + s);
-					continue;
+				for(CFGNode suc : n.sucessors) {
+					if(suc.in.indexOf(s) != -1) {
+						addToRanges(new LiveRange(s,n.line,suc.line));
+				
+					}
 				}
-				/*for(;a>=0 && stack.get(a).in.indexOf(s) != -1;a--) {
-					
-				}
-				//System.out.println(s);
-				*///addToRanges(new LiveRange(s,n.line,stack.get(a+1).line));
-				addToRanges(new LiveRange(s,n.line,depth));
-				System.out.println(s + " " + (n.line) + " -> " + (depth));
+
 			}
 		}
 		
-		for(LiveRange range : this.ranges) {
+		/*for(LiveRange range : this.ranges) {
 			System.out.println(range);
-		}
+		}*/
 		//System.out.println("\n\n\n\n");
 		
+		/*
+		 * Build intergerence graph
+		 */
 		for(int i = 0; i < ranges.size(); i++) {
 			LiveRange n = ranges.get(i);
 			for(int a = i +1;a < ranges.size();a++) {
@@ -347,87 +451,91 @@ public class CFGNode {
 			}
 		}
 		
-		for(LiveRange range : this.ranges) {
+		/*for(LiveRange range : this.ranges) {
 			System.out.println(range);
-		}
-		
-		List<LiveRange> stackRange = new ArrayList<LiveRange>();
-		int k = 10;
-		
-		if(k < this.def.size()){
-			System.out.println("Less registries than arguments");
-			return;
-		}
-		
-		while(stackRange.size() != this.ranges.size()) {
-			int old_size = stackRange.size();
+		}*/
+		if(k != null) {
+			// do not count with register 0, for this
+			k = k+1;
+			List<LiveRange> stackRange = new ArrayList<LiveRange>();
+			/*
+			 * The number of registers needs to be greater or equal to the number of arguments of the functions
+			 */
+			if(k < this.def.size()){
+				throw new RegisterAllocationException("Less registers than arguments");
+			}
 			
-			for(int i = 0; i < this.ranges.size();i++) {
-				LiveRange range = this.ranges.get(i);
-				if(range.on_stack)
-					continue;
-				if(range.degree() < k) {
-					range.on_stack = true;
-					stackRange.add(range);
+			/*
+			 * Stack registers for coloring
+			 */
+			while(stackRange.size() != this.ranges.size()) {
+				int old_size = stackRange.size();
+				
+				for(int i = 0; i < this.ranges.size();i++) {
+					LiveRange range = this.ranges.get(i);
+					if(range.on_stack)
+						continue;
+					if(range.degree() < k) {
+						range.on_stack = true;
+						stackRange.add(range);
+					}
+					
 				}
 				
-			}
-			
-			if(old_size == stackRange.size()) {
-				System.out.println("COULD NOT HAVE SO FEW REGISTERS");
-				return;
-			}
-		}
-		
-		for(int i = stackRange.size() -1; i>=0 ; i--) {
-			LiveRange range = stackRange.get(i);
-			int color = 0;
-			for(; color < k; color++) {
-				if(range.color == null && range.checkColor(color)) {
-					range.color = color;
-					break;
+				if(old_size == stackRange.size()) {
+					throw new RegisterAllocationException("Few registers for interference graph");
 				}
 			}
-			if(color == k){
-				System.out.println("COULD NOT COLOR WITH SO FEW REGISTERS");
-				return;
-			}
-		}
-		
-		for(int a = 0; a < this.out.size();a++) {
-			Simbol outS = this.out.get(a);
-			for(int b = 0; b < this.ranges.size();b++) {
-				LiveRange range = this.ranges.get(b);
-				if(range.s == outS) {
-					int def_p = this.def.indexOf(outS);
-					if(range.color != def_p) {
-						//System.out.println("Tenho que trocar  " + outS + "  " + def_p + " por " + range.color);
-						Integer switch1 = def_p;
-						Integer switch2 = range.color;
-						for(int c = 0; c < this.ranges.size();c++) {
-							LiveRange range_t = this.ranges.get(c);
-							if(range_t.color == switch1)
-								range_t.color = switch2;
-							else if(range_t.color == switch2)
-								range_t.color = switch1;
-						}
+			/*
+			 * Color registers
+			 */
+			for(int i = stackRange.size() -1; i>=0 ; i--) {
+				LiveRange range = stackRange.get(i);
+				int color = 0;
+				for(; color < k; color++) {
+					if(range.color == null && range.checkColor(color)) {
+						range.color = color;
+						break;
 					}
-					break;
+				}
+				if(color == k){
+					throw new RegisterAllocationException("Few registers for allocations");
 				}
 			}
-		}
-		
-		for(LiveRange range : stackRange) {
-			System.out.println(range);
-		}
-		
-		System.out.println("STACK:");
-		for(CFGNode n : stack) {
-			System.out.println(n);
+			/*
+			 * Order registers in correct order, this first and the order the arguments appear
+			 */
+			for(int a = 0; a < this.out.size();a++) {
+				Simbol outS = this.out.get(a);
+				for(int b = 0; b < this.ranges.size();b++) {
+					LiveRange range = this.ranges.get(b);
+					if(range.s == outS) {
+						int def_p = this.def.indexOf(outS);
+						if(range.color != def_p) {
+							//System.out.println("Tenho que trocar  " + outS + "  " + def_p + " por " + range.color);
+							Integer switch1 = def_p;
+							Integer switch2 = range.color;
+							for(int c = 0; c < this.ranges.size();c++) {
+								LiveRange range_t = this.ranges.get(c);
+								if(range_t.color == switch1)
+									range_t.color = switch2;
+								else if(range_t.color == switch2)
+									range_t.color = switch1;
+							}
+						}
+						break;
+					}
+				}
+			}
 			
+			// print for show
+			for(LiveRange range : stackRange) {
+				System.out.println(range);
+			}
+
+			//allocate registers in each statement accordinly to the ranges
+			this.allocRegisters(ranges, stack);
 		}
-		
-		this.allocRegisters(ranges, stack);
 		
 		
 	}
@@ -461,7 +569,7 @@ public class CFGNode {
 					}
 				}
 			}
-			System.out.println("register => " + register);
+			//System.out.println("register => " + register);
 			child.local_var = register;
 		}
 	}
@@ -502,8 +610,11 @@ public class CFGNode {
 		for(LiveRange range : this.ranges) {
 			if(range.s != r.s)
 				continue;
-			if(range.intersect(r))
+			if(range.intersectClose(r)) {
+				if(range.end < r.end)
+					range.end = r.end;
 				return;
+			}
 		}
 		this.ranges.add(r);
 	}
@@ -549,16 +660,27 @@ public class CFGNode {
 		
 		public LiveRange(Simbol simbol, int b, int e) {
 			this.s = simbol;
-			this.begin = b;
-			this.end = e;
+			if(b<e) {
+				this.begin = b;
+				this.end = e;
+			}else {
+				this.begin = e;
+				this.end = b;
+			}
 		}
 		public boolean intersect(LiveRange range) {
 			if(range.begin >= this.begin && range.begin < this.end)
 				return true;
 			return false;
 		}
+		
+		public boolean intersectClose(LiveRange range) {
+			if(range.begin >= this.begin && range.begin <= this.end)
+				return true;
+			return false;
+		}
 		public String toString() {
-			String str = this.s + "\t" + begin + "\t" + end +"\tregister: " + this.color +"    interferences:     ";
+			String str = this.s + "\t\t" + begin + "\t\t" + end +"\t\tregister: " + this.color +"\tinterferences:\t";
 			for(LiveRange r : this.interferences)
 				str+= r.s + ", ";
 			

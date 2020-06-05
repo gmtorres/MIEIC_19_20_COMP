@@ -1,3 +1,5 @@
+import java.util.List;
+import java.util.ArrayList;
 
 public class IRBuilder {
 	
@@ -7,7 +9,8 @@ public class IRBuilder {
 	
 	boolean constant_folding = false;
 	
-	public IRBuilder(SimpleNode sn) {
+	public IRBuilder(SimpleNode sn, Integer registers, List<String> opt) throws RegisterAllocationException 
+	{
 		root = new IRNode(null);
 		root.build(sn);
 		this.simplifyBooleans(root);
@@ -20,8 +23,7 @@ public class IRBuilder {
 		
 		for(int i = 0; i < cfg_methods.length;i++) {
 			cfg_methods[i] = new CFGNode();
-			cfg_methods[i].buildCFG(root.children[0].children[3 + i]);
-			
+			cfg_methods[i].buildCFG(root.children[0].children[3 + i], registers,opt);
 		}
 		
 		this.setPop(root);
@@ -191,7 +193,7 @@ public class IRBuilder {
 			  //this.println("pop");
 			  IRNode n = new IRNode(parent);
 			  n.setInst("pop");
-			  System.out.println("ola");
+			  //System.out.println("ola");
 			  parent.addChild(n, i+1);
 		  }
 	}
