@@ -10,7 +10,7 @@ return
 .end method
 
 .method public static main([Ljava/lang/String;)V
-	.limit stack 2
+	.limit stack 3
 	.limit locals 4
 
 new Hello_T
@@ -26,6 +26,8 @@ pop
 
 aload_0
 bipush 15
+bipush 6
+isub
 invokevirtual Hello_T.prop(I)I
 invokestatic	io.println(I)V
 

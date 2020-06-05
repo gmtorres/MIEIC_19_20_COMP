@@ -25,7 +25,7 @@ class Hello_T {
 		a = 8 + 5;
 		b = a + 2;
 		
-		io.println(mygame.prop(b));
+		io.println(mygame.prop(b-6));
    	}
    	
    	public int prop(int a){

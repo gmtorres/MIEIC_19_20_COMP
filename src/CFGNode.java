@@ -77,8 +77,11 @@ public class CFGNode {
 				doConstantPropagationIf(child,values);
 			}else if(inst.equals("while")) {
 				doConstantPropagationWhile(child,values);
-			}else 
+			}else {
 				substituteConstant(child,values);
+				if(this.constant_folding)
+					this.constant_folding(child);
+			}
 		}
 		//System.out.println(values);
 	}
