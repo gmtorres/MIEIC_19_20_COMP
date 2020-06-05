@@ -1,5 +1,7 @@
 import java.lang.reflect.Array; 
 import java.io.PrintStream;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Jasmin {
 
@@ -26,14 +28,18 @@ public class Jasmin {
 	  
 	  boolean and_in_or = false;
 	  
-	  public Jasmin(IRNode r,PrintStream ps, boolean dg) {
+	  List<String> opt;
+	  
+	  
+	  public Jasmin(IRNode r,PrintStream ps, boolean dg, List<String> opt) {
 		  this.root=r;
 		  this.os = ps;
 		  this.debugMode = dg;
+		  this.opt = opt;
 		  printClass(this.root);
 	  }
 	  public Jasmin(IRNode r,PrintStream ps) {
-		  this(r, ps,false);
+		  this(r, ps,false,new ArrayList<String>());
 	  }
 	  
 	  
@@ -312,11 +318,16 @@ public class Jasmin {
 	  }
 	  
 	  private void printStore(IRNode node) {
+		  IRNode lhn = node.children[0];
+		  Integer local_var = lhn.local_var;
+		  if(this.opt.indexOf("u") != -1) { //remove useless arithmetic code
+			  if(local_var == -1 && node.children[1].getInst().equals("ldc")) { // arithmetic not assigned to a register
+				  return;
+			  }
+		  }
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  IRNode lhn = node.children[0];
-		  Integer local_var = lhn.local_var;
 		  if(local_var == -1)
 			  this.println("pop");
 		  else if(local_var < 4)

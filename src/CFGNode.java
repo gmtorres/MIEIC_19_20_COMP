@@ -364,6 +364,8 @@ public class CFGNode {
 				CFGNode suc = null;
 				if(i < if_node.children.length-1)
 					suc = new CFGNode();
+				else 
+					suc = successor;
 				line = cfgNode.buildIf(irNode,line,suc);
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = null;

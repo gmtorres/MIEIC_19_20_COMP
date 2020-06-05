@@ -10,7 +10,7 @@ return
 .end method
 
 .method public static main([Ljava/lang/String;)V
-	.limit stack 3
+	.limit stack 2
 	.limit locals 4
 
 new Hello_T
@@ -18,16 +18,10 @@ dup
 invokespecial Hello_T/<init>()V
 astore_0
 
-bipush 13
-pop
 
-bipush 15
-pop
 
 aload_0
-bipush 15
-bipush 6
-isub
+bipush 9
 invokevirtual Hello_T.prop(I)I
 invokestatic	io.println(I)V
 
@@ -41,7 +35,7 @@ invokestatic	io.println(I)V
 iload_1
 iconst_1
 iadd
-istore_3
+pop
 
 iconst_1
 istore_2
@@ -53,40 +47,56 @@ if_icmpge else_if1
 iconst_2
 istore_2
 
-iload_3
+loop1:
+iload_1
 iconst_5
-if_icmpge else_if2
+if_icmpge end_loop1
 
+iload_1
+pop
+
+iload_1
 iconst_1
-istore_3
+iadd
+istore_1
 
-goto end_if2
+goto loop1
+end_loop1:
 
-else_if2:
-iconst_2
-istore_3
-
-end_if2:
-
-iload_3
+iload_1
 iconst_2
 iadd
-istore_3
+istore_1
 
 goto end_if1
 
 else_if1:
 iconst_1
-istore_3
+istore_1
 
 end_if1:
 
-iload_3
+iload_1
 iload_2
 iadd
-istore_3
+istore_2
 
-iload_3
+iload_2
+ireturn
+
+.end method
+
+.method public sum2()I
+	.limit stack 1
+	.limit locals 4
+
+
+
+
+
+
+
+bipush 77
 ireturn
 
 .end method

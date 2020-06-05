@@ -258,58 +258,6 @@ class Life {
 
     }
 
-    public int[] getNeighborCoords(int absPos) {
-        int x;
-        int y;
-
-        int upX;
-        int upY;
-        int downX;
-        int downY;
-
-        int[] cart;
-        int[] ret;
-
-        cart = this.cartIdx(absPos);
-        x = cart[0];
-        y = cart[1];
-
-        if (x < xMax) {
-            downX = x + 1;
-            if (this.gt(x,0))
-                upX = x - 1;
-            else
-                upX = xMax;
-        } else {
-            downX = 0;
-            upX = x - 1;
-        }
-
-        if (y < yMax) {
-            downY = y + 1;
-            if (this.gt(y,0))
-                upY = y - 1;
-            else
-                upY = yMax;
-        } else {
-            downY = 0;
-            upY = y - 1;
-        }
-
-        ret = new int[8];
-        // Clockwise from N
-        ret[0] = this.trIdx(x, upY);
-        ret[1] = this.trIdx(upX, upY);
-        ret[2] = this.trIdx(upX, y);
-        ret[3] = this.trIdx(upX, downY);
-        ret[4] = this.trIdx(x, downY);
-        ret[5] = this.trIdx(downX, downY);
-        ret[6] = this.trIdx(downX, y);
-        ret[7] = this.trIdx(downX, upY);
-
-        return ret;
-
-    }
 
     public int getLiveNeighborN(int absPos) {
         int[] neigh;
@@ -367,5 +315,58 @@ class Life {
     public boolean ge(int a, int b) {
 		return !(!this.gt(a, b) && !this.eq(a, b));
 	}
+	
+	    public int[] getNeighborCoords(int absPos) {
+        int x;
+        int y;
+
+        int upX;
+        int upY;
+        int downX;
+        int downY;
+
+        int[] cart;
+        int[] ret;
+
+        cart = this.cartIdx(absPos);
+        x = cart[0];
+        y = cart[1];
+
+        if (x < xMax) {
+            downX = x + 1;
+            if (this.gt(x,0))
+                upX = x - 1;
+            else
+                upX = xMax;
+        } else {
+            downX = 0;
+            upX = x - 1;
+        }
+
+        if (y < yMax) {
+            downY = y + 1;
+            if (this.gt(y,0))
+                upY = y - 1;
+            else
+                upY = yMax;
+        } else {
+            downY = 0;
+            upY = y - 1;
+        }
+
+        ret = new int[8];
+        // Clockwise from N
+        ret[0] = this.trIdx(x, upY);
+        ret[1] = this.trIdx(upX, upY);
+        ret[2] = this.trIdx(upX, y);
+        ret[3] = this.trIdx(upX, downY);
+        ret[4] = this.trIdx(x, downY);
+        ret[5] = this.trIdx(downX, downY);
+        ret[6] = this.trIdx(downX, y);
+        ret[7] = this.trIdx(downX, upY);
+
+        return ret;
+
+    }
 
 }

@@ -36,16 +36,29 @@ class Hello_T {
    		c = 1;
    		if(a<10){
    			c = 2;
-   			if(b < 5)
-   				a = 1;
-   			else
-   				a = c;
+   			while(a < 5){
+   				b = a;
+   				a = a + 1;
+   			}
    			a = a + c; 
    		}else{
    			a = c;
    		}
    		b = a + c;
    		return b;
+   	}
+   	
+   	public int sum2(){
+   		int a;
+   		int b;
+   		int c;
+   		a = 5;
+   		b = 4+a;
+   		c= b * b;
+   		b = c - a;
+   		c = b - a;
+   		a = b + 1;
+   		return a;
    	}
 	
 	/*public int putPiece(int col, int val){

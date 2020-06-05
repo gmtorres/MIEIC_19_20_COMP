@@ -58,7 +58,7 @@ public class IRBuilder {
 				}
 				for(int i = 0; i < node.children.length;i++) {
 					child = node.children[i];
-					this.propagateNot(child,i);
+					propagateNot(child,i);
 				}
 			}else if(child.getInst().equals("||")) { //se for
 				node.setInst("&&");
@@ -68,7 +68,7 @@ public class IRBuilder {
 				}
 				for(int i = 0; i < node.children.length;i++) {
 					child = node.children[i];
-					this.propagateNot(child,i);
+					propagateNot(child,i);
 				}
 			}
 		}
@@ -98,7 +98,7 @@ public class IRBuilder {
 		
 	}
 	
-	private void propagateNot(IRNode node, int i) {
+	public static void propagateNot(IRNode node, int i) {
 		System.out.println(node.getInst() + " " + i);
 		
 		if(node.getInst().equals("&&"))
@@ -134,7 +134,7 @@ public class IRBuilder {
 		
 		for(int a = 0; a < node.children.length;a++) {
 			IRNode child = node.children[a];
-			this.propagateNot(child,a);
+			propagateNot(child,a);
 		}
 	}
 	
