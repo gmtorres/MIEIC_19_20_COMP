@@ -38,7 +38,7 @@ public class IRBuilder {
 		
 		root.setRegisters();
 		
-		//this.optimizeOperations(root);
+		this.optimizeOperations(root);
 		
 	}
 	

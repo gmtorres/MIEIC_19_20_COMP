@@ -22,16 +22,21 @@ class Hello_T {
 		//io.println(mygame.test(5));
 		//io.println(mygame.sum(1,3));
 		a = 0 - 5;
+		b = 0;
 		while(0 > a){
 			io.println(a);
 			a = a + 1;
+			//b = b + 1;
 		}
+		
+		b = b + 1;
 		
 		a = 5;
 		while(a > 0){
 			io.println(a);
 			a = a - 1;
 		}
+		io.println(b);
    	}
    	/*
    	public int prop(int a){

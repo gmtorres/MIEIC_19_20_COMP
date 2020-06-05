@@ -21,6 +21,7 @@ pop
 bipush -5
 istore_0
 
+
 iload_0
 ifgt end_loop1
 begin_loop1:
@@ -28,14 +29,12 @@ begin_loop1:
 iload_0
 invokestatic	io.println(I)V
 
-iload_0
-iconst_1
-iadd
-istore_0
+iinc 0 1
 
 iload_0
 ifle begin_loop1
 end_loop1:
+
 
 iconst_5
 istore_0
@@ -47,14 +46,14 @@ begin_loop2:
 iload_0
 invokestatic	io.println(I)V
 
-iload_0
-iconst_1
-isub
-istore_0
+iinc 0 -1
 
 iload_0
 ifgt begin_loop2
 end_loop2:
+
+iconst_1
+invokestatic	io.println(I)V
 
 	return
 .end method
