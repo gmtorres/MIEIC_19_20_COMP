@@ -27,17 +27,38 @@ class Hello_T {
 	    
 	    player = 0;
 	    mygame = new Hello_T();
-	
-		if(true)
-			player = 1;
-		else
-			player = 0;
-		player = 1;
+
+		while (true ) {
+		  while(false){
+		      move = BoardBase.playerTurn(player);   		
+		      if (!mygame.inbounds(move[0],move[1])) 
+		        BoardBase.wrongMove();
+		      else {
+		        if (!mygame.Move(move[0],move[1]))
+		           BoardBase.placeTaken();
+		        else
+		          done = true;
+		      } 
+		   }	
+		}
    	}
 	
+	public int sum2(int []A, int N){
+		int sum;
+		int i;
+		int t;
+		sum = 0;
+		i = 0;
+		while(i<N){
+			t = A[i];
+			sum = sum + t;
+			i = i + 1;
+		}
+		return sum;
+	}
 	
 	
-	/*
+	
 	public int sum(int a, int b, int c, int d, int e){
 		int v1;
 		int v2;
@@ -59,6 +80,6 @@ class Hello_T {
 		foo = t;
 		return t;
 	}
-	*/
+	
 	
  }

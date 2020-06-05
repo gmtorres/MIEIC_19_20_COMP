@@ -56,7 +56,7 @@ public class Main {
 	        System.out.println("\n--------------*****************-----------------	\n\n");
 	        /*ir.dump();
 	        
-	        System.out.println("\n--------------*****************-----------------	\n");
+	        /*System.out.println("\n--------------*****************-----------------	\n");
 	        
 	        PrintStream file;
 	        try{
