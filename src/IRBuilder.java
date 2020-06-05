@@ -11,7 +11,6 @@ public class IRBuilder {
 		root = new IRNode(null);
 		root.build(sn);
 		this.simplifyBooleans(root);
-		this.setPop(root);
 		
 		if(this.constant_folding) {
 			this.constant_folding(root);
@@ -25,10 +24,11 @@ public class IRBuilder {
 			
 		}
 		
+		this.setPop(root);
 		
 		root.setRegisters();
 		
-		this.optimizeOperations(root);
+		//this.optimizeOperations(root);
 		
 	}
 	

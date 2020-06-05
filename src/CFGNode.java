@@ -37,7 +37,7 @@ public class CFGNode {
 		//this.print();
 		this.livenessAnalysis();
 		System.out.println("\n\n");
-		this.print();
+		//this.print();
 			
 		System.out.println("");
 	}
@@ -70,7 +70,7 @@ public class CFGNode {
 	private void setUse(CFGNode n,IRNode node) {
 		for(IRNode child : node.children)
 			setUse(n,child);
-		if(node.getInst().equals("sta") || node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
+		if((node.getInst().equals("sta")&& node.children[0].local_var != null) || node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
 			n.addToList(n.use,node.children[0].simbol);
 		}
 	}
@@ -106,7 +106,7 @@ public class CFGNode {
 				if(i < method.children.length-1)
 					suc = new CFGNode();
 				line = cfgNode.buildIf(irNode,line,suc);
-				prev.addSucessor(cfgNode);
+				if(prev != null) prev.addSucessor(cfgNode);
 				prev = null;
 				cfgNode = suc;
 			}else {
@@ -138,7 +138,7 @@ public class CFGNode {
 				else
 					suc = this;
 				line = cfgNode.buildIf(irNode,line,suc);
-				prev.addSucessor(cfgNode);
+				if(prev != null) prev.addSucessor(cfgNode);
 				prev = null;
 				cfgNode = suc;
 			}else {
@@ -174,7 +174,7 @@ public class CFGNode {
 				if(i < if_node.children.length-1)
 					suc = new CFGNode();
 				line = cfgNode.buildIf(irNode,line,suc);
-				prev.addSucessor(cfgNode);
+				if(prev != null) prev.addSucessor(cfgNode);
 				prev = null;
 				cfgNode = suc;
 			}else {
@@ -204,7 +204,7 @@ public class CFGNode {
 				else 
 					suc = successor;
 				line = cfgNode.buildIf(irNode,line,suc);
-				prev.addSucessor(cfgNode);
+				if(prev != null) prev.addSucessor(cfgNode);
 				prev = null;
 				cfgNode = suc;
 			}else {
@@ -275,11 +275,11 @@ public class CFGNode {
 	private Integer getMaxDepth(CFGNode node, Simbol s) {
 		if(node == null)
 			return null;
-		if(node.in.indexOf(s) == -1)
-			return null;
 		int depth = node.line;
 		for(CFGNode sucessor : node.sucessors) {
 			if(sucessor.line <= node.line)
+				continue;
+			if(sucessor.in.indexOf(s) == -1)
 				continue;
 			Integer t = getMaxDepth(sucessor,s);
 			if(t != null && t > depth)
@@ -309,25 +309,33 @@ public class CFGNode {
 			}		
 		}while(completed == false);
 		
+		System.out.println("\n\n");
+		this.print();
+		System.out.println("\n\n");
+		
 		for(int i = stack.size() -1; i >= 0; i--) {
 			CFGNode n = stack.get(i);
 			for(Simbol s : n.out) {
-				Integer depth = this.getMaxDepth(n, s);
-				if(depth == null)
+				if(n.in.indexOf(s) != -1)
 					continue;
+				Integer depth = this.getMaxDepth(n, s);
+				if(depth == null) {
+					System.out.println("Null " + s);
+					continue;
+				}
 				/*for(;a>=0 && stack.get(a).in.indexOf(s) != -1;a--) {
 					
 				}
 				//System.out.println(s);
 				*///addToRanges(new LiveRange(s,n.line,stack.get(a+1).line));
-				addToRanges(new LiveRange(s,n.line-1,depth));
-				System.out.println(s + " " + (n.line-1) + " " + depth);
+				addToRanges(new LiveRange(s,n.line,depth));
+				System.out.println(s + " " + (n.line) + " -> " + (depth));
 			}
 		}
 		
-		/*for(LiveRange range : this.ranges) {
+		for(LiveRange range : this.ranges) {
 			System.out.println(range);
-		}*/
+		}
 		//System.out.println("\n\n\n\n");
 		
 		for(int i = 0; i < ranges.size(); i++) {
@@ -431,7 +439,7 @@ public class CFGNode {
 			Integer line = node.line;
 			IRNode irNode = node.correspondent;
 			String inst = irNode.getInst();
-			if(inst.equals("st") || inst.equals("sta"))
+			if(inst.equals("st") || (inst.equals("sta") && irNode.children[0].local_var != null))
 				irNode.children[0].local_var = -1;
 			allocRegisters_Aux(ranges,irNode,line);
 				
@@ -441,7 +449,7 @@ public class CFGNode {
 	private void allocRegisters_Aux(List<LiveRange> ranges, IRNode node, int line) {
 		for(IRNode child : node.children)
 			allocRegisters_Aux(ranges,child,line);
-		if(node.getInst().equals("st") || node.getInst().equals("sta") || node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
+		if(node.getInst().equals("st") || (node.getInst().equals("sta") && node.children[0].local_var != null) || node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
 			int register = -1;
 			IRNode child = node.children[0];
 			for(int i = 0; i < ranges.size();i++) {

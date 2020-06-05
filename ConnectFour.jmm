@@ -121,7 +121,7 @@ class ConnectFour {
 				found = true;
 			}else{}
 		}
-	
+		io.println(x);
 		return x;
 	}
 	

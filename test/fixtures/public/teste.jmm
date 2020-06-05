@@ -9,56 +9,42 @@ import static BoardBase.placeTaken();
 class Hello_T {	
 
 	int foo;
-	
-	public boolean inbounds(int row, int column) {
-    	return true;
-   	}
-	public boolean Move(int row, int column) {
-    	return true;
-  	}
 
 	public static void main(String[] args){ 	
-		// Create the TicTacToe object.
+	
 	    Hello_T mygame;
-	    int win;
-	    boolean done;
-	    int[] move;
-	    int player;
 	    
 	    mygame = new Hello_T();
-	    /*
-	    player = 0;
 
-		while (true ) {
-		  while(false){
-		      move = BoardBase.playerTurn(player);   		
-		      if (!mygame.inbounds(move[0],move[1])) 
-		        BoardBase.wrongMove();
-		      else {
-		        if (!mygame.Move(move[0],move[1]))
-		           BoardBase.placeTaken();
-		        else
-		          done = true;
-		      } 
-		   }	
-		}*/
-		io.println(e.sum(1,1,1,1,1));
+		io.println(mygame.sum(1,1,1,1,1));
+		io.println(mygame.test(5));
    	}
 	
-	public int sum2(int []A, int N){
-		int sum;
+	public int test(int b){
+		int [] arr;
 		int i;
-		int t;
-		sum = 0;
+		arr = new int[b];
 		i = 0;
-		while(i<N){
-			t = A[i];
-			sum = sum + t;
+		while(i < b){
+			arr[i] = i * i;
 			i = i + 1;
 		}
-		return sum;
+		return arr[i-1];
 	}
 	
+	public int res(){
+		int a;
+		int b;
+		int c;
+		int d;
+		int e;
+		a = 0;
+		b = a;
+		c = b;
+		d = c;
+		e = d;
+		return e;
+	}
 	
 	
 	public int sum(int a, int b, int c, int d, int e){
@@ -66,6 +52,7 @@ class Hello_T {
 		int v2;
 		int v3;
 		int v4;
+		
 		v1 = a + b;
 		this.set(d);
 		c = v1 + d;

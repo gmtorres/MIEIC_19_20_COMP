@@ -194,6 +194,9 @@ class TicTacToe {
              BoardBase.placeTaken();
           else
             done = true;
+        if(done)
+        	io.println(10000);
+        else io.println(0);
        } 
       }
 	
