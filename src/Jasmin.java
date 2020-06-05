@@ -543,7 +543,7 @@ public class Jasmin {
 		  
 		  String loop = "loop"+ ++this.loop_count;
 		  
-		  this.println(loop + ":");
+		  //this.println(loop + ":");
 		  
 		  IRNode condition = node.children[0];
 		  this.current_loop = loop;
@@ -554,13 +554,21 @@ public class Jasmin {
 		  printJasmin(condition);
 		  this.in_while_condition = false;
 		  
+		  this.println("begin_" + loop + ":");
+		  
 		  //this.println("if_icmpge end_" + loop);
 		  this.println("");
 		  for(int i = 1; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 			  this.println("");
 		  }
-		  this.println("goto " + loop);
+		  //this.println("goto " + loop);
+		  IRBuilder.propagateNot(condition, 0);
+		  condition = node.children[0];
+		  this.fail_tag = "begin_" + loop;
+		  this.in_while_condition = true;
+		  printJasmin(condition);
+		  this.in_while_condition = false;
 		  this.println("end_"+ loop + ":");
 	  }
 	  private void printIf(IRNode node) {
