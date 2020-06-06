@@ -502,13 +502,13 @@ public class Jasmin {
 			  if(zero != 0) {
 				  if(zero == 1) {
 					  if(op.equals("if_icmplt ")) {
-						  op = "ifge ";
+						  op = "ifgt ";
 					  }else if(op.equals("if_icmpge ")) {
 						  op = "ifle ";
 					  }
 				  }else if(zero == 2) {
 					  if(op.equals("if_icmplt ")) {
-						  op = "ifle ";
+						  op = "iflt ";
 					  }else if(op.equals("if_icmpge ")) {
 						  op = "ifge ";
 					  }
@@ -574,13 +574,13 @@ public class Jasmin {
 					  if(op.equals("if_icmple ")) {
 						  op = "ifge ";
 					  }else if(op.equals("if_icmpgt ")) {
-						  op = "ifle ";
+						  op = "iflt ";
 					  }
 				  }else if(zero == 2) {
 					  if(op.equals("if_icmple ")) {
 						  op = "ifle ";
 					  }else if(op.equals("if_icmpgt ")) {
-						  op = "ifge ";
+						  op = "ifgt ";
 					  }
 				  }
 			  }

@@ -8,7 +8,7 @@ import org.junit.Test;
 public class JasminTest {
 	
 
-	/*@Test
+	@Test
     public void testFindMaximum() {
 		JasminUtils.testJmm("fixtures/public/FindMaximum.jmm", "Result: 28");
     }
@@ -18,10 +18,10 @@ public class JasminTest {
 		JasminUtils.testJmm("fixtures/public/HelloWorld.jmm", "Hello, World!");
     }
 
-	@Test
+	/*@Test
     public void testMonteCarloPi() {
 		JasminUtils.testJmm("fixtures/public/MonteCarloPi.jmm", "Insert number: Result: 0", "-1\n");
-    }
+    }*/
 
 	@Test
     public void testQuickSort() {
@@ -42,7 +42,7 @@ public class JasminTest {
 	@Test
     public void testWhileAndIF() {
 		JasminUtils.testJmm("fixtures/public/WhileAndIF.jmm", JasminUtils.getResource("fixtures/public/WhileAndIF.txt"));
-    }*/
+    }
 
 
 }

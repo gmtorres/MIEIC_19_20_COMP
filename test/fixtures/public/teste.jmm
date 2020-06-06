@@ -15,7 +15,19 @@ class Hello_T {
 		int a;
 		int i;
 		a = 0;
-		if(a < 0)
+		if(a > 0)
+			io.println(1);
+		else
+			io.println(0);
+		if(0 > a)
+			io.println(1);
+		else
+			io.println(0);
+		if(!(a > 0))
+			io.println(1);
+		else
+			io.println(0);
+		if(!(0 > a))
 			io.println(1);
 		else
 			io.println(0);

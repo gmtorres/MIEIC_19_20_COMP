@@ -61,9 +61,11 @@ class TicTacToe {
 
   public boolean Move(int row, int column) {
     boolean mov;
+
+
     if(!(row < 0) && !(0 < row) ){
         mov = this.MoveRow(row0,column);
-        
+
     }else if (!(row < 1) && !(1 < row)){
         mov = this.MoveRow(row1,column);
         
@@ -194,9 +196,7 @@ class TicTacToe {
              BoardBase.placeTaken();
           else
             done = true;
-        if(done)
-        	io.println(10000);
-        else io.println(0);
+
        } 
       }
 	
