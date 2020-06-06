@@ -12,48 +12,28 @@ class Hello_T {
 	int foo;
 
 	public static void main(String[] args){ 	
-		int a;
-		int i;
-		a = 0;
-		if(a > 0)
-			io.println(1);
-		else
-			io.println(0);
-		if(0 > a)
-			io.println(1);
-		else
-			io.println(0);
-		if(!(a > 0))
-			io.println(1);
-		else
-			io.println(0);
-		if(!(0 > a))
-			io.println(1);
-		else
-			io.println(0);
+		io.println(new Hello_T().prop(0-50));
    	}
    	
    	public int prop(int a){
    		int b;
    		int c;
-   		 		
-   		b = a + 1;
-   		c = 1;
-   		if(a<10){
-   			c = 2;
-   			while(a < 5){
-   				b = a;
-   				a = a + 1;
-   			}
-   			a = a + c; 
+   		
+   		b = 4;
+   		c = 3 + b;
+   		
+   		if(c < 5){
+   			b = a + 5;
    		}else{
-   			a = c;
+   			b = a - 5;
+   			b = b + 1;
    		}
-   		b = a + c;
-   		return b;
+   		c = c + 3;
+   		return b + c;
+   		
    	}
    	
-   	public int sum2(){
+   	/*public int sum2(){
    		int a;
    		int b;
    		int c;
@@ -64,7 +44,7 @@ class Hello_T {
    		c = b - a;
    		a = b + 1;
    		return a;
-   	}
+   	}*/
 	
 	/*public int putPiece(int col, int val){
 	

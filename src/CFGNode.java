@@ -3,6 +3,8 @@ import java.util.ArrayList;
 
 public class CFGNode {
 	
+	static Integer line_count = 0;
+	
 	CFGNode[] sucessors = new CFGNode[0];
 	
 	IRNode correspondent = null;
@@ -105,6 +107,9 @@ public class CFGNode {
 					String value = child.children[1].children[0].getInst();
 					s.value = Integer.parseInt(value);
 					addToValues(values,s);
+				}else {
+					Simbol s = child.children[0].simbol;
+					this.removeFromValues(values, s);
 				}
 			}else if(inst.equals("if")) {
 				doConstantPropagation(child.children[0],values);
@@ -290,11 +295,14 @@ public class CFGNode {
 			this.addToList(this.def, arg.simbol);
 		}
 		this.buildBase(method.children[4]);
-		this.setUseDef(this.sucessors[0]);
-
+		
 		System.out.println("");
 		System.out.println(method.children[1].children[1].getInst());
-		this.livenessAnalysis(registers);
+		
+		if(this.sucessors.length > 0) {
+			this.setUseDef(this.sucessors[0]);
+			this.livenessAnalysis(registers);
+		}
 		System.out.println("\n");
 		this.print();
 	}
@@ -349,12 +357,12 @@ public class CFGNode {
 	private void buildBase(IRNode method) {
 		CFGNode prev = this;
 		CFGNode cfgNode = new CFGNode();
-		int line = 0;
+		line_count = 0;
 		for(int i = 0; i < method.children.length;i++) {
 			IRNode irNode = method.children[i];
 			String inst = irNode.getInst();
 			if(inst.equals("while")) {
-				line = cfgNode.buildWhile(irNode,line);
+				cfgNode.buildWhile(irNode);
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = cfgNode;
 				cfgNode = new CFGNode();
@@ -362,29 +370,67 @@ public class CFGNode {
 				CFGNode suc = null;
 				if(i < method.children.length-1)
 					suc = new CFGNode();
-				line = cfgNode.buildIf(irNode,line,suc);
+				cfgNode.buildIf(irNode,suc);
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = null;
 				cfgNode = suc;
+			}else if(inst.equals("statements")) {
+				System.out.println(prev.line);
+				prev = prev.buildStatement(irNode,prev);
+				System.out.println(prev.line);
+				cfgNode = new CFGNode();
 			}else {
 				cfgNode.correspondent = irNode;
-				cfgNode.line = line++;
+				cfgNode.line = line_count++;
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = cfgNode;
 				cfgNode = new CFGNode();
 			}
 		}
 	}
-	private int buildWhile(IRNode loop, int line) {
+	
+	private CFGNode buildStatement(IRNode statements,CFGNode prev) {
+		CFGNode cfgNode = new CFGNode();
+		for(int i = 0; i < statements.children.length;i++) {
+			IRNode irNode = statements.children[i];
+			String inst = irNode.getInst();
+			if(inst.equals("while")) {
+				cfgNode.buildWhile(irNode);
+				if(prev != null) prev.addSucessor(cfgNode);
+				prev = cfgNode;
+				cfgNode = new CFGNode();
+			}else if(inst.equals("if")) {
+				CFGNode suc = null;
+				if(i < statements.children.length-1)
+					suc = new CFGNode();
+				cfgNode.buildIf(irNode,suc);
+				if(prev != null) prev.addSucessor(cfgNode);
+				prev = null;
+				cfgNode = suc;
+			}else if(inst.equals("statements")) {
+				prev = prev.buildStatement(irNode,prev);
+				cfgNode = new CFGNode();
+			}else {
+				cfgNode.correspondent = irNode;
+				cfgNode.line = line_count++;
+				if(prev != null) prev.addSucessor(cfgNode);
+				prev = cfgNode;
+				cfgNode = new CFGNode();
+			}
+		}
+		return prev;
+	}
+	
+	private void buildWhile(IRNode loop) {
 		this.correspondent = loop.children[0];
-		this.line = line++;
+		this.line = line_count++;
 		CFGNode prev = this;
 		CFGNode cfgNode = new CFGNode();
 		for(int i = 1; i < loop.children.length;i++) {
 			IRNode irNode = loop.children[i];
 			String inst = irNode.getInst();
 			if(inst.equals("while")) {
-				line = cfgNode.buildWhile(irNode,line);
+				cfgNode.buildWhile(irNode);
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = cfgNode;
 				cfgNode = new CFGNode();
@@ -394,25 +440,27 @@ public class CFGNode {
 					suc = new CFGNode();
 				else
 					suc = this;
-				line = cfgNode.buildIf(irNode,line,suc);
+				cfgNode.buildIf(irNode,suc);
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = null;
 				cfgNode = suc;
+			}else if(inst.equals("statements")) {
+				prev = prev.buildStatement(irNode,prev);
+				cfgNode = new CFGNode();
 			}else {
 				cfgNode.correspondent = irNode;
-				cfgNode.line = line++;
+				cfgNode.line = line_count++;
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = cfgNode;
 				cfgNode = new CFGNode();
 			}
 		}
 		if(prev != null)	prev.addSucessor(this);
-		return line;
 	}
 	
-	private int buildIf(IRNode branch, int line,CFGNode successor) {
+	private void buildIf(IRNode branch,CFGNode successor) {
 		this.correspondent = branch.children[0];
-		this.line = line++;
+		this.line = line_count++;
 		IRNode if_node = branch.children[1];
 		IRNode else_node = branch.children[2];
 		
@@ -422,7 +470,7 @@ public class CFGNode {
 			IRNode irNode = if_node.children[i];
 			String inst = irNode.getInst();
 			if(inst.equals("while")) {
-				line = cfgNode.buildWhile(irNode,line);
+				cfgNode.buildWhile(irNode);
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = cfgNode;
 				cfgNode = new CFGNode();
@@ -432,13 +480,16 @@ public class CFGNode {
 					suc = new CFGNode();
 				else 
 					suc = successor;
-				line = cfgNode.buildIf(irNode,line,suc);
+				cfgNode.buildIf(irNode,suc);
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = null;
 				cfgNode = suc;
+			}else if(inst.equals("statements")) {
+				prev = prev.buildStatement(irNode,prev);
+				cfgNode = new CFGNode();
 			}else {
 				cfgNode.correspondent = irNode;
-				cfgNode.line = line++;
+				cfgNode.line = line_count++;
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = cfgNode;
 				cfgNode = new CFGNode();
@@ -452,7 +503,7 @@ public class CFGNode {
 			IRNode irNode = else_node.children[i];
 			String inst = irNode.getInst();
 			if(inst.equals("while")) {
-				line = cfgNode.buildWhile(irNode,line);
+				cfgNode.buildWhile(irNode);
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = cfgNode;
 				cfgNode = new CFGNode();
@@ -462,13 +513,16 @@ public class CFGNode {
 					suc = new CFGNode();
 				else 
 					suc = successor;
-				line = cfgNode.buildIf(irNode,line,suc);
+				cfgNode.buildIf(irNode,suc);
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = null;
 				cfgNode = suc;
+			}else if(inst.equals("statement")) {
+				prev = prev.buildStatement(irNode,prev);
+				cfgNode = new CFGNode();
 			}else {
 				cfgNode.correspondent = irNode;
-				cfgNode.line = line++;
+				cfgNode.line = line_count++;
 				if(prev != null) prev.addSucessor(cfgNode);
 				prev = cfgNode;
 				cfgNode = new CFGNode();
@@ -476,7 +530,6 @@ public class CFGNode {
 		}		
 		if(successor != null && prev != null)	prev.addSucessor(successor);
 		
-		return line;
 	}
 	
 	public void print() {
