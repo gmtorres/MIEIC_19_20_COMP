@@ -507,6 +507,13 @@ public class IRNode {
 		this.addChild(child);
 		this.type = "int";
 	}
+	public void buildFloatLiteral(SimpleNode sn) {
+		this.setInst("ldc");
+		IRNode child = new IRNode(this);
+		child.setInst(String.valueOf(sn.valF));
+		this.addChild(child);
+		this.type = "float";
+	}
 	public void buildBool(SimpleNode sn) {
 		this.setInst("ldc");
 		IRNode child = new IRNode(this);
@@ -863,6 +870,9 @@ public class IRNode {
 			break;
 		case "INTEGERLITERAL":
 			buildIntegerLiteral(sn);
+			break;
+		case "FLOATLITERAL":
+			buildFloatLiteral(sn);
 			break;
 		case "IDENTIFIER":
 			buildIdentifier(sn);

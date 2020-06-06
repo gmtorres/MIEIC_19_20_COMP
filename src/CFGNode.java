@@ -37,7 +37,9 @@ public class CFGNode {
 		if(registers != null)
 			this.registerOptimization(method, registers);
 		//System.out.println("");
-		
+		if(opt.indexOf("cf") != -1) {
+			this.constant_folding(method);
+		}
 	}
 	
 	private void constantPropagation(IRNode method) {
@@ -96,6 +98,8 @@ public class CFGNode {
 	private void doConstantPropagationIf(IRNode branch, List<Simbol> values) {
 		List<Simbol> def = this.getAllDefs(branch);
 		doConstantPropagation(branch.children[0],values);
+		if(this.constant_folding)
+			this.constant_folding(branch.children[0]);
 		List<Simbol> temp_values = new ArrayList<Simbol>(values);
 		List<Integer> prev_values = new ArrayList<Integer>();
 		for(Simbol s : temp_values)

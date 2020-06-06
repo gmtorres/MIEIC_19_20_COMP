@@ -67,6 +67,7 @@ TOKEN:{
     | <EXTENDS : "extends">
     | <VOID : "void">
     | <STRING : "String">
+    | <FLOAT : "float">
 
     | <CURLY_BRACE_OPEN : "{">
     | <CURLY_BRACE_CLOSE : "}">
@@ -97,6 +98,7 @@ TOKEN:{
 	
     | <IDENTIFIER: ["A"-"Z" , "a"-"z", "_", "$"] (["0"-"9" ,"A"-"Z" , "a"-"z" , "_", "$"])*>
     | <INTEGERLITERAL: (["0"-"9"])+ >
+    | <FLOATLITERAL : (["0"-"9"])*"."(["0"-"9"])*>
     | <TEXTO : "\"" (["0"-"9" ,"A"-"Z" , "a"-"z" , "_", "$" , " "])* "\"">
 }
 
@@ -174,6 +176,7 @@ String Type() #void: {Token t1; String s1 = "";} {
     | t1 = <IDENTIFIER> {  return t1.image; }
     | t1 = <VOID> {  return t1.image; } 
     | t1 = <STRING> {  return t1.image; } 
+    | t1 = <FLOAT> {  return t1.image; } 
 }
 
 void Statement() #void: {Token t1;} {
@@ -288,6 +291,7 @@ void MulDivAritm() #void : {Token t1;} {
 void ExpTerminal() #void : {Token t1;} {
 	( t1 = <IDENTIFIER> {  jjtThis.name = t1.image; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; }  #IDENTIFIER
     | t1 = <INTEGERLITERAL> {  jjtThis.val = Integer.parseInt(t1.image); jjtThis.type = "int"; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; }  #INTEGERLITERAL 
+    | t1 = <FLOATLITERAL> {  jjtThis.valF = Float.parseFloat(t1.image); jjtThis.type = "float"; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; }  #FLOATLITERAL 
     | t1 = <TRUE> {  jjtThis.val = 1; jjtThis.type = "boolean"; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #BOOL
     | t1 = <FALSE> {  jjtThis.val = 0; jjtThis.type = "boolean"; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #BOOL
     | t1 =  <THIS> {  jjtThis.name = t1.image; ; jjtThis.lineNo = t1.beginLine; jjtThis.columnNo = t1.beginColumn; } #THIS

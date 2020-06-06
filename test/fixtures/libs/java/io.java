@@ -71,6 +71,10 @@ public class io {
     final static void print(int a) {
 		System.out.print(a);
 	}
+    
+    final static void print(float a) {
+		System.out.print(a);
+	}
 
 	final static void print(String a) {
 		System.out.print(a);
@@ -85,6 +89,10 @@ public class io {
 	}
 
     final static void println(int a) {
+		System.out.println(a);
+	}
+    
+    final static void println(float a) {
 		System.out.println(a);
 	}
 

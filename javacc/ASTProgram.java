@@ -25,6 +25,7 @@ class ASTProgram extends SimpleNode {
     this.descriptors = new DescriptorTable();
     
     this.descriptors.addDescriptor("int",this.simbolTable);
+    this.descriptors.addDescriptor("float",this.simbolTable);
     this.descriptors.addDescriptor("boolean",this.simbolTable);
     this.descriptors.addDescriptor("String",this.simbolTable);
     this.descriptors.addDescriptor("int[]",this.simbolTable,this.descriptors.getDescriptor("int"));

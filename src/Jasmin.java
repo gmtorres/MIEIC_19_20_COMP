@@ -49,6 +49,8 @@ public class Jasmin {
 		        return "V";
 		    case "int":
 		        return "I";  
+		    case "float":
+		    	return "F";
 		    case "boolean":
 		    	return "Z";	      
 		    case "int[]":
@@ -68,6 +70,8 @@ public class Jasmin {
 		    	//return "b";
 		    case "int":
 		        return "i";
+		    case "float":
+		    	return "f";
 		    case "int[]":
 		        return "a";
 		    default:
@@ -218,15 +222,20 @@ public class Jasmin {
 	  private void printLoad(IRNode node) {
 		  String prefix = "";
 		  if(node.getInst().equals("ldc")) {
-			  Integer value = Integer.parseInt(node.children[0].getInst());
-			  if(value>= 0 && value <= 5)
-				  this.println("iconst_"+value);
-			  else if(value>= -127 && value <= 127)
-				  this.println("bipush " + value);
-			  else if(value>= -32767 && value <= 32767)
-				  this.println("sipush " + value);
-			  else
-				  this.println("ldc " + value);
+			  if(node.getIRType().equals("int")) {
+				  Integer value = Integer.parseInt(node.children[0].getInst());
+				  if(value>= 0 && value <= 5)
+					  this.println("iconst_"+value);
+				  else if(value>= -127 && value <= 127)
+					  this.println("bipush " + value);
+				  else if(value>= -32767 && value <= 32767)
+					  this.println("sipush " + value);
+				  else
+					  this.println("ldc " + value);
+			  }else if(node.getIRType().equals("float")) {
+				  Float value = Float.parseFloat(node.children[0].getInst());
+				  this.println("ldc " + value + "f");
+			  }
 		  }else if(node.getInst().equals("ldl") || node.getInst().equals("ldp")) {
 			  Integer local_var = node.children[0].local_var;
 			  if(local_var < 4)
@@ -472,8 +481,6 @@ public class Jasmin {
 			  String tag = null;
 			  
 			  boolean last = node.isLast();
-			  //System.out.println(node.getInst() +"   F: "+ this.fail_tag + "  S: " + this.sucess_tag);
-			  //System.out.println("or:" + this.in_or + "   and_in_or:" + this.and_in_or + " last:" + last);
 			  if(this.in_or == true) {
 				  if(!last)
 					  tag = this.sucess_tag;
@@ -621,32 +628,51 @@ public class Jasmin {
 		  this.println("end_"+ loop + ":");
 	  }
 	  private void printIf(IRNode node) {
-		  
+		  Boolean branch = null;
 		  String c_if = "if"+ ++this.if_count;
 		  
 		  IRNode condition = node.children[0];
-		  this.current_if = c_if;
 		  
-		  this.fail_tag = "else_" + c_if;
-		  
-		  this.in_if_condition = true;
-		  printJasmin(condition);
-		  this.in_if_condition = false;
-		  
-		  //this.println("if_icmpge end_" + loop);
-		  this.println("");
-		  for(int i = 0; i < node.children[1].getChildren().length; i++) {
-			  printJasmin(node.children[1].getChildren()[i]);
-			  this.println("");
+		  if(this.opt.indexOf("b") != -1 && condition.getInst().equals("ldc")) {
+			  if(condition.children[0].getInst().equals("0"))
+				  branch = false;
+			  else if(condition.children[0].getInst().equals("1"))
+				  branch = true;
 		  }
-		  this.println("goto end_" + c_if );
-		  this.println("");
-		  this.println("else_"+c_if + ":");
-		  for(int i = 0; i < node.children[2].getChildren().length; i++) {
-			  printJasmin(node.children[2].getChildren()[i]);
+		  if(branch == null) {
+			  this.current_if = c_if;
+			  
+			  this.fail_tag = "else_" + c_if;
+			  
+			  this.in_if_condition = true;
+			  printJasmin(condition);
+			  this.in_if_condition = false;
+			  
+			  //this.println("if_icmpge end_" + loop);
 			  this.println("");
+			  for(int i = 0; i < node.children[1].getChildren().length; i++) {
+				  printJasmin(node.children[1].getChildren()[i]);
+				  this.println("");
+			  }
+			  this.println("goto end_" + c_if );
+			  this.println("");
+			  this.println("else_"+c_if + ":");
+			  for(int i = 0; i < node.children[2].getChildren().length; i++) {
+				  printJasmin(node.children[2].getChildren()[i]);
+				  this.println("");
+			  }
+			  this.println("end_"+ c_if + ":");
+		  }else if(branch) {
+			  for(int i = 0; i < node.children[1].getChildren().length; i++) {
+				  printJasmin(node.children[1].getChildren()[i]);
+				  this.println("");
+			  }
+		  }else {
+			  for(int i = 0; i < node.children[2].getChildren().length; i++) {
+				  printJasmin(node.children[2].getChildren()[i]);
+				  this.println("");
+			  }
 		  }
-		  this.println("end_"+ c_if + ":");
 	  }
 	  
 	  private void printboolExpression(IRNode node) { //similar to if, called directly
