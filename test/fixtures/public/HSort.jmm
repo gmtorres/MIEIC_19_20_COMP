@@ -72,7 +72,49 @@ class HSort
 		return true;
 	}
 	
-	public boolean heapSort(int[] a){
+	
+
+    public static void main(String[] args) 
+    {
+        int n;
+        int res;
+        int i;
+        int[] a;
+        HSort h;
+        h = new HSort();
+        n = ioPlus.requestNumber();
+        a = new int[n];
+        io.print("Enter elements ");
+
+        for( i=0; i < n; i=i+1){
+        	a[i] =  ioPlus.requestNumber();
+        }
+        io.print("elements in array ");
+        h.printarray(a);
+        h.heapSort(a);
+        io.print("elements after sorting");
+        h.printarray(a);
+
+    }
+    
+    public boolean equals(int a, int b) {
+		return (!this.lt(a, b) && !this.lt(b, a));
+	}
+    
+ 
+	public boolean lt(int a, int b) {
+		return (a < b);
+    }
+    
+	public boolean le(int a, int b) {
+		return !(!this.lt(a, b) && !this.equals(a, b));
+    }
+    
+    public boolean gt(int a, int b) {
+		return (a > b);
+    }
+    
+    public boolean heapSort(int[] a){
     int size;
     int i;
     int t;
@@ -129,45 +171,5 @@ class HSort
     }
     return true;
 }
-
-    public static void main(String[] args) 
-    {
-        int n;
-        int res;
-        int i;
-        int[] a;
-        HSort h;
-        h = new HSort();
-        n = ioPlus.requestNumber();
-        a = new int[n];
-        io.print("Enter elements ");
-
-        for( i=0; i < n; i=i+1){
-        	a[i] =  ioPlus.requestNumber();
-        }
-        io.print("elements in array ");
-        h.printarray(a);
-        h.heapSort(a);
-        io.print("elements after sorting");
-        h.printarray(a);
-
-    }
-    
-    public boolean equals(int a, int b) {
-		return (!this.lt(a, b) && !this.lt(b, a));
-	}
-    
- 
-	public boolean lt(int a, int b) {
-		return (a < b);
-    }
-    
-	public boolean le(int a, int b) {
-		return !(!this.lt(a, b) && !this.equals(a, b));
-    }
-    
-    public boolean gt(int a, int b) {
-		return (a > b);
-    }
  
 }

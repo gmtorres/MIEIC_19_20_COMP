@@ -15,12 +15,10 @@ class Hello_T {
 		int a;
 		int i;
 		a = 0;
-		while(a < 20){
-			//io.println(a);
-			a = a + 1;
-			io.println(a);
-		}
-		io.println(a);
+		if(a < 0)
+			io.println(1);
+		else
+			io.println(0);
    	}
    	
    	public int prop(int a){

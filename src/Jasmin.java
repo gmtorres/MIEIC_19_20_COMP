@@ -504,11 +504,11 @@ public class Jasmin {
 					  if(op.equals("if_icmplt ")) {
 						  op = "ifge ";
 					  }else if(op.equals("if_icmpge ")) {
-						  op = "iflt ";
+						  op = "ifle ";
 					  }
 				  }else if(zero == 2) {
 					  if(op.equals("if_icmplt ")) {
-						  op = "iflt ";
+						  op = "ifle ";
 					  }else if(op.equals("if_icmpge ")) {
 						  op = "ifge ";
 					  }
@@ -572,7 +572,7 @@ public class Jasmin {
 			  if(zero != 0) {
 				  if(zero == 1) {
 					  if(op.equals("if_icmple ")) {
-						  op = "ifgt ";
+						  op = "ifge ";
 					  }else if(op.equals("if_icmpgt ")) {
 						  op = "ifle ";
 					  }
@@ -580,7 +580,7 @@ public class Jasmin {
 					  if(op.equals("if_icmple ")) {
 						  op = "ifle ";
 					  }else if(op.equals("if_icmpgt ")) {
-						  op = "ifgt ";
+						  op = "ifge ";
 					  }
 				  }
 			  }
