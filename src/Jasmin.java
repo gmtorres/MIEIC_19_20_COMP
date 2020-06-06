@@ -167,9 +167,17 @@ public class Jasmin {
 		  	case "pop":
 		  		printPop(r);
 		  		break;
+		  	case "statements":
+		  		printStatements(r);
+		  		break;
 		  }	
 		  
 		 
+	  }
+	  
+	  private void printStatements(IRNode node) {
+		  for(IRNode child : node.children)
+			  this.printJasmin(child);
 	  }
 	  
 	  private void printNewObject(IRNode node) {

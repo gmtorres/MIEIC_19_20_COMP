@@ -43,9 +43,9 @@ public class Main {
 		if(fileName == null)
 			return;
 
-		System.out.println(fileName);
+		/*System.out.println(fileName);
 		System.out.println(opt);
-		System.out.println(registers);
+		System.out.println(registers);*/
         //System.out.println("TESTE:");
         InputStream initialStream = null;
         try {
