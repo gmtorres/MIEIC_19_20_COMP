@@ -28,18 +28,21 @@ public class Jasmin {
 	  
 	  boolean and_in_or = false;
 	  
+	  Integer unrolling = null;
+	  
 	  List<String> opt;
 	  
 	  
-	  public Jasmin(IRNode r,PrintStream ps, boolean dg, List<String> opt) {
+	  public Jasmin(IRNode r,PrintStream ps, boolean dg, List<String> opt, Integer unrolling) {
 		  this.root=r;
 		  this.os = ps;
 		  this.debugMode = dg;
 		  this.opt = opt;
+		  this.unrolling = unrolling;
 		  printClass(this.root);
 	  }
 	  public Jasmin(IRNode r,PrintStream ps) {
-		  this(r, ps,false,new ArrayList<String>());
+		  this(r, ps,false,new ArrayList<String>(), null);
 	  }
 	  
 	  
@@ -658,7 +661,8 @@ public class Jasmin {
 		  
 		  String loop = "loop"+ ++this.loop_count;
 		  
-		  //this.println(loop + ":");
+		  if(this.opt.indexOf("o") == -1)
+			  this.println(loop + ":");
 		  
 		  IRNode condition = node.children[0];
 		  this.current_loop = loop;
@@ -671,20 +675,47 @@ public class Jasmin {
 		  
 		  this.println("begin_" + loop + ":");
 		  
+		  
+		  
 		  //this.println("if_icmpge end_" + loop);
 		  this.println("");
-		  for(int i = 1; i < node.getChildren().length; i++) {
-			  printJasmin(node.getChildren()[i]);
-			  this.println("");
+		  if(this.unrolling == null) {
+			  for(int i = 1; i < node.getChildren().length; i++) {
+				  printJasmin(node.getChildren()[i]);
+				  this.println("");
+			  }
+		  }else { //unroll loop
+			  for(int i = 1; i < node.getChildren().length; i++) {
+				  printJasmin(node.getChildren()[i]);
+				  this.println("");
+			  }
+			  
+			  for(int a = 0; a < this.unrolling - 1; a++) {
+				  String c_if = "if"+ ++this.if_count;
+				  this.current_if = c_if;	  
+				  this.fail_tag = "end_" + loop;	  
+				  this.in_if_condition = true;
+				  printJasmin(condition);
+				  this.in_if_condition = false;
+				  
+				  for(int i = 1; i < node.getChildren().length; i++) {
+					  printJasmin(node.getChildren()[i]);
+					  this.println("");
+				  }
+			  }
 		  }
-		  //this.println("goto " + loop);
-		  IRBuilder.propagateNot(condition, 0);
-		  condition = node.children[0];
-		  this.fail_tag = "begin_" + loop;
-		  this.in_while_condition = true;
-		  printJasmin(condition);
-		  this.in_while_condition = false;
+		  if(this.opt.indexOf("o") != -1) {
+			  IRBuilder.propagateNot(condition, 0);
+			  condition = node.children[0];
+			  this.fail_tag = "begin_" + loop;
+			  this.in_while_condition = true;
+			  printJasmin(condition);
+			  this.in_while_condition = false;
+		  }else {
+			  this.println("goto " + loop);
+		  }
 		  this.println("end_"+ loop + ":");
+		  
 	  }
 	  private void printIf(IRNode node) {
 		  Boolean branch = null;

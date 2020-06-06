@@ -629,6 +629,12 @@ public class CFGNode {
 				}
 				throw new RegisterAllocationException("Not enough registers to store variables, " + k + " needed for method " + this.correspondent.children[1].children[1].getInst(),k);
 			}
+			int maxR = this.def.size();
+			for(LiveRange r : this.ranges) {
+				if(r.color + 1 > maxR)
+					maxR = r.color + 1;
+			}
+			this.correspondent.locals_stack = maxR;
 		}
 		
 		

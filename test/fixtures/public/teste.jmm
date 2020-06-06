@@ -13,20 +13,16 @@ class Hello_T {
 
 	public static void main(String[] args){ 	
 		int a;
+		int i;
 		a = 0;
-		if(a < 5){
-			a = 2;
-			if(a > 2){
-				io.println(3);
-			}else{
-				io.println(4);
-			}
-		}else{
-			io.println(0);
+		while(a < 20){
+			//io.println(a);
+			a = a + 1;
+			io.println(a);
 		}
 		io.println(a);
    	}
-   	/*
+   	
    	public int prop(int a){
    		int b;
    		int c;
@@ -58,7 +54,7 @@ class Hello_T {
    		c = b - a;
    		a = b + 1;
    		return a;
-   	}*/
+   	}
 	
 	/*public int putPiece(int col, int val){
 	

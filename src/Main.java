@@ -18,6 +18,7 @@ public class Main {
 		}*/
     	String fileName = null;
     	Integer registers = null;
+    	Integer unrolling = null;
     	List<String> opt = new ArrayList<String>();
     	
 		for(int i = 0; i < args.length;i++) {
@@ -26,6 +27,9 @@ public class Main {
 				switch(args[i].charAt(1)) {
 				case 'r':
 					registers = Integer.parseInt(args[i].substring(3,args[i].length()));
+					break;
+				case 'l':
+					unrolling = Integer.parseInt(args[i].substring(3,args[i].length()));
 					break;
 				default:
 					opt.add(args[i].substring(1,args[i].length()));
@@ -98,7 +102,7 @@ public class Main {
         	return;
         }
        
-        Jasmin j = new Jasmin(ir.root,file,false,opt);
+        Jasmin j = new Jasmin(ir.root,file,false,opt,unrolling);
 
 
     }
