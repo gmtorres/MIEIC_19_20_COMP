@@ -195,21 +195,72 @@ public class Jasmin {
 	  
 	  
 	  private void printOperation(IRNode node) {
-		  for(int i = 0; i < node.getChildren().length; i++) {
-			  printJasmin(node.getChildren()[i]);
-		  }
-
-		  switch(node.getInst()) {
-		  case "+": this.println("iadd");
-			  break;
-		  case "-": this.println("isub");
-			  break;
-		  case "*": this.println("imul");
-			  break;
-		  case "/": this.println("idiv");
-			  break;
-		  }
-		  //this.printPop(node);
+		
+ 		if(this.opt.indexOf("s") != -1) {
+ 			if (node.getInst().equals("/")) {
+ 				if(node.getChildren()[1].getInst().equals("ldc")) {
+ 					int number = Integer.parseInt(node.getChildren()[1].getChildren()[0].getInst()); 
+ 					if((number != 0) && ((number & (number - 1)) == 0)) {
+ 						int shift = (int)(Math.log(number) / Math.log(2));
+ 						printJasmin(node.getChildren()[0]);
+ 						if(shift>= 0 && shift <= 5)
+ 							this.println("iconst_"+shift);
+ 						else if(shift>= -127 && shift <= 127)
+ 							this.println("bipush " + shift);
+ 				 		this.println("ishr");
+ 				 		return;
+ 					}
+ 				}
+ 			}
+ 			else if (node.getInst().equals("*")) {
+ 				if(node.getChildren()[0].getInst().equals("ldc")) {
+ 					int number = Integer.parseInt(node.getChildren()[0].getChildren()[0].getInst()); 
+ 					if((number != 0) && ((number & (number - 1)) == 0)) {
+ 						int shift = (int)(Math.log(number) / Math.log(2));
+ 						printJasmin(node.getChildren()[1]);
+ 						if(shift>= 0 && shift <= 5)
+ 							this.println("iconst_"+shift);
+ 						else if(shift>= -127 && shift <= 127)
+ 							this.println("bipush " + shift);
+ 				 		this.println("ishl");
+ 				 		return;
+ 					}
+ 				}
+ 				else if(node.getChildren()[1].getInst().equals("ldc")) {
+ 					int number = Integer.parseInt(node.getChildren()[1].getChildren()[0].getInst()); 
+ 					if((number != 0) && ((number & (number - 1)) == 0)) {
+ 						int shift = (int)(Math.log(number) / Math.log(2));
+ 						printJasmin(node.getChildren()[0]);
+ 						if(shift>= 0 && shift <= 5)
+ 							this.println("iconst_"+shift);
+ 						else if(shift>= -127 && shift <= 127)
+ 							this.println("bipush " + shift);
+ 				 		this.println("ishl");
+ 				 		return;
+ 					}
+ 				}
+ 			}
+ 			
+ 		}
+		for(int i = 0; i < node.getChildren().length; i++) {
+			printJasmin(node.getChildren()[i]);
+		
+		}
+	  	
+		String op = null;
+		switch(node.getInst()) {
+		case "+": op = "add";
+		 	break;
+		case "-": op = "sub";
+			break;
+		case "*": op = "mul";
+			break;
+		case "/": op = "div";
+		  	break;
+		default:
+			return;
+		}
+		this.println(this.getType(node.getIRType()) + op);
 	  }
 	  private void printInc(IRNode node) {
 		  this.println("iinc " + node.children[0].local_var + " " + node.children[1].getInst());

@@ -491,7 +491,7 @@ public class IRNode {
 			return;
 		int n = sn.jjtGetNumChildren();
 		this.setInst(sn.name);
-		
+		this.type = sn.type;
 		for(int i = 0; i < n; i++) {
 			SimpleNode node = (SimpleNode)sn.jjtGetChild(i);	
 			IRNode child = new IRNode(this);
