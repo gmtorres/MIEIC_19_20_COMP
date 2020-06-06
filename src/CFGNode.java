@@ -39,13 +39,28 @@ public class CFGNode {
 		}
 		if(opt.indexOf("o") != -1)
 			this.constantPropagation(method);
-		if(opt.indexOf("b") != -1)
+		if(opt.indexOf("b") != -1) {
 			this.removeIfBranches(method,0);
+			this.removeStatements(method.children[4],0);
+		}
 		if(registers != null)
 			this.registerOptimization(method, registers);
 		//System.out.println("");
 		if(opt.indexOf("cf") != -1) {
 			this.constant_folding(method);
+		}
+	}
+	
+	private void removeStatements(IRNode node, int index) {
+		for(int i = 0; i < node.children.length;i++) {
+			IRNode child = node.children[i];
+			String inst = child.getInst();
+			if(inst.equals("statements")) {
+				node.removeChild(i);
+				for(int a = 0; a < child.children.length;a++)
+					node.addChild(child.children[a], a + i);
+			}
+			removeStatements(child,i);
 		}
 	}
 	
@@ -375,10 +390,13 @@ public class CFGNode {
 				prev = null;
 				cfgNode = suc;
 			}else if(inst.equals("statements")) {
-				System.out.println(prev.line);
+				CFGNode suc = null;
+				if(i < method.children.length-1)
+					suc = new CFGNode();
 				prev = prev.buildStatement(irNode,prev);
-				System.out.println(prev.line);
-				cfgNode = new CFGNode();
+				if(prev != null) prev.addSucessor(cfgNode);
+				prev = null;
+				cfgNode = suc;
 			}else {
 				cfgNode.correspondent = irNode;
 				cfgNode.line = line_count++;
@@ -401,11 +419,12 @@ public class CFGNode {
 				cfgNode = new CFGNode();
 			}else if(inst.equals("if")) {
 				CFGNode suc = null;
-				if(i < statements.children.length-1)
+				//if(i < statements.children.length-1)
 					suc = new CFGNode();
 				cfgNode.buildIf(irNode,suc);
 				if(prev != null) prev.addSucessor(cfgNode);
-				prev = null;
+				if(i < statements.children.length-1)
+					prev = null;
 				cfgNode = suc;
 			}else if(inst.equals("statements")) {
 				prev = prev.buildStatement(irNode,prev);

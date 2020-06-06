@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 
+
 public class IRNode {
 	
 	// max of reg available
@@ -91,6 +92,16 @@ public class IRNode {
 	      }
 	      children = c;
 
+	  }
+	  
+	  public void removeChild(int i) {
+		  IRNode c[] = new IRNode[children.length - 1];
+		  System.arraycopy(children, 0, c, 0, i);
+		  System.arraycopy(children, i+1, c, i, children.length-(i+1));
+		  for(int a = 0; a < c.length;a++) {
+	    	  System.out.println(c[a].getInst());
+	      }
+		  children = c;
 	  }
 	  
 	  public void removeLast() {
