@@ -12,7 +12,12 @@ class Hello_T {
 	int foo;
 
 	public static void main(String[] args){ 	
-		io.println(new Hello_T().prop(2));
+		float a;
+		a = 2.0;
+		if(!(a > 5.6))
+			io.println(1);
+		else
+			io.println(0);
    	}
    	
    	public int prop(int a){

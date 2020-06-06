@@ -11,14 +11,26 @@ return
 
 .method public static main([Ljava/lang/String;)V
 	.limit stack 2
-	.limit locals 1
+	.limit locals 2
 
-new Hello_T
-dup
-invokespecial Hello_T/<init>()V
-iconst_2
-invokevirtual Hello_T.prop(I)I
+fconst_2
+fstore_1
+
+fload_1
+ldc 5.6f
+fcmpl
+ifgt else_if1
+
+iconst_1
 invokestatic	io.println(I)V
+
+goto end_if1
+
+else_if1:
+iconst_0
+invokestatic	io.println(I)V
+
+end_if1:
 
 	return
 .end method
@@ -37,19 +49,19 @@ istore_3
 
 iload_3
 iconst_5
-if_icmpge else_if1
+if_icmpge else_if2
 
 iload_1
 iconst_5
 iadd
 istore_2
 
-goto end_if1
+goto end_if2
 
-else_if1:
+else_if2:
 iload_1
 iconst_5
-if_icmpge else_if2
+if_icmpge else_if3
 
 iload_1
 iconst_5
@@ -58,15 +70,15 @@ istore_2
 
 iinc 2 1
 
-goto end_if2
+goto end_if3
 
-else_if2:
+else_if3:
 iconst_1
 istore_2
 
-end_if2:
+end_if3:
 
-end_if1:
+end_if2:
 
 iinc 3 3
 
