@@ -292,7 +292,7 @@ public class IRBuilder {
 		if(node.getInst().equals("st")) {
 			IRNode lhn = node.getChildren()[0];
 			IRNode rhn = node.getChildren()[1];
-			if(rhn.getInst().equals("+") || rhn.getInst().equals("-")) {
+			if((rhn.getInst().equals("+") || rhn.getInst().equals("-")) && node.getIRType().equals("int")) {
 				IRNode rhn2 = rhn.getChildren()[0];
 				IRNode lhn2 = rhn.getChildren()[1];
 				if((rhn2.getInst().equals("ldl") || rhn2.getInst().equals("ldp")) 

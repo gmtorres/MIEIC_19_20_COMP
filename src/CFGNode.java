@@ -174,46 +174,81 @@ public class CFGNode {
 			IRNode lhn = sn.children[0];
 			IRNode rhn = sn.children[1];
 			if(lhn.getInst().equals("ldc") && rhn.getInst().equals("ldc")) {
-				int val1 = Integer.parseInt(lhn.children[0].getInst());
-				int val2 = Integer.parseInt(rhn.children[0].getInst());
-				int res = val1;
-				if(opcode == 1)
-					res+=val2;
-				else if(opcode == 2)
-					res-=val2;
-				else if(opcode == 3)
-					res*=val2;
-				else if(opcode == 4)
-					res/=val2;
-				else if(opcode == 5)
-					if(val1 < val2)
-						res = 1;
-					else
-						res = 0;
-				else if(opcode == 6)
-					if(val1 > val2)
-						res = 1;
-					else
-						res = 0;
-				else if(opcode == 7)
-					if(val1 >0 && val2 > 0) {
-						res = 1;
-					}else
-						res = 0;
-				else if(opcode == 8) {
-					if(val1 >0 || val2 > 0) {
-						res = 1;
-					}else
-						res = 0;
+				String val1 = lhn.children[0].getInst();
+				String val2 = rhn.children[0].getInst();
+				String res = null;
+				if(opcode == 1) {
+					if(sn.type.equals("int"))
+						res = String.valueOf(Integer.parseInt(val1) + Integer.parseInt(val2));
+					else if(sn.type.equals("float"))
+						res = String.valueOf(Float.parseFloat(val1) + Float.parseFloat(val2));
+				}else if(opcode == 2) {
+					if(sn.type.equals("int"))
+						res = String.valueOf(Integer.parseInt(val1) - Integer.parseInt(val2));
+					else if(sn.type.equals("float"))
+						res = String.valueOf(Float.parseFloat(val1) - Float.parseFloat(val2));
+				}else if(opcode == 3) {
+					if(sn.type.equals("int"))
+						res = String.valueOf(Integer.parseInt(val1) * Integer.parseInt(val2));
+					else if(sn.type.equals("float"))
+						res = String.valueOf(Float.parseFloat(val1) * Float.parseFloat(val2));
+				}else if(opcode == 4) {
+					if(sn.type.equals("int"))
+						res = String.valueOf(Integer.parseInt(val1) / Integer.parseInt(val2));
+					else if(sn.type.equals("float"))
+						res = String.valueOf(Float.parseFloat(val1) / Float.parseFloat(val2));
+				}else if(opcode == 5) {
+					if(sn.type.equals("int"))
+						if(Integer.parseInt(val1) < Integer.parseInt(val2))
+							res = "1";
+						else
+							res = "0";
+					else if(sn.type.equals("float"))
+						if(Float.parseFloat(val1) < Float.parseFloat(val2))
+							res = "1";
+						else
+							res = "0";
+				}else if(opcode == 6) {
+					if(sn.type.equals("int"))
+						if(Integer.parseInt(val1) > Integer.parseInt(val2))
+							res = "1";
+						else
+							res = "0";
+					else if(sn.type.equals("float"))
+						if(Float.parseFloat(val1) > Float.parseFloat(val2))
+							res = "1";
+						else
+							res = "0";
+				}else if(opcode == 7) {
+					if(sn.type.equals("int"))
+						if(Integer.parseInt(val1) >0 && Integer.parseInt(val2) > 0) 
+							res = "1";
+						else
+							res = "0";
+					else if(sn.type.equals("float"))
+						if(Float.parseFloat(val1) >0 && Float.parseFloat(val1) > 0) 
+							res = "1";
+						else
+							res = "0";
+				}else if(opcode == 8) {
+					if(sn.type.equals("int"))
+						if(Integer.parseInt(val1) >0 || Integer.parseInt(val2) > 0) 
+							res = "1";
+						else
+							res = "0";
+					else if(sn.type.equals("float"))
+						if(Float.parseFloat(val1) >0 || Float.parseFloat(val1) > 0) 
+							res = "1";
+						else
+							res = "0";
 				}else
 					return;
-				if(opcode == 5 || opcode == 6)
-					sn.type = "boolean";		
+
 				sn.setInst("ldc");
 				sn.resetChildren();
 				IRNode child = new IRNode(sn);
 				sn.addChild(child);
-				child.setInst(String.valueOf(res));
+				child.setInst(res);
 			}
 		}
 	}

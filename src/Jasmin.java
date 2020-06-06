@@ -196,7 +196,7 @@ public class Jasmin {
 	  
 	  private void printOperation(IRNode node) {
 		
- 		if(this.opt.indexOf("s") != -1) {
+ 		if(this.opt.indexOf("s") != -1 && node.getIRType().equals("int")) {
  			if (node.getInst().equals("/")) {
  				if(node.getChildren()[1].getInst().equals("ldc")) {
  					int number = Integer.parseInt(node.getChildren()[1].getChildren()[0].getInst()); 
@@ -273,7 +273,7 @@ public class Jasmin {
 	  private void printLoad(IRNode node) {
 		  String prefix = "";
 		  if(node.getInst().equals("ldc")) {
-			  if(node.getIRType().equals("int")) {
+			  if(node.getIRType().equals("int") || node.getIRType().equals("boolean")) {
 				  Integer value = Integer.parseInt(node.children[0].getInst());
 				  if(value>= 0 && value <= 5)
 					  this.println("iconst_"+value);
