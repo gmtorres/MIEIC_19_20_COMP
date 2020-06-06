@@ -1065,16 +1065,20 @@ public class IRNode {
 			for(int i = this.children.length-1; i >=4 ;i--) {
 				if(this.children[i].reg != null) this.reg_allocated.push(this.children[i].reg);
 			}
-			if(!this.children[1].children[0].getInst().equals("void")) // se o return type é diferente de void
+			if(!this.children[1].children[0].getInst().equals("void")) { // se o return type é diferente de void
 				this.reg = this.reg_allocated.pop();
+				this.max_op_stack = max(this.max_op_stack,this.maxReg - this.reg_allocated.size());
+			}
 		}
 		else if(this.inst.equals("invoke_virtual")) {
 			for(int i = this.children.length-1; i >=5 ;i--) {
 				if(this.children[i].reg != null) this.reg_allocated.push(this.children[i].reg);
 			}
 			this.reg_allocated.push(this.children[3].reg);
-			if(!this.children[1].children[0].getInst().equals("void")) // se o return type é diferente de void
+			if(!this.children[1].children[0].getInst().equals("void")) { // se o return type é diferente de void
 				this.reg = this.reg_allocated.pop();
+				this.max_op_stack = max(this.max_op_stack,this.maxReg - this.reg_allocated.size());
+			}
 		}
 		else if(this.inst.equals("return")) {
 			int rhn = this.children[0].num_reg;
