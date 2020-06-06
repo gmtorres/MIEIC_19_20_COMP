@@ -98,7 +98,7 @@ public class Main {
         	return;
         }
        
-        Jasmin j = new Jasmin(ir.root,file,false,opt);
+        Jasmin j = new Jasmin(ir.root,file,true,opt);
 
 
     }

@@ -1,84 +1,135 @@
 import static ioPlus.requestNumber() int;
 import static io.print(String) void;
 import static io.print(int) void;
-import static sort.equals(int,int) boolean;
 
 class HSort
 {
-public boolean heapify(int[] a,int i,int n)
-{ 
+	public boolean heapify(int[] a,int i,int n){ 
  
-int l;
-int r;
-int temp;
-int largest;
-l=2*i+1;
-r=2*i+2;
+		int l;
+		int r;
+		int temp;
+		int largest;
+		l=2*i+1;
+		r=2*i+2;
+		 
+		 
+		if(l<n && a[l]>a[i]) {
+			largest=l;
+		}
+		else {
+			largest=i;
+		}
  
+		if(r<n && a[r]>a[largest]) {
+			largest=r;		
+		}
  
-if(l<n && a[l]>a[i])
-largest=l;
-else
-largest=i;
+		else if(!(this.equals(largest,i)))
+		{
+		    temp=a[largest];
+		    a[largest]=a[i];
+		    a[i]=temp;
+		    this.heapify(a,largest,n);
+		
+		}
+		else {}
+		 return true;
+	}
  
-if(r<n && a[r]>a[largest])
-largest=r;
+	public boolean bheap(int[] a)
+	{ 
+	 	int i;
+		for(i=(a.length/2)-1;i>0 || this.equals(i,0);i=i-1){ 
+			this.heapify(a,i,a.length); 
+		}
+		
+	 	return true;
+	}
  
-else if(!(sort.equals(largest,i)))
-{
-    temp=a[largest];
-    a[largest]=a[i];
-    a[i]=temp;
-    this.heapify(a,largest,n);
+	public boolean Sort(int[] a){ 
+		int temp;
+		int j; 
+		int i;
+	 
+		this.bheap(a);
+ 
+		for( i=(a.length)-1; i>0;){
+			temp=a[0];
+			a[0]=a[i];
+			a[i]=temp;
+			i= i-1;
+			this.heapify(a,0,i); 
+		}
+	 	return true;
+	} 
+ 
+	public boolean printarray(int[] a){
+		int i;
+		for(i=0; i < a.length; i=i+1){
+			io.print(a[i]);
+		}
+		return true;
+	}
+	
+	public boolean heapSort(int[] a){
+    int size;
+    int i;
+    int t;
+    int father;
+    int son;
+    boolean b;
+    boolean b1;
+	
+	b = true;
+	b1 = true;
+    size = a.length;
+    i = size/2;
 
-}
-else {}
- return true;
-}
- 
-public boolean bheap(int[] a)
-{ 
- int i;
-for(i=(a.length/2)-1;i>0 || sort.equals(i,0);i=i-1)
-{
- 
-this.heapify(a,i,a.length);
- 
-}
- return true;
+    while (true && b){
+        if (0 < i){
+            i = i -1; 
+            t = a[i];
+        }else{
+            size = size -1;
+            if (this.le(size,0)) {
+                b = false;
+                b1 = false;
+            }
+            else {}
+            if(b) {
+                t = a[size];
+                a[size] = a[0];
+            }
+            else {}
+        
+        }
+        if (b) {
+            father = i;
+            son = ((i * 2) + 1);
+            while (son < size && b1){
+                if ((son + 1 < size) && ( a[son] < a[son + 1])) {
+                    son = son + 1;
+                }
+                else {}
+                if (t < a[son]){
+                    a[father] = a[son];
+                    father = son;
+                    son = father * 2 + 1;
+                }else {
+                    b1 = false;
+                }
+            }
+            a[father] = t;
+        }
+        else {
 
+        }
+        
+    }
+    return true;
 }
- 
-public boolean Sort(int[] a)
-{ 
-int temp;
-int j; 
-int i;
- 
-this.bheap(a);
- 
-for( i=(a.length)-1; i>0;)
-{
-temp=a[0];
-a[0]=a[i];
-a[i]=temp;
-i= i-1;
-this.heapify(a,0,i) ;
- 
-}
- return true;
-} 
- 
-public boolean printarray(int[] a)
-{
-int i;
-for(i=0; i < a.length; i=i+1)
-{
-io.print(a[i]);
-}
- return true;
 
-}
     public static void main(String[] args) 
     {
         int n;
@@ -91,17 +142,32 @@ io.print(a[i]);
         a = new int[n];
         io.print("Enter elements ");
 
-        for( i=0; i < n; i=i+1)
-        {
-        a[i] =  ioPlus.requestNumber();
+        for( i=0; i < n; i=i+1){
+        	a[i] =  ioPlus.requestNumber();
         }
         io.print("elements in array ");
         h.printarray(a);
-        h.Sort(a);
+        h.heapSort(a);
         io.print("elements after sorting");
         h.printarray(a);
 
     }
+    
+    public boolean equals(int a, int b) {
+		return (!this.lt(a, b) && !this.lt(b, a));
+	}
+    
  
+	public boolean lt(int a, int b) {
+		return (a < b);
+    }
+    
+	public boolean le(int a, int b) {
+		return !(!this.lt(a, b) && !this.equals(a, b));
+    }
+    
+    public boolean gt(int a, int b) {
+		return (a > b);
+    }
  
 }
