@@ -1,5 +1,6 @@
 import static io.println() void;
 import static io.println(String) void;
+import static io.println(int) void;
 import static io.print(int) void;
 import static io.print(String) void;
 import static io.read() int;
@@ -813,7 +814,6 @@ class sudoku {
    			}
    			else {
    			}
-   			
    			i = i + 1;
    		}
    		
@@ -835,48 +835,51 @@ class sudoku {
    		
    		toRet = true;
    		
-   		   		
-   		if (this.ge(1, line) && this.le(3, line)) {
-   			io.print(7777);
+	
+   		if (this.ge(line, 1) && this.le(line, 3)) {
    			i = 1;
    			sqy = 4;
    		}
    		
-   		else if(this.ge(4, line) && this.le(6, line)) {
+   		else if(this.ge(line, 4) && this.le(line, 6)) {
    			i = 4;
    			sqy = 7;
+   			
    		}
    		
    		else {
    			i = 7;
    			sqy = 10;
+   			
    		}
    		
    		
-   		if (this.ge(0, col) && this.le(2, col)) {
-   			io.print(8888);
+   		if (this.ge(col, 0) && this.le(col, 2)) {
    			j = 0;
    			prevJ = 0;
    			sqx = 3;
+			
    		}
    		
-   		else if(this.ge(3, col) && this.le(5, col)) {
+   		else if(this.ge(col, 3) && this.le(col, 5)) {
    			j = 3;
    			prevJ = 3;
    			sqx = 6;
+   			
    		}
    		
    		else {
    			j = 6;
    			prevJ = 6;
    			sqx = 9;
+   			
    		}
    		
    		   		
    		while ((i < sqy ) && toRet) {
    			arr = this.getLine(i);
    			while((j < sqx) && toRet) {
-   			
+   				
    				if(this.eq(arr[j], option)) {
    					toRet = false;
    				}
@@ -980,7 +983,7 @@ class sudoku {
     }
     
     public boolean gt(int a, int b) {
-		return (a > b);
+		return (!this.le(a, b));
     }
     
     public boolean ge(int a, int b) {
