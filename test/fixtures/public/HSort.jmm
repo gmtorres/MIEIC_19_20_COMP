@@ -1,74 +1,24 @@
 import static ioPlus.requestNumber() int;
-import static io.print(String) void;
 import static io.print(int) void;
+import static io.println(int) void;
+
 
 class HSort
 {
-	public boolean heapify(int[] a,int i,int n){ 
- 
-		int l;
-		int r;
-		int temp;
-		int largest;
-		l=2*i+1;
-		r=2*i+2;
-		 
-		 
-		if(l<n && a[l]>a[i]) {
-			largest=l;
-		}
-		else {
-			largest=i;
-		}
- 
-		if(r<n && a[r]>a[largest]) {
-			largest=r;		
-		}
- 
-		else if(!(this.equals(largest,i)))
-		{
-		    temp=a[largest];
-		    a[largest]=a[i];
-		    a[i]=temp;
-		    this.heapify(a,largest,n);
-		
-		}
-		else {}
-		 return true;
-	}
- 
-	public boolean bheap(int[] a)
-	{ 
-	 	int i;
-		for(i=(a.length/2)-1;i>0 || this.equals(i,0);i=i-1){ 
-			this.heapify(a,i,a.length); 
-		}
-		
-	 	return true;
-	}
- 
-	public boolean Sort(int[] a){ 
-		int temp;
-		int j; 
-		int i;
-	 
-		this.bheap(a);
- 
-		for( i=(a.length)-1; i>0;){
-			temp=a[0];
-			a[0]=a[i];
-			a[i]=temp;
-			i= i-1;
-			this.heapify(a,0,i); 
-		}
-	 	return true;
-	} 
  
 	public boolean printarray(int[] a){
 		int i;
-		for(i=0; i < a.length; i=i+1){
-			io.print(a[i]);
+		i = 0;
+		while(i < a.length) {
+			if(this.equals(i, a.length -1)) {
+				io.println(a[i]);
+			}
+			else {
+				io.print(a[i]);
+			}
+			i = i + 1;
 		}
+		
 		return true;
 	}
 	
@@ -81,18 +31,16 @@ class HSort
         int i;
         int[] a;
         HSort h;
+        i =0;
         h = new HSort();
         n = ioPlus.requestNumber();
         a = new int[n];
-        io.print("Enter elements ");
-
-        for( i=0; i < n; i=i+1){
-        	a[i] =  ioPlus.requestNumber();
+        while (i < n) {
+	        a[i] =  ioPlus.requestNumber();
+	        i = i + 1;
         }
-        io.print("elements in array ");
         h.printarray(a);
         h.heapSort(a);
-        io.print("elements after sorting");
         h.printarray(a);
 
     }
@@ -111,7 +59,7 @@ class HSort
     }
     
     public boolean gt(int a, int b) {
-		return (a > b);
+		return (!this.le(a, b));
     }
     
     public boolean heapSort(int[] a){
@@ -130,10 +78,10 @@ class HSort
 
     while (true && b){
         if (0 < i){
-            i = i -1; 
+            i = i - 1; 
             t = a[i];
         }else{
-            size = size -1;
+            size = size - 1;
             if (this.le(size,0)) {
                 b = false;
                 b1 = false;
@@ -143,7 +91,9 @@ class HSort
                 t = a[size];
                 a[size] = a[0];
             }
-            else {}
+            else {
+            	t = 0;
+            }
         
         }
         if (b) {
