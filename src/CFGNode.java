@@ -22,23 +22,53 @@ public class CFGNode {
 	boolean visited = false;
 	
 	boolean constant_folding = false;
+	boolean if_branch_remove = false;
 	
 	public CFGNode() {
 		
 	}
 	
 	public void buildCFG(IRNode method, Integer registers, List<String> opt) throws RegisterAllocationException {
+		if(opt.indexOf("b") != -1)
+			this.if_branch_remove = true;
 		if(opt.indexOf("cf") != -1) {
 			this.constant_folding = true;
 			this.constant_folding(method);
 		}
 		if(opt.indexOf("o") != -1)
 			this.constantPropagation(method);
+		if(opt.indexOf("b") != -1)
+			this.removeIfBranches(method,0);
 		if(registers != null)
 			this.registerOptimization(method, registers);
 		//System.out.println("");
 		if(opt.indexOf("cf") != -1) {
 			this.constant_folding(method);
+		}
+	}
+	
+	private void removeIfBranches(IRNode node, int index) {
+		for(int i = 0; i <node.children.length; i++) {
+			removeIfBranches(node.children[i],i);
+		}
+		if(node.getInst().equals("if")) {
+			IRNode condition = node.children[0];
+			if(condition.getInst().equals("ldc")) {
+				String value = condition.getChildren()[0].getInst();
+				if(value.equals("1")) {
+					IRNode else_statements = node.children[1];
+					IRNode parent = node.parent;
+					parent.children[index] = else_statements;
+					else_statements.parent = parent;
+					else_statements.setInst("statements");
+				}else if(value.equals("0")) {
+					IRNode else_statements = node.children[2];
+					IRNode parent = node.parent;
+					parent.children[index] = else_statements;
+					else_statements.parent = parent;
+					else_statements.setInst("statements");
+				}
+			}
 		}
 	}
 	
@@ -63,6 +93,7 @@ public class CFGNode {
 	}
 	
 	private void doConstantPropagation(IRNode method, List<Simbol> values) {
+		int i = 0;
 		for(IRNode child : method.children) {
 			String inst = child.getInst();
 			if(inst.equals("st")) {
@@ -76,7 +107,18 @@ public class CFGNode {
 					addToValues(values,s);
 				}
 			}else if(inst.equals("if")) {
-				doConstantPropagationIf(child,values);
+				doConstantPropagation(child.children[0],values);
+				if(this.constant_folding)
+					this.constant_folding(child.children[0]);
+				if(this.if_branch_remove) {
+					this.removeIfBranches(child,i);
+					child = method.children[i];
+					if(child.getInst().equals("if")) {
+						doConstantPropagationIf(child,values);
+					}else
+						doConstantPropagation(child,values);
+				}else
+					doConstantPropagationIf(child,values);
 			}else if(inst.equals("while")) {
 				doConstantPropagationWhile(child,values);
 			}else {
@@ -84,6 +126,7 @@ public class CFGNode {
 				if(this.constant_folding)
 					this.constant_folding(child);
 			}
+			i++;
 		}
 		//System.out.println(values);
 	}
@@ -97,9 +140,6 @@ public class CFGNode {
 	
 	private void doConstantPropagationIf(IRNode branch, List<Simbol> values) {
 		List<Simbol> def = this.getAllDefs(branch);
-		doConstantPropagation(branch.children[0],values);
-		if(this.constant_folding)
-			this.constant_folding(branch.children[0]);
 		List<Simbol> temp_values = new ArrayList<Simbol>(values);
 		List<Integer> prev_values = new ArrayList<Integer>();
 		for(Simbol s : temp_values)
@@ -139,7 +179,6 @@ public class CFGNode {
 	}
 	
 	private void constant_folding(IRNode sn) {
-		
 		for(IRNode child : sn.children) {
 			this.constant_folding(child);
 		}
@@ -176,7 +215,7 @@ public class CFGNode {
 			if(lhn.getInst().equals("ldc") && rhn.getInst().equals("ldc")) {
 				String val1 = lhn.children[0].getInst();
 				String val2 = rhn.children[0].getInst();
-				String res = null;
+				String res = "---";
 				if(opcode == 1) {
 					if(sn.type.equals("int"))
 						res = String.valueOf(Integer.parseInt(val1) + Integer.parseInt(val2));
@@ -198,49 +237,37 @@ public class CFGNode {
 					else if(sn.type.equals("float"))
 						res = String.valueOf(Float.parseFloat(val1) / Float.parseFloat(val2));
 				}else if(opcode == 5) {
-					if(sn.type.equals("int"))
+					if(sn.children[0].type.equals("int"))
 						if(Integer.parseInt(val1) < Integer.parseInt(val2))
 							res = "1";
 						else
 							res = "0";
-					else if(sn.type.equals("float"))
+					else if(sn.children[0].type.equals("float"))
 						if(Float.parseFloat(val1) < Float.parseFloat(val2))
 							res = "1";
 						else
 							res = "0";
 				}else if(opcode == 6) {
-					if(sn.type.equals("int"))
+					if(sn.children[0].type.equals("int"))
 						if(Integer.parseInt(val1) > Integer.parseInt(val2))
 							res = "1";
 						else
 							res = "0";
-					else if(sn.type.equals("float"))
+					else if(sn.children[0].type.equals("float"))
 						if(Float.parseFloat(val1) > Float.parseFloat(val2))
 							res = "1";
 						else
 							res = "0";
 				}else if(opcode == 7) {
-					if(sn.type.equals("int"))
-						if(Integer.parseInt(val1) >0 && Integer.parseInt(val2) > 0) 
-							res = "1";
-						else
-							res = "0";
-					else if(sn.type.equals("float"))
-						if(Float.parseFloat(val1) >0 && Float.parseFloat(val1) > 0) 
-							res = "1";
-						else
-							res = "0";
+					if(Integer.parseInt(val1) >0 && Integer.parseInt(val2) > 0) 
+						res = "1";
+					else
+						res = "0";		
 				}else if(opcode == 8) {
-					if(sn.type.equals("int"))
-						if(Integer.parseInt(val1) >0 || Integer.parseInt(val2) > 0) 
-							res = "1";
-						else
-							res = "0";
-					else if(sn.type.equals("float"))
-						if(Float.parseFloat(val1) >0 || Float.parseFloat(val1) > 0) 
-							res = "1";
-						else
-							res = "0";
+					if(Integer.parseInt(val1) >0 || Integer.parseInt(val2) > 0) 
+						res = "1";
+					else
+						res = "0";
 				}else
 					return;
 
@@ -602,6 +629,12 @@ public class CFGNode {
 				}
 				throw new RegisterAllocationException("Not enough registers to store variables, " + k + " needed for method " + this.correspondent.children[1].children[1].getInst(),k);
 			}
+			int maxR = this.def.size();
+			for(LiveRange r : this.ranges) {
+				if(r.color + 1 > maxR)
+					maxR = r.color + 1;
+			}
+			this.correspondent.locals_stack = maxR;
 		}
 		
 		

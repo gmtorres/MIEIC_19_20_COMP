@@ -12,12 +12,17 @@ class Hello_T {
 	int foo;
 
 	public static void main(String[] args){ 	
-	   float a;
-	   a = 0.5 * 0.4 + 1.7 / 0.4;
-	   a = a + 1.0;
-	   io.println(a);
+		int a;
+		int i;
+		a = 0;
+		while(a < 20){
+			//io.println(a);
+			a = a + 1;
+			io.println(a);
+		}
+		io.println(a);
    	}
-   	/*
+   	
    	public int prop(int a){
    		int b;
    		int c;
@@ -49,7 +54,7 @@ class Hello_T {
    		c = b - a;
    		a = b + 1;
    		return a;
-   	}*/
+   	}
 	
 	/*public int putPiece(int col, int val){
 	
