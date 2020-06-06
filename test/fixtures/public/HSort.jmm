@@ -4,65 +4,6 @@ import static io.print(int) void;
 
 class HSort
 {
-	public boolean heapify(int[] a,int i,int n){ 
- 
-		int l;
-		int r;
-		int temp;
-		int largest;
-		l=2*i+1;
-		r=2*i+2;
-		 
-		 
-		if(l<n && a[l]>a[i]) {
-			largest=l;
-		}
-		else {
-			largest=i;
-		}
- 
-		if(r<n && a[r]>a[largest]) {
-			largest=r;		
-		}
- 
-		else if(!(this.equals(largest,i)))
-		{
-		    temp=a[largest];
-		    a[largest]=a[i];
-		    a[i]=temp;
-		    this.heapify(a,largest,n);
-		
-		}
-		else {}
-		 return true;
-	}
- 
-	public boolean bheap(int[] a)
-	{ 
-	 	int i;
-		for(i=(a.length/2)-1;i>0 || this.equals(i,0);i=i-1){ 
-			this.heapify(a,i,a.length); 
-		}
-		
-	 	return true;
-	}
- 
-	public boolean Sort(int[] a){ 
-		int temp;
-		int j; 
-		int i;
-	 
-		this.bheap(a);
- 
-		for( i=(a.length)-1; i>0;){
-			temp=a[0];
-			a[0]=a[i];
-			a[i]=temp;
-			i= i-1;
-			this.heapify(a,0,i); 
-		}
-	 	return true;
-	} 
  
 	public boolean printarray(int[] a){
 		int i;
@@ -88,10 +29,10 @@ class HSort
 
     while (true && b){
         if (0 < i){
-            i = i -1; 
+            i = i - 1; 
             t = a[i];
         }else{
-            size = size -1;
+            size = size - 1;
             if (this.le(size,0)) {
                 b = false;
                 b1 = false;
@@ -101,7 +42,9 @@ class HSort
                 t = a[size];
                 a[size] = a[0];
             }
-            else {}
+            else {
+            	t = 0;
+            }
         
         }
         if (b) {
