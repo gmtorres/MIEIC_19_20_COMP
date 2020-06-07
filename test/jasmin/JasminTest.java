@@ -18,10 +18,10 @@ public class JasminTest {
 		JasminUtils.testJmm("fixtures/public/HelloWorld.jmm", "Hello, World!");
     }
 
-	/*@Test
+	@Test
     public void testMonteCarloPi() {
 		JasminUtils.testJmm("fixtures/public/MonteCarloPi.jmm", "Insert number: Result: 0", "-1\n");
-    }*/
+    }
 
 	@Test
     public void testQuickSort() {

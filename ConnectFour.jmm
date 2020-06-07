@@ -24,9 +24,13 @@ class ConnectFour {
 	public static void main(String[] args){ 	
 		ConnectFour game;
 		
-		game = new ConnectFour();
+		game = new ConnectFour().getInstance().init();
 		game.run();
 		
+	}
+	
+	public ConnectFour getInstance(){
+		return new ConnectFour();
 	}
 	
 	public ConnectFour init(){
@@ -121,7 +125,7 @@ class ConnectFour {
 				found = true;
 			}else{}
 		}
-		io.println(x);
+
 		return x;
 	}
 	
@@ -241,10 +245,10 @@ class ConnectFour {
 	public int run(){
 		int y;
 		int x;
-		this.init();
+
 		while(run){
 			this.printBoard();
-			
+			io.println(currentPlayer);
 			x = this.getMove();
 			y = this.putPiece(x,currentPlayer);
 			while(y < 0){

@@ -1,4 +1,5 @@
 import static io.println(int);
+import static io.println(float);
 import static io.println(String) void;
 import static io.print(String) void;
 
@@ -57,7 +58,7 @@ class StressTest {
 		io.println(e.getArray(0)[0]);
 		io.println(e.getArray(1)[1]);
 		io.println(e.getArray(1).length);
-		
+		io.println(e.abs(5.0 * (0.0 - 1.0))	);
 		io.println("Stress test finished");
 		
 	}
@@ -79,6 +80,13 @@ class StressTest {
 		else 
 			ret = this.fibonacci(v-1) + this.fibonacci(v-2);
 		return ret;
+	}
+	
+	public float abs(float v){
+		if(v < 0.0)
+			v = 0.0 - v;
+		else{}
+		return v;
 	}
 	
 	public StressTest printA(){

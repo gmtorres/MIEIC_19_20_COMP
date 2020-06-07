@@ -9,20 +9,25 @@ import static BoardBase.wrongMove();
 import static BoardBase.placeTaken();
 class Hello_T {	
 
-	int foo;
+	float foo;
 
 	public static void main(String[] args){ 	
 		int a;
 		float b;
-		a = new Hello_T().f() + 0.1;
+		a = new Hello_T().instance().f() + 0.1;
 		a = a + 1;
 		io.println(a);
    	}
 	
 	public float f(){
-		return 1.8;
+		foo;
+		foo = 5.0;
+		return foo;
 	}
    
+   	public Hello_T instance(){
+   		return new Hello_T();
+   	}
 
    	/*public int sum2(){
    		int a;

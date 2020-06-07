@@ -368,6 +368,22 @@ public class Jasmin {
 	  }
 	  
 	  private void printLoadGlobal(IRNode node) {
+		  
+			  if(this.opt.indexOf("u") != -1) {
+				  int i = 0;
+				  for(;i < node.getParent().children.length;i++) {
+					  if(node.parent.children[i] == node)
+						  break;
+				  }
+				  i++;
+				  if(i < node.getParent().children.length) {
+					  if(node.parent.children[i].getInst().equals("pop")) {
+						  node.parent.removeChild(i);
+						  return;
+					  }
+				  }
+			  }
+		  	 
 		  	String name = node.getChildren()[0].getInst();
 		  	if(name.equals("field"))
 		  		name = "__"+name;
