@@ -10,24 +10,18 @@ return
 .end method
 
 .method public static main([Ljava/lang/String;)V
-	.limit stack 2
-	.limit locals 3
+	.limit stack 1
+	.limit locals 2
 
 iconst_0
 istore_1
 
-iconst_1
-iload_1
-isub
-istore_1
-
-iload_1
-invokestatic	io.println(I)V
+iinc 1 1
 
 	return
 .end method
 
-.method public optimization(F)F
+.method public optimization(F)Z
 	.limit stack 2
 	.limit locals 2
 
@@ -55,6 +49,6 @@ goto loop1
 end_loop1:
 
 fload_1
-freturn
+ireturn
 
 .end method

@@ -17,7 +17,7 @@ class Hello_T {
 		a = a + 1;
    	}
 
-   	public boolean optimization(float a){  		
+   	public boolean optimization(int a){  		
 		for(a = 2.0; a < 4.0;a = a - 0.25)
 			a = a + 2.0;
 		return a;
