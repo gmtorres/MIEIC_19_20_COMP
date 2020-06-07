@@ -24,20 +24,35 @@ Any incorrect grammar not accepted by the parser is registered and reported to t
 
 ## SEMANTIC ANALYSIS:
 The semantic analysis performed by the compiler at hands seeks to highlight a wide number of possible errors, some of which are mentioned below and most of which are showcased in the test files included in the project:
+
 - Two variables (within the same scope) cannot have the same identifier;
+
 - A variable must be declared before being used;
+
 - Wrong type of arguments;
+
 - During assignments, the left-hand side and the right-hand side of the statement must be of the same type, except when casting float to integer
+
 - Check if operations are performed with the same type (e.g. int + boolean must give error);
+
 - It is not possible to use arrays directly for arithmetic operations;
+
 - Check if an array access is in fact done over an array;
+
 - Check if the index of the access array is an integer;
+
 - Check if a boolean operation is performed only with boolean variables;
+
 - Check if conditional expressions (if and while) result in a boolean;
+
 - Supports function overload;
+
 - Support inheritance;
+
 - Function type and return type are the same;
+
 - and many more; 
+
 
 ## INTERMEDIATE REPRESENTATIONS (IRs): 
 We decided to generate an intermediate representation, a data structure used internally by the compiler, to aid in the analysis of input code. This representation is made after both the semantic and syntax are complete. Also, the IR helps us structure the Java-- code in something more simpler, manageable and closer to the target machine code. It will also help us in the optimizations of the code generation part of the project. We also did the Control Flow Graph for liveness analysis allowing us to do the register allocation optimization. Their implementations can be found in \textit{/src/CFGNode.java}, \textit{/src/IRNode.java} and \textit{/src/IRBuilder.java}.
