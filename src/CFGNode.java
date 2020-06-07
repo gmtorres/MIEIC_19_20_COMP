@@ -120,7 +120,7 @@ public class CFGNode {
 				if(child.children[1].getInst().equals("ldc")) {
 					Simbol s = child.children[0].simbol;
 					String value = child.children[1].children[0].getInst();
-					s.value = Integer.parseInt(value);
+					s.value = value;
 					addToValues(values,s);
 				}else {
 					Simbol s = child.children[0].simbol;
@@ -152,6 +152,23 @@ public class CFGNode {
 	}
 	
 	private void doConstantPropagationWhile(IRNode loop, List<Simbol> values) {
+		IRNode temp_while = new IRNode(null);
+		IRNode temp_condition = new IRNode(temp_while,loop.children[0]);
+		List<Simbol> temp_values = new ArrayList<Simbol>(values);
+		List<String> prev_values = new ArrayList<String>();
+		for(Simbol s : temp_values)
+			prev_values.add(new String(s.value));
+		doConstantPropagation(temp_condition,temp_values);
+		if(this.constant_folding)
+			this.constant_folding(temp_condition);
+		if(temp_condition.getInst().equals("ldc")) {
+			if(temp_condition.children[0].getInst().equals("1"))
+				loop.loop_once = true;
+			else
+				loop.loop_once = false;
+		}
+		for(int i = 0; i < temp_values.size();i++)
+			temp_values.get(i).value = prev_values.get(i);
 		List<Simbol> def = this.getAllDefs(loop);
 		this.removeFromValues(values, def);
 		doConstantPropagation(loop,values);
@@ -161,9 +178,9 @@ public class CFGNode {
 	private void doConstantPropagationIf(IRNode branch, List<Simbol> values) {
 		List<Simbol> def = this.getAllDefs(branch);
 		List<Simbol> temp_values = new ArrayList<Simbol>(values);
-		List<Integer> prev_values = new ArrayList<Integer>();
+		List<String> prev_values = new ArrayList<String>();
 		for(Simbol s : temp_values)
-			prev_values.add(new Integer(s.value));
+			prev_values.add(new String(s.value));
 		doConstantPropagation(branch.children[1],temp_values);
 		temp_values = new ArrayList<Simbol>(values);
 		for(int i = 0; i < temp_values.size();i++)
@@ -180,7 +197,7 @@ public class CFGNode {
 			Simbol s = statement.children[0].simbol;
 			if(values.indexOf(s) != -1) {
 				statement.setInst("ldc");
-				statement.children[0].setInst(String.valueOf(s.value));
+				statement.children[0].setInst(s.value);
 			}
 		}
 	}

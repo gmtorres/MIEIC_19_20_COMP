@@ -237,7 +237,7 @@ public class Jasmin {
  				 		return;
  					}
  				}
- 				else if(node.getChildren()[1].getInst().equals("ldc")) {
+ 				if(node.getChildren()[1].getInst().equals("ldc")) {
  					int number = Integer.parseInt(node.getChildren()[1].getChildren()[0].getInst()); 
  					if((number != 0) && ((number & (number - 1)) == 0)) {
  						int shift = (int)(Math.log(number) / Math.log(2));
@@ -282,6 +282,20 @@ public class Jasmin {
 	  }
 	  
 	  private void printLoad(IRNode node) {
+		  if(this.opt.indexOf("u") != -1) {
+			  int i = 0;
+			  for(;i < node.getParent().children.length;i++) {
+				  if(node.parent.children[i] == node)
+					  break;
+			  }
+			  i++;
+			  if(i < node.getParent().children.length) {
+				  if(node.parent.children[i].getInst().equals("pop")) {
+					  node.parent.removeChild(i);
+					  return;
+				  }
+			  }
+		  }
 		  String prefix = "";
 		  if(node.getInst().equals("ldc")) {
 			  if(node.getIRType().equals("int") || node.getIRType().equals("boolean")) {
@@ -695,19 +709,43 @@ public class Jasmin {
 	  }
 	  
 	  private void printWhile(IRNode node) {
+		  Boolean branch = null;
+		  IRNode condition = node.children[0];
 		  
+		  if(this.opt.indexOf("b") != -1) {
+			  if(condition.getInst().equals("ldc")) {
+				  if(condition.children[0].getInst().equals("0"))
+					  return;
+				  else if(condition.children[0].getInst().equals("1"))
+					  branch = true;
+			  }else if(condition.getInst().equals("not") && condition.children[0].getInst().equals("ldc")) {
+				  if(condition.children[0].children[0].getInst().equals("0"))
+					  branch = true;
+				  else if(condition.children[0].children[0].getInst().equals("1"))
+					  return;
+			  }
+		  }
+		  if(this.opt.indexOf("o") != -1) {
+			  if(node.loop_once != null && node.loop_once == false)
+				  return;
+		  }
 		  String loop = "loop"+ ++this.loop_count;
 		  
 		  if(this.opt.indexOf("o") == -1)
 			  this.println(loop + ":");
 		  
-		  IRNode condition = node.children[0];
 		  this.current_loop = loop;
 		  
 		  this.fail_tag = "end_" + loop;
 		  
 		  this.in_while_condition = true;
-		  printJasmin(condition);
+		  if(branch == null) {
+			  if(this.opt.indexOf("o") != -1) {
+				  if(node.loop_once == null)
+					  printJasmin(condition);
+			  }else
+				  printJasmin(condition);
+		  }
 		  this.in_while_condition = false;
 		  
 		  this.println("begin_" + loop + ":");
@@ -742,12 +780,16 @@ public class Jasmin {
 			  }
 		  }
 		  if(this.opt.indexOf("o") != -1) {
-			  IRBuilder.propagateNot(condition, 0);
-			  condition = node.children[0];
-			  this.fail_tag = "begin_" + loop;
-			  this.in_while_condition = true;
-			  printJasmin(condition);
-			  this.in_while_condition = false;
+			  if(branch == null) {
+				  IRBuilder.propagateNot(condition, 0);
+				  condition = node.children[0];
+				  this.fail_tag = "begin_" + loop;
+				  this.in_while_condition = true;
+				  printJasmin(condition);
+				  this.in_while_condition = false;
+			  }else {
+				  this.println("goto begin_" + loop);
+			  }
 		  }else {
 			  this.println("goto " + loop);
 		  }
@@ -760,11 +802,18 @@ public class Jasmin {
 		  
 		  IRNode condition = node.children[0];
 		  
-		  if(this.opt.indexOf("b") != -1 && condition.getInst().equals("ldc")) {
-			  if(condition.children[0].getInst().equals("0"))
-				  branch = false;
-			  else if(condition.children[0].getInst().equals("1"))
-				  branch = true;
+		  if(this.opt.indexOf("b") != -1) {
+			  if(condition.getInst().equals("ldc")) {
+				  if(condition.children[0].getInst().equals("0"))
+					  branch = false;
+				  else if(condition.children[0].getInst().equals("1"))
+					  branch = true;
+			  }else if(condition.getInst().equals("not") && condition.children[0].getInst().equals("ldc")) {
+				  if(condition.children[0].children[0].getInst().equals("0"))
+					  branch = true;
+				  else if(condition.children[0].children[0].getInst().equals("1"))
+					  branch = false;
+			  }
 		  }
 		  if(branch == null) {
 			  this.current_if = c_if;

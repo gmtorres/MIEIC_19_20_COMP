@@ -165,6 +165,9 @@ public class IRBuilder {
 					inst.equals("||") ||
 					inst.equals("<")||
 					inst.equals(">")||
+					inst.equals("ldc")||
+					inst.equals("ldl")||
+					inst.equals("ldp")||
 					inst.equals("new_object") ) {
 				this.addPop(child,i);
 			}
@@ -190,6 +193,7 @@ public class IRBuilder {
 				  !parentInst.equals("funcParams") &&
 				  !parentInst.equals("st") &&
 				  !parentInst.equals("stg") &&
+				  !parentInst.equals("new_int_arr") &&
 				  !parentInst.equals("sta") &&
 				  !parentInst.equals("lda") &&
 				  !parentInst.equals("return")&&
