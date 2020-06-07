@@ -13,15 +13,13 @@ class Hello_T {
 
 	public static void main(String[] args){ 	
 		int a;
-		a = 0;
+		float b;
+		a = 3.21;
 		a = a + 1;
+		io.println(a);
    	}
 
-   	public Hello_T optimization(float a){  		
-		for(a = 2.0; a < 4.0;a = a - 0.25)
-			a = a + 2.0;
-		return this;
-   	}
+   
 
    	/*public int sum2(){
    		int a;

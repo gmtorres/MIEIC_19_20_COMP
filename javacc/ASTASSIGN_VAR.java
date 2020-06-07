@@ -33,13 +33,20 @@ class ASTASSIGN_VAR extends SimpleNode {
 	  if(!lhn.type.equals(rhn.type)) {
 		  Descriptor d = this.descriptors.getDescriptor(rhn.type);
 		  if(d == null || !d.doesExtends(lhn.type)) {
-			  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Assigning imcompatible type:  " + lhn.type + "  and  " + rhn.type);
-			  this.decrementMaxErros();
-
-			  
-			  return false;
+			  if(lhn.type.equals("int") && rhn.type.equals("float")) {
+				  System.out.println("Warning on line " + this.lineNo + ", column " + this.columnNo + ": Incmpatible types, possible data loss from :  " + lhn.type + "  to  " + rhn.type);
+				  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(this.descriptors.getDescriptor("int"));
+			  }else if(lhn.type.equals("float") && rhn.type.equals("int")) {
+				  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(this.descriptors.getDescriptor("float"));
+			  }
+			  else{
+				  System.out.println("Error on line " + this.lineNo + ", column " + this.columnNo + ": Assigning imcompatible type:  " + lhn.type + "  and  " + rhn.type);
+				  this.decrementMaxErros();
+				  return false;
+			  }
 		  }
-		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(d);
+		  else
+			  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(d);
 	  }else {
 		  Descriptor d = this.descriptors.getDescriptor(rhn.type);
 		  this.simbolTable.getSimbol(((SimpleNode) lhn.children[0]).name).setAssignType(d);

@@ -419,9 +419,19 @@ public class Jasmin {
 		  for(int i = 0; i < node.getChildren().length; i++) {
 			  printJasmin(node.getChildren()[i]);
 		  }
-		  if(local_var == -1)
+		  if(local_var == -1) {
 			  this.println("pop");
-		  else if(local_var < 4)
+			  return;
+		  }
+		  String lht = node.type;
+		  String rht = node.children[1].type;
+		  if(!lht.equals(rht)) {
+			  if(lht.equals("int") && rht.equals("float"))
+				  this.println("f2i");
+			  else if(lht.equals("float") && rht.equals("int"))
+				  this.println("i2f");
+		  }
+		  if(local_var < 4)
 			  this.println(this.getType(node.type) + "store_" + local_var);
 		  else
 			  this.println(this.getType(node.type) + "store " + local_var);
