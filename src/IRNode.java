@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 
+
 public class IRNode {
 	
 	// max of reg available
@@ -46,6 +47,8 @@ public class IRNode {
 	String type = null;
 	
     String className;
+    
+    Boolean loop_once = null;
 
 	//intruction
 	private String inst = "";
@@ -53,6 +56,22 @@ public class IRNode {
 	
 	public IRNode(IRNode p) {
 		parent = p;
+	}
+	
+	public IRNode(IRNode parent, IRNode replicate) {
+		this.parent = parent;
+		this.num_reg = new Integer(replicate.num_reg);
+		if(replicate.reg != null)
+				this.reg = new Integer(replicate.reg);
+		if(replicate.local_var != null)
+			this.local_var = new Integer(replicate.local_var);
+		this.simbol = replicate.simbol;
+		if(replicate.type != null)
+			this.type = new String(replicate.type);
+		if(replicate.inst != null)
+			this.inst = new String(replicate.inst);
+		for(IRNode child : replicate.children)
+			this.addChild(new IRNode(this,child));
 	}
 	
 	public IRNode getParent() {
@@ -91,6 +110,16 @@ public class IRNode {
 	      }
 	      children = c;
 
+	  }
+	  
+	  public void removeChild(int i) {
+		  IRNode c[] = new IRNode[children.length - 1];
+		  System.arraycopy(children, 0, c, 0, i);
+		  System.arraycopy(children, i+1, c, i, children.length-(i+1));
+		  for(int a = 0; a < c.length;a++) {
+	    	  //System.out.println(c[a].getInst());
+	      }
+		  children = c;
 	  }
 	  
 	  public void removeLast() {
@@ -395,8 +424,12 @@ public class IRNode {
 	}
 	
 	public void buildFor(SimpleNode sn) {
-		SimpleNode ass = (SimpleNode)(sn.jjtGetChild(0)).jjtGetChild(0); //ASSIGN
-		this.getBuild(ass);
+		SimpleNode ass1 = (SimpleNode)(sn.jjtGetChild(0));
+		if(ass1.jjtGetNumChildren() > 0) {
+			SimpleNode ass = (SimpleNode)ass1.jjtGetChild(0); //ASSIGN
+			this.getBuild(ass);
+		}
+		
 		IRNode newWhile = new IRNode(this.parent);
 		newWhile.setInst("while");
 		parent.addChild(newWhile);
@@ -696,7 +729,7 @@ public class IRNode {
 	
 	public void buildArr_access(SimpleNode sn) {
 		this.setInst("lda");
-		
+		this.type = "int"; //always an integer...
 		if(sn.jjtGetNumChildren() == 0)
 			return;	
 		SimpleNode lhn = (SimpleNode)sn.jjtGetChild(0);

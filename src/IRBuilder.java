@@ -165,6 +165,9 @@ public class IRBuilder {
 					inst.equals("||") ||
 					inst.equals("<")||
 					inst.equals(">")||
+					inst.equals("ldc")||
+					inst.equals("ldl")||
+					inst.equals("ldp")||
 					inst.equals("new_object") ) {
 				this.addPop(child,i);
 			}
@@ -190,6 +193,7 @@ public class IRBuilder {
 				  !parentInst.equals("funcParams") &&
 				  !parentInst.equals("st") &&
 				  !parentInst.equals("stg") &&
+				  !parentInst.equals("new_int_arr") &&
 				  !parentInst.equals("sta") &&
 				  !parentInst.equals("lda") &&
 				  !parentInst.equals("return")&&
@@ -296,7 +300,9 @@ public class IRBuilder {
 				IRNode rhn2 = rhn.getChildren()[0];
 				IRNode lhn2 = rhn.getChildren()[1];
 				if((rhn2.getInst().equals("ldl") || rhn2.getInst().equals("ldp")) 
-						&& rhn2.getChildren()[0].getInst().equals(lhn.getInst())) {
+						//&& rhn2.getChildren()[0].getInst().equals(lhn.getInst())
+						&& rhn2.getChildren()[0].local_var == lhn.local_var
+						) {
 					if(lhn2.getInst().equals("ldc")) {
 						int val = Integer.parseInt(lhn2.getChildren()[0].getInst());
 						//System.out.println(rhn.getInst());

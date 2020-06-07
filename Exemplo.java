@@ -4,7 +4,11 @@ class Exemplo {
 		
 		float a;
 		a = 3.21f;
-		
+		if(!(a > 5.6f)) {
+			
+		}else {
+			
+		}
 	}
    
 }

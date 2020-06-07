@@ -12,7 +12,7 @@ public class Simbol {
     
     public Integer local_var = null;
     public Integer size = null;
-    public Integer value = null;
+    public String value = null;
     
     Simbol(Descriptor tp , String id , boolean init){
     	this.type = tp;
