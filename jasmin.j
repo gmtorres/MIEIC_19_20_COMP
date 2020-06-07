@@ -21,7 +21,7 @@ iinc 1 1
 	return
 .end method
 
-.method public optimization(F)Z
+.method public optimization(F)LHello_T;
 	.limit stack 2
 	.limit locals 2
 
@@ -48,7 +48,7 @@ fstore_1
 goto loop1
 end_loop1:
 
-fload_1
-ireturn
+aload_0
+areturn
 
 .end method

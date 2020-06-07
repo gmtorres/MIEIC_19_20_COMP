@@ -66,6 +66,8 @@ class ASTEXPRESSION extends SimpleNode {
 				  }
 				  lhn.type = s.getType().getName();
 			  }
+		  }else if(lhn.toString().equals("THIS")) {
+			  lhn.type = "this";
 		  }
 		  
 		  this.type = lhn.type;

@@ -17,10 +17,10 @@ class Hello_T {
 		a = a + 1;
    	}
 
-   	public boolean optimization(int a){  		
+   	public Hello_T optimization(float a){  		
 		for(a = 2.0; a < 4.0;a = a - 0.25)
 			a = a + 2.0;
-		return a;
+		return this;
    	}
 
    	/*public int sum2(){
