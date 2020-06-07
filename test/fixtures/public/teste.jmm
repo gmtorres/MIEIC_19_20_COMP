@@ -13,13 +13,11 @@ class Hello_T {
 
 	public static void main(String[] args){ 	
 		int a;
-		int b;
 		a = 0;
-		a = 1 - a;
-		io.println(a);
+		a = a + 1;
    	}
 
-   	public float optimization(float a){  		
+   	public boolean optimization(float a){  		
 		for(a = 2.0; a < 4.0;a = a - 0.25)
 			a = a + 2.0;
 		return a;
