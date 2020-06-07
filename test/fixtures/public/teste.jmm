@@ -14,11 +14,14 @@ class Hello_T {
 	public static void main(String[] args){ 	
 		int a;
 		float b;
-		a = 3.21;
+		a = new Hello_T().f() + 0.1;
 		a = a + 1;
 		io.println(a);
    	}
-
+	
+	public float f(){
+		return 1.8;
+	}
    
 
    	/*public int sum2(){
