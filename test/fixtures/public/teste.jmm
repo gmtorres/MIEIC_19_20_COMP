@@ -26,8 +26,10 @@ class Hello_T {
 
    	/*public int sum2(){
    		int a;
-   		
+   		int b;
+   		boolean boo;
    		int c;
+   		boo = false;
    		a = 5;
    		b = 4+a;
    		c= b * b;
