@@ -2,6 +2,7 @@ import static io.println(int);
 import static io.println(float);
 import static io.println(String) void;
 import static io.print(String) void;
+import static io.read() int;
 
 class StressTest {
 	
@@ -26,25 +27,31 @@ class StressTest {
 		int i;
 		int t;
 		int y;
+		float f;
 		StressTest e;
 		
 		io.println("Starting stress test");
 		
 		e = new StressTest(3);
-		
+		io.println("Sample printing of nested calls");
 		for(i = 0; 3 > i; i = i + 1){
 			e.printA().setA(i).printA().setA(0-i);
 		}
+		io.println("");
+		io.print("Fibonacci of 10 is ");
 		io.println(e.fibonacci(10));
 		
 		i = 0;
 		b = true;
 		e.setA(3);
+		io.println("");
+		io.println("Sample conditional evaluation with greater or equal");
 		if( i < 1 && !(!b || (e.getA() > 4 && e.getA() < 2))){
 			io.println("True");
 		}else
 			io.println("False");
-		
+		io.println("");
+		io.println("Sample printing of a pattern using for loops");
 		for(i = 0 - 5; 26 > i * i; i = i + 1){
 			if(i < 0)
 				y = 0 - i;
@@ -54,13 +61,47 @@ class StressTest {
 				io.print("o");
 			io.println("");
 		}
-		
+		io.println("");
+		io.println("Sample printing of function calls that return arrays defined via contructor with arguments");
 		io.println(e.getArray(0)[0]);
 		io.println(e.getArray(1)[1]);
 		io.println(e.getArray(1).length);
-		io.println(e.abs(5.0 * (0.0 - 1.0))	);
+		io.println("");
+		io.println("Float demonstration");
+		io.print("Insert integer  ");
+		i = io.read();
+		f = i;
+		io.print("Absolute is ");
+		io.println(e.abs(f));
+		
+		io.print("Power of two is ");
+		io.println(f * f);
+		
+		io.print("Inverse is ");
+		io.println(1.0 / f);
+		
+		io.print("Approximate cos is ");
+		io.println(e.cos(f));
+		
+		io.println("");
 		io.println("Stress test finished");
 		
+	}
+	
+	public float cos(float a){
+		float tau;
+		boolean pos;
+		int i;
+		int b;
+		tau = 3.14159265359;
+		while(a > tau){
+			a = a - tau;
+		}
+		while(a < 0.0-tau){
+			a = a + tau;
+		}
+		
+		return 1.0 - (a * a)/2.0 + (a*a*a*a)/24.0 - (a*a*a*a*a*a)/720.0;
 	}
 	
 	public int[] getArray(int n){
@@ -101,6 +142,28 @@ class StressTest {
 	
 	public int getA(){
 		return a;
+	}
+	
+	public int optimization(){
+		int a;
+		int b;
+		int c;
+		a = 5;
+		b = a + 6;
+		c = 10;
+		if(b < c){
+			io.println("true");
+		}else{
+			io.println("false");
+		}
+		c = 0;
+		
+		while(b > 10){
+			b = b - 1;
+			io.println(b);
+		}
+		
+		return 1;
 	}
 	
 
