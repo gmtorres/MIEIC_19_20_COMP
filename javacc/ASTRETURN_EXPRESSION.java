@@ -30,7 +30,7 @@ public class ASTRETURN_EXPRESSION extends SimpleNode {
 	    	result = true;
 	    }
 	    else {
-	    	System.out.println("Return type " + lhn.type + " doesn't match the function " + grandParent.name + " return type " + grandParent.type);
+	    	System.out.println("Error on line " + lhn.lineNo + ", column " + lhn.columnNo +": Return type " + lhn.type + " doesn't match the function " + grandParent.name + " return type " + grandParent.type);
 	    	result = false;
 		    this.decrementMaxErros();
 	    }
