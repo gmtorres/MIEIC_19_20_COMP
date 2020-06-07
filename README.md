@@ -55,10 +55,10 @@ The semantic analysis performed by the compiler at hands seeks to highlight a wi
 
 
 ## INTERMEDIATE REPRESENTATIONS (IRs): 
-We decided to generate an intermediate representation, a data structure used internally by the compiler, to aid in the analysis of input code. This representation is made after both the semantic and syntax are complete. Also, the IR helps us structure the Java-- code in something more simpler, manageable and closer to the target machine code. It will also help us in the optimizations of the code generation part of the project. We also did the Control Flow Graph for liveness analysis allowing us to do the register allocation optimization. Their implementations can be found in \textit{/src/CFGNode.java}, \textit{/src/IRNode.java} and \textit{/src/IRBuilder.java}.
+We decided to generate an intermediate representation, a data structure used internally by the compiler, to aid in the analysis of input code. This representation is made after both the semantic and syntax are complete. Also, the IR helps us structure the Java-- code in something more simpler, manageable and closer to the target machine code. It will also help us in the optimizations of the code generation part of the project. We also did the Control Flow Graph for liveness analysis allowing us to do the register allocation optimization. Their implementations can be found in _/src/CFGNode.java_, _/src/IRNode.java_ and _/src/IRBuilder.java_.
 
 ## CODE GENERATION:
-If there aren’t any errors the code for the specified file is generated. This process is done by the Jasmin class that receives the generated IR and a Printstream with the specified file for which the final code will be printed. It can be found in \textit{/src/Jasmin.java}. The generated code can be found in the \textit{jasmin.j} file placed in the root folder of the project.
+If there aren’t any errors the code for the specified file is generated. This process is done by the Jasmin class that receives the generated IR and a Printstream with the specified file for which the final code will be printed. It can be found in _/src/Jasmin.java_. The generated code can be found in the _jasmin.j_ file placed in the root folder of the project.
 
 ## OVERVIEW:
 
