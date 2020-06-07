@@ -1,0 +1,125 @@
+import static ioPlus.requestNumber() int;
+import static io.print(int) void;
+import static io.println(int) void;
+
+
+class HSort
+{
+ 
+	public boolean printarray(int[] a){
+		int i;
+		i = 0;
+		while(i < a.length) {
+			if(this.equals(i, a.length -1)) {
+				io.println(a[i]);
+			}
+			else {
+				io.print(a[i]);
+			}
+			i = i + 1;
+		}
+		
+		return true;
+	}
+	
+	
+
+    public static void main(String[] args) 
+    {
+        int n;
+        int res;
+        int i;
+        int[] a;
+        HSort h;
+        i =0;
+        h = new HSort();
+        n = ioPlus.requestNumber();
+        a = new int[n];
+        while (i < n) {
+	        a[i] =  ioPlus.requestNumber();
+	        i = i + 1;
+        }
+        h.printarray(a);
+        h.heapSort(a);
+        h.printarray(a);
+
+    }
+    
+    public boolean equals(int a, int b) {
+		return (!this.lt(a, b) && !this.lt(b, a));
+	}
+    
+ 
+	public boolean lt(int a, int b) {
+		return (a < b);
+    }
+    
+	public boolean le(int a, int b) {
+		return !(!this.lt(a, b) && !this.equals(a, b));
+    }
+    
+    public boolean gt(int a, int b) {
+		return (!this.le(a, b));
+    }
+    
+    public boolean heapSort(int[] a){
+    int size;
+    int i;
+    int t;
+    int father;
+    int son;
+    boolean b;
+    boolean b1;
+	
+	b = true;
+	b1 = true;
+    size = a.length;
+    i = size/2;
+
+    while (true && b){
+        if (0 < i){
+            i = i - 1; 
+            t = a[i];
+        }else{
+            size = size - 1;
+            if (this.le(size,0)) {
+                b = false;
+                b1 = false;
+            }
+            else {}
+            if(b) {
+                t = a[size];
+                a[size] = a[0];
+            }
+            else {
+            	t = 0;
+            }
+        
+        }
+        if (b) {
+            father = i;
+            son = ((i * 2) + 1);
+            while (son < size && b1){
+                if ((son + 1 < size) && ( a[son] < a[son + 1])) {
+                    son = son + 1;
+                }
+                else {}
+                if (t < a[son]){
+                    a[father] = a[son];
+                    father = son;
+                    son = father * 2 + 1;
+                }else {
+                    b1 = false;
+                }
+            }
+            a[father] = t;
+        }
+        else {
+
+        }
+        
+    }
+    return true;
+}
+ 
+}

@@ -1,0 +1,994 @@
+import static io.println() void;
+import static io.println(String) void;
+import static io.println(int) void;
+import static io.print(int) void;
+import static io.print(String) void;
+import static io.read() int;
+import static ioPlus.requestNumber() int;
+import static BoardBase.wrongMove();
+import static BoardBase.placeTaken();
+
+
+
+class sudoku {
+
+    int[] line1;
+    int[] line2;
+    int[] line3;
+    int[] line4;
+    int[] line5;
+    int[] line6;
+    int[] line7;
+    int[] line8;
+    int[] line9;
+    
+    int[] origLine1;
+    int[] origLine2;
+    int[] origLine3;
+    int[] origLine4;
+    int[] origLine5;
+    int[] origLine6;
+    int[] origLine7;   
+    int[] origLine8;   
+    int[] origLine9;
+    
+    boolean canRun;
+    
+    
+    public boolean init(int option) {
+    	line1 = new int[9];
+    	line2 = new int[9];
+    	line3 = new int[9];
+    	line4 = new int[9];
+    	line5 = new int[9];
+    	line6 = new int[9];
+    	line7 = new int[9];
+    	line8 = new int[9];
+    	line9 = new int[9];
+    	
+    	origLine1 = new int[9];
+    	origLine2 = new int[9];
+    	origLine3 = new int[9];
+    	origLine4 = new int[9];
+    	origLine5 = new int[9];
+    	origLine6 = new int[9];
+    	origLine7 = new int[9];
+    	origLine8 = new int[9];
+    	origLine9 = new int[9];
+    	    	
+    	canRun = true; 
+    	
+    	this.setLines(option);
+    	
+    	this.printBoard();
+
+    	return true;
+ 	}
+    
+    
+    public static void main(String[] args) {
+   		
+   		sudoku s;
+   		int option;
+   		
+   		io.println("Insert game difficulty 1 Easy 2 Medium 3 Hard");
+   		option = ioPlus.requestNumber();
+   		
+   		s = new sudoku();
+   		
+   		s.init(option);
+   		
+   		while(s.canRun()) {
+   			s.run();
+   		}
+   		
+
+    }
+    
+    public boolean setLines(int option) {
+    	
+    	if(this.eq(1,option)) {
+    	
+    	line1[0] = 0;
+    	line1[1] = 0;
+    	line1[2] = 0;
+    	line1[3] = 0;
+    	line1[4] = 6;
+    	line1[5] = 0;
+    	line1[6] = 8;
+    	line1[7] = 0;
+    	line1[8] = 0;
+    	
+    	line2[0] = 7;
+    	line2[1] = 1;
+    	line2[2] = 3;
+    	line2[3] = 0;
+    	line2[4] = 0;
+    	line2[5] = 0;
+    	line2[6] = 2;
+    	line2[7] = 0;
+    	line2[8] = 0;
+    	
+    	line3[0] = 5;
+    	line3[1] = 0;
+    	line3[2] = 0;
+    	line3[3] = 2;
+    	line3[4] = 0;
+    	line3[5] = 0;
+    	line3[6] = 1;
+    	line3[7] = 3;
+    	line3[8] = 9;
+    	
+    	line4[0] = 8;
+    	line4[1] = 3;
+    	line4[2] = 5;
+    	line4[3] = 0;
+    	line4[4] = 4;
+    	line4[5] = 6;
+    	line4[6] = 0;
+    	line4[7] = 0;
+    	line4[8] = 2;
+    	
+    	line5[0] = 0;
+    	line5[1] = 7;
+    	line5[2] = 0;
+    	line5[3] = 0;
+    	line5[4] = 1;
+    	line5[5] = 0;
+    	line5[6] = 0;
+    	line5[7] = 4;
+    	line5[8] = 0;
+    
+    	line6[0] = 4;
+    	line6[1] = 0;
+    	line6[2] = 0;
+    	line6[3] = 9;
+    	line6[4] = 3;
+    	line6[5] = 0;
+    	line6[6] = 6;
+    	line6[7] = 7;
+    	line6[8] = 5;
+    
+    	line7[0] = 6;
+    	line7[1] = 8;
+    	line7[2] = 2;
+    	line7[3] = 0;
+    	line7[4] = 0;
+    	line7[5] = 3;
+    	line7[6] = 0;
+    	line7[7] = 0;
+    	line7[8] = 1;
+    
+    	line8[0] = 0;
+    	line8[1] = 0;
+    	line8[2] = 4;
+    	line8[3] = 0;
+    	line8[4] = 0;
+    	line8[5] = 0;
+    	line8[6] = 5;
+    	line8[7] = 2;
+    	line8[8] = 3;
+    	
+    	line9[0] = 0;
+    	line9[1] = 0;
+    	line9[2] = 7;
+    	line9[3] = 0;
+    	line9[4] = 2;
+    	line9[5] = 0;
+    	line9[6] = 0;
+    	line9[7] = 0;
+    	line9[8] = 0;
+    	
+    	
+    	origLine1[0] = 0;
+    	origLine1[1] = 0;
+    	origLine1[2] = 0;
+    	origLine1[3] = 0;
+    	origLine1[4] = 6;
+    	origLine1[5] = 0;
+    	origLine1[6] = 8;
+    	origLine1[7] = 0;
+    	origLine1[8] = 0;
+    	
+    	origLine2[0] = 7;
+    	origLine2[1] = 1;
+    	origLine2[2] = 3;
+    	origLine2[3] = 0;
+    	origLine2[4] = 0;
+    	origLine2[5] = 0;
+    	origLine2[6] = 2;
+    	origLine2[7] = 0;
+    	origLine2[8] = 0;
+    	
+    	origLine3[0] = 5;
+    	origLine3[1] = 0;
+    	origLine3[2] = 0;
+    	origLine3[3] = 2;
+    	origLine3[4] = 0;
+    	origLine3[5] = 0;
+    	origLine3[6] = 1;
+    	origLine3[7] = 3;
+    	origLine3[8] = 9;
+    	
+    	origLine4[0] = 8;
+    	origLine4[1] = 3;
+    	origLine4[2] = 5;
+    	origLine4[3] = 0;
+    	origLine4[4] = 4;
+    	origLine4[5] = 6;
+    	origLine4[6] = 0;
+    	origLine4[7] = 0;
+    	origLine4[8] = 2;
+    	
+    	origLine5[0] = 0;
+    	origLine5[1] = 7;
+    	origLine5[2] = 0;
+    	origLine5[3] = 0;
+    	origLine5[4] = 1;
+    	origLine5[5] = 0;
+    	origLine5[6] = 0;
+    	origLine5[7] = 4;
+    	origLine5[8] = 0;
+    
+    	origLine6[0] = 4;
+    	origLine6[1] = 0;
+    	origLine6[2] = 0;
+    	origLine6[3] = 9;
+    	origLine6[4] = 3;
+    	origLine6[5] = 0;
+    	origLine6[6] = 6;
+    	origLine6[7] = 7;
+    	origLine6[8] = 5;
+    
+    	origLine7[0] = 6;
+    	origLine7[1] = 8;
+    	origLine7[2] = 2;
+    	origLine7[3] = 0;
+    	origLine7[4] = 0;
+    	origLine7[5] = 3;
+    	origLine7[6] = 0;
+    	origLine7[7] = 0;
+    	origLine7[8] = 1;
+    
+    	origLine8[0] = 0;
+    	origLine8[1] = 0;
+    	origLine8[2] = 4;
+    	origLine8[3] = 0;
+    	origLine8[4] = 0;
+    	origLine8[5] = 0;
+    	origLine8[6] = 5;
+    	origLine8[7] = 2;
+    	origLine8[8] = 3;
+    	
+    	origLine9[0] = 0;
+    	origLine9[1] = 0;
+    	origLine9[2] = 7;
+    	origLine9[3] = 0;
+    	origLine9[4] = 2;
+    	origLine9[5] = 0;
+    	origLine9[6] = 0;
+    	origLine9[7] = 0;
+    	origLine9[8] = 0;
+    	}
+    	
+    	else if (this.eq(2,option)) {
+    	
+    	line1[0] = 0;
+    	line1[1] = 6;
+    	line1[2] = 0;
+    	line1[3] = 9;
+    	line1[4] = 0;
+    	line1[5] = 4;
+    	line1[6] = 0;
+    	line1[7] = 0;
+    	line1[8] = 1;
+    	
+    	line2[0] = 1;
+    	line2[1] = 8;
+    	line2[2] = 3;
+    	line2[3] = 0;
+    	line2[4] = 5;
+    	line2[5] = 7;
+    	line2[6] = 6;
+    	line2[7] = 4;
+    	line2[8] = 0;
+    	
+    	line3[0] = 0;
+    	line3[1] = 0;
+    	line3[2] = 4;
+    	line3[3] = 6;
+    	line3[4] = 0;
+    	line3[5] = 0;
+    	line3[6] = 0;
+    	line3[7] = 0;
+    	line3[8] = 7;
+    	
+    	line4[0] = 0;
+    	line4[1] = 2;
+    	line4[2] = 0;
+    	line4[3] = 0;
+    	line4[4] = 0;
+    	line4[5] = 6;
+    	line4[6] = 7;
+    	line4[7] = 0;
+    	line4[8] = 0;
+    	
+    	line5[0] = 6;
+    	line5[1] = 0;
+    	line5[2] = 0;
+    	line5[3] = 0;
+    	line5[4] = 0;
+    	line5[5] = 0;
+    	line5[6] = 2;
+    	line5[7] = 1;
+    	line5[8] = 0;
+    
+    	line6[0] = 7;
+    	line6[1] = 0;
+    	line6[2] = 0;
+    	line6[3] = 0;
+    	line6[4] = 0;
+    	line6[5] = 0;
+    	line6[6] = 0;
+    	line6[7] = 0;
+    	line6[8] = 0;
+    
+    	line7[0] = 5;
+    	line7[1] = 0;
+    	line7[2] = 0;
+    	line7[3] = 0;
+    	line7[4] = 7;
+    	line7[5] = 0;
+    	line7[6] = 0;
+    	line7[7] = 0;
+    	line7[8] = 2;
+    
+    	line8[0] = 0;
+    	line8[1] = 0;
+    	line8[2] = 0;
+    	line8[3] = 4;
+    	line8[4] = 0;
+    	line8[5] = 9;
+    	line8[6] = 0;
+    	line8[7] = 0;
+    	line8[8] = 0;
+    	
+    	line9[0] = 0;
+    	line9[1] = 0;
+    	line9[2] = 2;
+    	line9[3] = 5;
+    	line9[4] = 0;
+    	line9[5] = 0;
+    	line9[6] = 3;
+    	line9[7] = 0;
+    	line9[8] = 4;
+    	
+    	origLine1[0] = 0;
+    	origLine1[1] = 6;
+    	origLine1[2] = 0;
+    	origLine1[3] = 9;
+    	origLine1[4] = 0;
+    	origLine1[5] = 4;
+    	origLine1[6] = 0;
+    	origLine1[7] = 0;
+    	origLine1[8] = 1;
+    	
+    	origLine2[0] = 1;
+    	origLine2[1] = 8;
+    	origLine2[2] = 3;
+    	origLine2[3] = 0;
+    	origLine2[4] = 5;
+    	origLine2[5] = 7;
+    	origLine2[6] = 6;
+    	origLine2[7] = 4;
+    	origLine2[8] = 0;
+    	
+    	origLine3[0] = 0;
+    	origLine3[1] = 0;
+    	origLine3[2] = 4;
+    	origLine3[3] = 6;
+    	origLine3[4] = 0;
+    	origLine3[5] = 0;
+    	origLine3[6] = 0;
+    	origLine3[7] = 0;
+    	origLine3[8] = 7;
+    	
+    	origLine4[0] = 0;
+    	origLine4[1] = 2;
+    	origLine4[2] = 0;
+    	origLine4[3] = 0;
+    	origLine4[4] = 0;
+    	origLine4[5] = 6;
+    	origLine4[6] = 7;
+    	origLine4[7] = 0;
+    	origLine4[8] = 0;
+    	
+    	origLine5[0] = 6;
+    	origLine5[1] = 0;
+    	origLine5[2] = 0;
+    	origLine5[3] = 0;
+    	origLine5[4] = 0;
+    	origLine5[5] = 0;
+    	origLine5[6] = 2;
+    	origLine5[7] = 1;
+    	origLine5[8] = 0;
+    
+    	origLine6[0] = 7;
+    	origLine6[1] = 0;
+    	origLine6[2] = 0;
+    	origLine6[3] = 0;
+    	origLine6[4] = 0;
+    	origLine6[5] = 0;
+    	origLine6[6] = 0;
+    	origLine6[7] = 0;
+    	origLine6[8] = 0;
+    
+    	origLine7[0] = 5;
+    	origLine7[1] = 0;
+    	origLine7[2] = 0;
+    	origLine7[3] = 0;
+    	origLine7[4] = 7;
+    	origLine7[5] = 0;
+    	origLine7[6] = 0;
+    	origLine7[7] = 0;
+    	origLine7[8] = 2;
+    
+    	origLine8[0] = 0;
+    	origLine8[1] = 0;
+    	origLine8[2] = 0;
+    	origLine8[3] = 4;
+    	origLine8[4] = 0;
+    	origLine8[5] = 9;
+    	origLine8[6] = 0;
+    	origLine8[7] = 0;
+    	origLine8[8] = 0;
+    	
+    	origLine9[0] = 0;
+    	origLine9[1] = 0;
+    	origLine9[2] = 2;
+    	origLine9[3] = 5;
+    	origLine9[4] = 0;
+    	origLine9[5] = 0;
+    	origLine9[6] = 3;
+    	origLine9[7] = 0;
+    	origLine9[8] = 4;
+    	
+    	}
+    	
+    	
+    	else {
+    	
+    	line1[0] = 4;
+    	line1[1] = 0;
+    	line1[2] = 0;
+    	line1[3] = 0;
+    	line1[4] = 0;
+    	line1[5] = 0;
+    	line1[6] = 8;
+    	line1[7] = 0;
+    	line1[8] = 0;
+    	
+    	line2[0] = 0;
+    	line2[1] = 6;
+    	line2[2] = 0;
+    	line2[3] = 0;
+    	line2[4] = 5;
+    	line2[5] = 1;
+    	line2[6] = 0;
+    	line2[7] = 0;
+    	line2[8] = 8;
+    	
+    	line3[0] = 0;
+    	line3[1] = 0;
+    	line3[2] = 0;
+    	line3[3] = 0;
+    	line3[4] = 0;
+    	line3[5] = 0;
+    	line3[6] = 4;
+    	line3[7] = 2;
+    	line3[8] = 0;
+    	
+    	line4[0] = 0;
+    	line4[1] = 7;
+    	line4[2] = 4;
+    	line4[3] = 0;
+    	line4[4] = 0;
+    	line4[5] = 0;
+    	line4[6] = 0;
+    	line4[7] = 0;
+    	line4[8] = 1;
+    	
+    	line5[0] = 0;
+    	line5[1] = 0;
+    	line5[2] = 1;
+    	line5[3] = 0;
+    	line5[4] = 0;
+    	line5[5] = 7;
+    	line5[6] = 0;
+    	line5[7] = 0;
+    	line5[8] = 0;
+    
+    	line6[0] = 0;
+    	line6[1] = 0;
+    	line6[2] = 8;
+    	line6[3] = 8;
+    	line6[4] = 1;
+    	line6[5] = 3;
+    	line6[6] = 0;
+    	line6[7] = 0;
+    	line6[8] = 0;
+    
+    	line7[0] = 8;
+    	line7[1] = 0;
+    	line7[2] = 0;
+    	line7[3] = 5;
+    	line7[4] = 9;
+    	line7[5] = 0;
+    	line7[6] = 0;
+    	line7[7] = 0;
+    	line7[8] = 3;
+    
+    	line8[0] = 0;
+    	line8[1] = 0;
+    	line8[2] = 0;
+    	line8[3] = 0;
+    	line8[4] = 0;
+    	line8[5] = 0;
+    	line8[6] = 0;
+    	line8[7] = 0;
+    	line8[8] = 0;
+    	
+    	line9[0] = 0;
+    	line9[1] = 0;
+    	line9[2] = 0;
+    	line9[3] = 0;
+    	line9[4] = 0;
+    	line9[5] = 0;
+    	line9[6] = 0;
+    	line9[7] = 0;
+    	line9[8] = 0;
+    	
+    	origLine1[0] = 4;
+    	origLine1[1] = 0;
+    	origLine1[2] = 0;
+    	origLine1[3] = 0;
+    	origLine1[4] = 0;
+    	origLine1[5] = 0;
+    	origLine1[6] = 8;
+    	origLine1[7] = 0;
+    	origLine1[8] = 0;
+    	
+    	origLine2[0] = 0;
+    	origLine2[1] = 6;
+    	origLine2[2] = 0;
+    	origLine2[3] = 0;
+    	origLine2[4] = 5;
+    	origLine2[5] = 1;
+    	origLine2[6] = 0;
+    	origLine2[7] = 0;
+    	origLine2[8] = 8;
+    	
+    	origLine3[0] = 0;
+    	origLine3[1] = 0;
+    	origLine3[2] = 0;
+    	origLine3[3] = 0;
+    	origLine3[4] = 0;
+    	origLine3[5] = 0;
+    	origLine3[6] = 4;
+    	origLine3[7] = 2;
+    	origLine3[8] = 0;
+    	
+    	origLine4[0] = 0;
+    	origLine4[1] = 7;
+    	origLine4[2] = 4;
+    	origLine4[3] = 0;
+    	origLine4[4] = 0;
+    	origLine4[5] = 0;
+    	origLine4[6] = 0;
+    	origLine4[7] = 0;
+    	origLine4[8] = 1;
+    	
+    	origLine5[0] = 0;
+    	origLine5[1] = 0;
+    	origLine5[2] = 1;
+    	origLine5[3] = 0;
+    	origLine5[4] = 0;
+    	origLine5[5] = 7;
+    	origLine5[6] = 0;
+    	origLine5[7] = 0;
+    	origLine5[8] = 0;
+    
+    	origLine6[0] = 0;
+    	origLine6[1] = 0;
+    	origLine6[2] = 8;
+    	origLine6[3] = 8;
+    	origLine6[4] = 1;
+    	origLine6[5] = 3;
+    	origLine6[6] = 0;
+    	origLine6[7] = 0;
+    	origLine6[8] = 0;
+    
+    	origLine7[0] = 8;
+    	origLine7[1] = 0;
+    	origLine7[2] = 0;
+    	origLine7[3] = 5;
+    	origLine7[4] = 9;
+    	origLine7[5] = 0;
+    	origLine7[6] = 0;
+    	origLine7[7] = 0;
+    	origLine7[8] = 3;
+    
+    	origLine8[0] = 0;
+    	origLine8[1] = 0;
+    	origLine8[2] = 0;
+    	origLine8[3] = 0;
+    	origLine8[4] = 0;
+    	origLine8[5] = 0;
+    	origLine8[6] = 0;
+    	origLine8[7] = 0;
+    	origLine8[8] = 0;
+    	
+    	origLine9[0] = 0;
+    	origLine9[1] = 0;
+    	origLine9[2] = 0;
+    	origLine9[3] = 0;
+    	origLine9[4] = 0;
+    	origLine9[5] = 0;
+    	origLine9[6] = 0;
+    	origLine9[7] = 0;
+    	origLine9[8] = 0;
+    	
+    	}
+    	
+    
+    	
+    	return true;
+    
+    }
+    
+    public boolean canRun() {
+    	return canRun;
+    }
+    
+   	
+   	public boolean printLine(int[] line) {
+   		
+   		int i;
+   		
+   		
+   		for (i = 0; i < 9; i = i + 1) {
+   			io.print(line[i]);
+   		}
+   		
+   		io.println();
+   		
+   		return true;
+   	}
+   	
+   	public boolean printBoard() {
+   		
+   		this.printLine(line1);
+   		this.printLine(line2);
+   		this.printLine(line3);
+   		this.printLine(line4);
+   		this.printLine(line5);
+   		this.printLine(line6);
+   		this.printLine(line7);
+   		this.printLine(line8);
+   		this.printLine(line9);
+   		
+   		return true;
+   	}
+   	
+   	
+   	public int[] getLine(int line) {
+   		int[] arr;
+   		
+   		if (this.eq(1,line)) {
+   			arr = line1;
+   		}
+   		else if (this.eq(2,line)) {
+   			arr = line2;
+   		}
+   		else if (this.eq(3,line)) {
+   			arr = line3;
+   		}
+   		else if (this.eq(4,line)) {
+   			arr = line4;
+   		}
+   		else if (this.eq(5,line)) {
+   			arr = line5;
+   		}
+   		else if (this.eq(6,line)) {
+   			arr = line6;
+   		}
+   		else if (this.eq(7,line)) {
+   			arr = line7;
+   		}
+   		else if (this.eq(8,line)) {
+   			arr = line8;
+   		}
+   		else {
+   			arr = line9;
+   		}
+   		
+   		return arr;
+   		
+   	}
+   	
+   	
+   	public boolean setLine(int line, int col, int option) {
+   		int[] arr;
+   		arr = this.getLine(line);
+   		
+   		arr[col] = option;
+   		
+   		return true;
+   	}
+   	
+   	
+   	public boolean setPosition() {
+   		boolean toRet;
+   		
+   		int opt;
+   		int line;
+   		int col;
+   		
+   		io.println("choose a number from 1 to 9 for your option");
+   		opt = ioPlus.requestNumber();
+   		io.print("choose a line from 1 to 9 VERTICAL");
+   		line = ioPlus.requestNumber();
+   		io.print("choose a column from 1 to 9 HORIZONTAL");
+   		col = ioPlus.requestNumber();
+   		
+   		col = col - 1;
+   		
+   		if (this.validateInput(opt) && this.validateInput(line) && this.validateInput(col)) {
+   			if (this.validatePlay(line, col, opt)) {
+   				this.setLine(line, col, opt);
+   				toRet = true;
+   			}
+   			else {
+   				toRet = false;
+   			}
+   		}
+   		
+   		else {
+   			toRet = false;
+   		}
+   		   		
+   		return toRet;
+   	}
+   	
+   	
+   	public boolean validatePlay(int line, int col, int option) {
+   		boolean toRet;
+   		int[] arr;
+   		int i;
+   		
+   		i = 0;
+   		toRet = true;
+   		arr = this.getLine(line);
+   		
+   		if(this.eq(arr[col],0)) {  //TODO: ALTERAR
+   			
+   			if (this.validateSquare(line, col, option) && this.validateColumn(col, option)) {
+   				while(i < 9 && toRet) {
+   					if(this.eq(arr[i], option)) {
+   						BoardBase.wrongMove();
+   						toRet = false;
+   					}
+   					else {
+   					}
+   					
+   					i = i + 1;
+   				}
+   				
+   			}
+   			else {
+   				BoardBase.wrongMove();
+   				toRet = false;
+   			}
+   		}
+   		else {
+   			BoardBase.placeTaken();
+   			toRet = false;
+   		}  
+   		
+   		return toRet; 
+   	}
+   	
+   	
+   	public boolean validateColumn(int column, int option) {
+   		boolean toRet;
+   		int i;
+   		int[] arr;
+   		
+   		i = 1;
+   		toRet = true;
+   		
+   		while (i < 10 && toRet) {
+   			arr = this.getLine(i);
+   			if (this.eq(arr[column], option)) {
+   				toRet = false;
+   			}
+   			else {
+   			}
+   			i = i + 1;
+   		}
+   		
+   		return toRet;
+   	}
+   	
+   	
+   	public boolean validateSquare(int line, int col, int option) {
+   		boolean toRet;
+   		
+   		int i;
+   		int j;
+   		int prevJ;
+   		
+   		int[] arr;
+   		
+   		int sqx;
+   		int sqy;
+   		
+   		toRet = true;
+   		
+	
+   		if (this.ge(line, 1) && this.le(line, 3)) {
+   			i = 1;
+   			sqy = 4;
+   		}
+   		
+   		else if(this.ge(line, 4) && this.le(line, 6)) {
+   			i = 4;
+   			sqy = 7;
+   			
+   		}
+   		
+   		else {
+   			i = 7;
+   			sqy = 10;
+   			
+   		}
+   		
+   		
+   		if (this.ge(col, 0) && this.le(col, 2)) {
+   			j = 0;
+   			prevJ = 0;
+   			sqx = 3;
+			
+   		}
+   		
+   		else if(this.ge(col, 3) && this.le(col, 5)) {
+   			j = 3;
+   			prevJ = 3;
+   			sqx = 6;
+   			
+   		}
+   		
+   		else {
+   			j = 6;
+   			prevJ = 6;
+   			sqx = 9;
+   			
+   		}
+   		
+   		   		
+   		while ((i < sqy ) && toRet) {
+   			arr = this.getLine(i);
+   			while((j < sqx) && toRet) {
+   				
+   				if(this.eq(arr[j], option)) {
+   					toRet = false;
+   				}
+   				else {
+   				}
+   				
+   				j = j + 1;
+   			}
+   		
+   			i = i + 1;
+   			j = prevJ;
+   		}
+   		
+   		return toRet;
+   	}
+   	
+   	
+   	
+   	
+   	
+   	public boolean validateInput(int toValidate) {
+   		boolean res;
+   		if (this.lt(1,toValidate) || this.gt(9,toValidate)) {
+   			res = true;
+   		}
+   		else {
+   			BoardBase.wrongMove();
+   			res = false;
+   		}
+   		
+   		return res;
+   	}
+   	
+   	
+   	
+   	public boolean validateBoard() {
+   		int i;
+   		boolean toRet;
+   		int[] arr;
+   		int j;
+   		
+   		toRet = true;
+   		i = 1;
+   		
+   		while(i < 10 && toRet) {
+   			arr = this.getLine(i);
+   			
+   			for (j = 0; j < 9; j = j + 1) {
+   				
+   				if (this.eq(0, arr[j])) {
+   					toRet = false;
+   				}
+   				else {
+   				}
+   			}
+   			
+   			j = 0;
+   			i = i + 1;
+   		}
+   	
+   		return toRet;
+   		
+   	}
+   	
+   	
+   	public boolean run() {
+   		
+   		while(!this.setPosition()) {
+   		}
+   		
+   		this.printBoard();
+   	
+   	
+   		if(this.validateBoard()) {
+   			canRun = false;
+   			io.println("Game over");
+   		}
+   		else {
+   		}		
+   		
+   		return true;
+   	}
+   	
+   	
+   	
+   	
+   	public boolean eq(int a, int b) {
+		return (!this.lt(a, b) && !this.lt(b, a));
+	}
+	
+	public boolean ne(int a, int b) {
+		return (!this.eq(a, b));
+	}
+	
+    public boolean lt(int a, int b) {
+		return (a < b);
+    }
+    
+    public boolean le(int a, int b) {
+		return !(!this.lt(a, b) && !this.eq(a, b));
+    }
+    
+    public boolean gt(int a, int b) {
+		return (!this.le(a, b));
+    }
+    
+    public boolean ge(int a, int b) {
+		return !(!this.gt(a, b) && !this.eq(a, b));
+	}
+    
+    
+}

@@ -1,0 +1,107 @@
+import static io.println(int);
+import static io.println(float);
+import static io.println(String) void;
+import static io.print(String) void;
+
+class StressTest {
+	
+	int a;
+	
+	int[] arr0;
+	int[] arr1;
+	
+	public StressTest(int arg1){
+		a = arg1;
+		arr0 = new int[2];
+		arr1 = new int[5];
+		arr0[0] = 1;
+		arr0[1] = 2;
+		arr1[0] = arr0[0]*10;
+		arr1[1] = arr0[1]*10;
+	}
+	
+	public static void main(String[] args){ 
+		
+		boolean b;
+		int i;
+		int t;
+		int y;
+		StressTest e;
+		
+		io.println("Starting stress test");
+		
+		e = new StressTest(3);
+		
+		for(i = 0; 3 > i; i = i + 1){
+			e.printA().setA(i).printA().setA(0-i);
+		}
+		io.println(e.fibonacci(10));
+		
+		i = 0;
+		b = true;
+		e.setA(3);
+		if( i < 1 && !(!b || (e.getA() > 4 && e.getA() < 2))){
+			io.println("True");
+		}else
+			io.println("False");
+		
+		for(i = 0 - 5; 26 > i * i; i = i + 1){
+			if(i < 0)
+				y = 0 - i;
+			else
+			 y = i;
+			for(t = 0; t < y ; t = t + 1)
+				io.print("o");
+			io.println("");
+		}
+		
+		io.println(e.getArray(0)[0]);
+		io.println(e.getArray(1)[1]);
+		io.println(e.getArray(1).length);
+		io.println(e.abs(5.0 * (0.0 - 1.0))	);
+		io.println("Stress test finished");
+		
+	}
+	
+	public int[] getArray(int n){
+		int[] ret;
+		if(n < 1)
+			ret = arr0;
+		else
+			ret = arr1;
+			
+		return ret;
+	}
+	
+	public int fibonacci(int v){
+		int ret;
+		if(v < 3)
+			ret = 1;
+		else 
+			ret = this.fibonacci(v-1) + this.fibonacci(v-2);
+		return ret;
+	}
+	
+	public float abs(float v){
+		if(v < 0.0)
+			v = 0.0 - v;
+		else{}
+		return v;
+	}
+	
+	public StressTest printA(){
+		io.println(a);
+		return this;
+	}
+	
+	public StressTest setA(int arg1){
+		a = arg1;
+		return this;
+	}
+	
+	public int getA(){
+		return a;
+	}
+	
+
+}	
