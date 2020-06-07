@@ -66,7 +66,7 @@ public class Main {
 
 
     	ASTProgram root = myJmm.Program();
-        //root.dump("");
+        root.dump("");
 
         if(myJmm.failed == true) {
         	throw new ParseException();

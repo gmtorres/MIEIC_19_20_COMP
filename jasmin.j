@@ -11,14 +11,18 @@ return
 
 .method public static main([Ljava/lang/String;)V
 	.limit stack 2
-	.limit locals 1
+	.limit locals 3
 
-new Hello_T
-dup
-invokespecial Hello_T/<init>()V
-fconst_2
-invokevirtual Hello_T.optimization(F)F
-invokestatic	io.println(F)V
+iconst_0
+istore_1
+
+iconst_1
+iload_1
+isub
+istore_1
+
+iload_1
+invokestatic	io.println(I)V
 
 	return
 .end method
@@ -30,6 +34,11 @@ invokestatic	io.println(F)V
 fconst_2
 fstore_1
 
+loop1:
+fload_1
+ldc 4.0f
+fcmpg
+ifge end_loop1
 begin_loop1:
 
 fload_1
@@ -42,10 +51,7 @@ ldc 0.25f
 fsub
 fstore_1
 
-fload_1
-ldc 4.0f
-fcmpg
-iflt begin_loop1
+goto loop1
 end_loop1:
 
 fload_1

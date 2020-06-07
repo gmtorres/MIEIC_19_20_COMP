@@ -2,7 +2,12 @@ import java.util.Stack;
 import java.util.List;
 import java.util.ArrayList;
 
-
+/**
+ * 
+ * IRNode stands for Intermediate Representation Node
+ * Used to build the IR tree
+ *
+ */
 
 public class IRNode {
 	
@@ -890,8 +895,9 @@ public class IRNode {
 
 	}
 
-	
-	
+	/*
+	 * Get build for each AST type
+	 */
 	public void getBuild(SimpleNode sn) {
 		//System.out.println(sn.toString());
 		switch(sn.toString()) {
@@ -1004,7 +1010,10 @@ public class IRNode {
 	}
 	
 	public void setRegisters() {
-		
+		if(this.inst.equals("st")){
+			if(this.children[0].local_var == -1)
+				return;
+		}
 		if(this.inst.equals("method")) {
 			this.max_op_stack = 0;
 		}else if(this.inst.equals("sta")) {

@@ -12,7 +12,11 @@ class Hello_T {
 	int foo;
 
 	public static void main(String[] args){ 	
-		io.println(new Hello_T().optimization(2.0));
+		int a;
+		int b;
+		a = 0;
+		a = 1 - a;
+		io.println(a);
    	}
 
    	public float optimization(float a){  		

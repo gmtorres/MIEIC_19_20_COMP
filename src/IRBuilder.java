@@ -1,6 +1,9 @@
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Builder for Intermediate Representation
+ */
 public class IRBuilder {
 	
 	IRNode root = null;
@@ -13,6 +16,7 @@ public class IRBuilder {
 		root.build(sn);
 		this.simplifyBooleans(root);
 		
+		//run optimizations and build control flow graph
 		cfg_methods = new CFGNode[root.children[0].children.length - 3]; // number of methods
 		int i = 0;
 		try {
@@ -34,11 +38,15 @@ public class IRBuilder {
 			throw e;
 		}
 		
+		//set pop in necessary places
 		this.setPop(root);
 		
+		//build incs
+		this.optimizeOperations(root);
+		
+		//set regiesters and stack
 		root.setRegisters();
 		
-		this.optimizeOperations(root);
 		
 	}
 	
@@ -300,18 +308,24 @@ public class IRBuilder {
 				IRNode rhn2 = rhn.getChildren()[0];
 				IRNode lhn2 = rhn.getChildren()[1];
 				if((rhn2.getInst().equals("ldl") || rhn2.getInst().equals("ldp")) 
-						//&& rhn2.getChildren()[0].getInst().equals(lhn.getInst())
-						&& rhn2.getChildren()[0].local_var == lhn.local_var
-						) {
+						&& rhn2.getChildren()[0].local_var == lhn.local_var) {
 					if(lhn2.getInst().equals("ldc")) {
 						int val = Integer.parseInt(lhn2.getChildren()[0].getInst());
-						//System.out.println(rhn.getInst());
 						if(rhn.getInst().equals("-")) {
 							val = -val;
-							//System.out.println(val);
 						}
 						if(val >= -127 && val <= 127) {
-							//System.out.println("inc");
+							node.setInst("iinc");
+							rhn.children = new IRNode[0];
+							rhn.setInst(String.valueOf(val));
+						}
+					}
+				}
+				if((lhn2.getInst().equals("ldl") || lhn2.getInst().equals("ldp")) 
+						&& lhn2.getChildren()[0].local_var == lhn.local_var) {
+					if(rhn2.getInst().equals("ldc") && rhn.getInst().equals("+")) {
+						int val = Integer.parseInt(rhn2.getChildren()[0].getInst());
+						if(val >= -127 && val <= 127) {
 							node.setInst("iinc");
 							rhn.children = new IRNode[0];
 							rhn.setInst(String.valueOf(val));

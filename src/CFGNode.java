@@ -1,6 +1,14 @@
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * CFGNode class stands for Control Flow Graph Node
+ * Here many optimizations are made, not only related to the CFG,
+ * but here we agregatted several optimization, from register allocation,
+ * constant propagation, constant folding and if/while branch removal.
+ *
+ */
+
 public class CFGNode {
 	
 	static Integer line_count = 0;
@@ -50,7 +58,11 @@ public class CFGNode {
 			this.constant_folding(method);
 		}
 	}
-	
+	/*
+	 * Remove IRNode labeled as "statements",
+	 * to be compatible with the register allocation algorithm,
+	 * substituting it by its children
+	 */
 	private void removeStatements(IRNode node, int index) {
 		for(int i = 0; i < node.children.length;i++) {
 			IRNode child = node.children[i];
@@ -63,7 +75,9 @@ public class CFGNode {
 			removeStatements(child,i);
 		}
 	}
-	
+	/*
+	 * Remove branches that are not going to be used in if clause
+	 */
 	private void removeIfBranches(IRNode node, int index) {
 		for(int i = 0; i <node.children.length; i++) {
 			removeIfBranches(node.children[i],i);
@@ -89,6 +103,9 @@ public class CFGNode {
 		}
 	}
 	
+	/*
+	 * Constant propagation method initiator
+	 */
 	private void constantPropagation(IRNode method) {
 		List<Simbol> values = new ArrayList<Simbol>();
 		IRNode statements = method.children[4];
@@ -109,6 +126,12 @@ public class CFGNode {
 			values.remove(s);
 	}
 	
+	/*
+	 * Do constant propagation
+	 * when finding a IRNode as "st", add the variable and its value to stored values
+	 * when finding a IRNode as "ldl","ldp", substitute by the value stored if one exists
+	 * be careful with constant folding case it is ativated
+	 */
 	private void doConstantPropagation(IRNode method, List<Simbol> values) {
 		int i = 0;
 		for(IRNode child : method.children) {
@@ -150,7 +173,10 @@ public class CFGNode {
 		}
 		//System.out.println(values);
 	}
-	
+	/*
+	 * Do constant propagation
+	 * Remove values assigned inside the while, before executing the while
+	 */
 	private void doConstantPropagationWhile(IRNode loop, List<Simbol> values) {
 		IRNode temp_while = new IRNode(null);
 		IRNode temp_condition = new IRNode(temp_while,loop.children[0]);
@@ -174,7 +200,10 @@ public class CFGNode {
 		doConstantPropagation(loop,values);
 		this.removeFromValues(values, def);
 	}
-	
+	/*
+	 * Do constant propagation
+	 * Remove values assigned inside the if, after executing the if
+	 */
 	private void doConstantPropagationIf(IRNode branch, List<Simbol> values) {
 		List<Simbol> def = this.getAllDefs(branch);
 		List<Simbol> temp_values = new ArrayList<Simbol>(values);
@@ -189,6 +218,9 @@ public class CFGNode {
 		this.removeFromValues(values, def);
 	}
 	
+	/*
+	 * Substitute variable by a constant
+	 */
 	private void substituteConstant(IRNode statement,List<Simbol> values) {
 		for(IRNode child : statement.children)
 			substituteConstant(child,values);
@@ -201,7 +233,9 @@ public class CFGNode {
 			}
 		}
 	}
-	
+	/*
+	 * Get all variable defined inside a block of instructions
+	 */
 	private List<Simbol> getAllDefs(IRNode node){
 		List<Simbol> defs = new ArrayList<Simbol>();
 		this.getAllDefAux(node, defs);
@@ -215,6 +249,9 @@ public class CFGNode {
 			this.addToValues(defs, node.children[0].simbol);
 	}
 	
+	/*
+	 * Evaluate expressions, when the two children are constants
+	 */
 	private void constant_folding(IRNode sn) {
 		for(IRNode child : sn.children) {
 			this.constant_folding(child);
@@ -317,6 +354,9 @@ public class CFGNode {
 		}
 	}
 	
+	/*
+	 * Start register optimization
+	 */
 	private void registerOptimization(IRNode method, Integer registers) throws RegisterAllocationException  {
 		IRNode args= method.children[2];
 		this.line = -1;
@@ -345,7 +385,9 @@ public class CFGNode {
 			return;
 		l.add(d);
 	}
-	
+	/*
+	 * Set use and def of each CFGNode
+	 */
 	public void setUseDef(CFGNode n) {
 		if(n == null)
 			return;
@@ -363,7 +405,9 @@ public class CFGNode {
 			setUseDef(n.sucessors[i]);
 		}
 	}
-	
+	/*
+	 * Set use of a certain CFGNode
+	 */
 	private void setUse(CFGNode n,IRNode node) {
 		for(IRNode child : node.children)
 			setUse(n,child);
@@ -372,6 +416,9 @@ public class CFGNode {
 		}
 	}
 	
+	/*
+	 * Add successor of CFGNode
+	 */
 	private void addSucessor(CFGNode n) {
 		 if (sucessors == null) {
 			 sucessors = new CFGNode[1];
@@ -385,7 +432,9 @@ public class CFGNode {
 	}
 	
 
-	
+	/*
+	 * Main method for building the CFG
+	 */
 	private void buildBase(IRNode method) {
 		CFGNode prev = this;
 		CFGNode cfgNode = new CFGNode();
@@ -457,6 +506,9 @@ public class CFGNode {
 		return prev;
 	}
 	
+	/*
+	 * Build CFG inside while
+	 */
 	private void buildWhile(IRNode loop) {
 		this.correspondent = loop.children[0];
 		this.line = line_count++;
@@ -494,6 +546,9 @@ public class CFGNode {
 		if(prev != null)	prev.addSucessor(this);
 	}
 	
+	/*
+	 * Build CFG inside if
+	 */
 	private void buildIf(IRNode branch,CFGNode successor) {
 		this.correspondent = branch.children[0];
 		this.line = line_count++;
@@ -581,7 +636,9 @@ public class CFGNode {
 		str+= "\tUse: " + this.use + "\t\tDEF: " + this.def  + "\t\tOUT: " + this.out + "\t\tIN: " + this.in;
 		return str;
 	}
-	
+	/*
+	 * Print CFG nodes
+	 */
 	private void printCFG(CFGNode n) {
 		if(n == null)
 			return;
@@ -614,6 +671,9 @@ public class CFGNode {
 		addToStack(stack,n);
 	}
 	
+	/*
+	 * Reset visited nodes, so they can be visited again, in case it is needed
+	 */
 	private void resetVisited(List<CFGNode> stack) {
 		for(CFGNode node : stack)
 			node.visited = false;
@@ -728,7 +788,9 @@ public class CFGNode {
 		
 		
 	}
-	
+	/*
+	 * Color register with algorith
+	 */
 	private void colorRegisters(List<CFGNode> stack,Integer k) throws RegisterAllocationException{
 		// do not count with register 0, for this
 		k = k+1;
@@ -819,6 +881,9 @@ public class CFGNode {
 		this.allocRegisters(ranges, stack);
 	}
 	
+	/*
+	 * Assign each variable to its new register
+	 */
 	private void allocRegisters(List<LiveRange> ranges, List<CFGNode> stack) {
 		
 		for(int i = 0; i < stack.size()-1;i++) {
@@ -832,7 +897,9 @@ public class CFGNode {
 				
 		}		
 	}
-	
+	/*
+	 * Auxiliar for ssign each variable to its new register
+	 */
 	private void allocRegisters_Aux(List<LiveRange> ranges, IRNode node, int line) {
 		for(IRNode child : node.children)
 			allocRegisters_Aux(ranges,child,line);
@@ -901,7 +968,11 @@ public class CFGNode {
 	
 	
 	
-	
+	/**
+	 * 
+	 * Live range class, storing the begin and end of a live range of a variable, and the simbol it maps to
+	 *
+	 */
 	class LiveRange{
 		Simbol s;
 		int begin;
