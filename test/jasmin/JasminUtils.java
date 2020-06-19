@@ -40,19 +40,32 @@ public class JasminUtils {
 		return TEST_CLASSPATH;
 	}
 
-    public static void testJmm(String jmmResource, String expectedOutput) {	
-		testJmm(jmmResource,expectedOutput, null);
+    public static String testJmm(String jmmResource, String expectedOutput) {	
+		 return testJmm(jmmResource,expectedOutput, null, true);
 	}
 
-    public static void testJmm(String jmmResource, String expectedOutput, String stdin) {	
+	
+    public static String testJmm(String jmmResource, String expectedOutput, String stdin) {	
+		return testJmm(jmmResource,expectedOutput, stdin, true);
+	}
+
+	public static String testJmm(String jmmResource, String expectedOutput, Boolean test) {	
+		return testJmm(jmmResource,expectedOutput, null, test);
+	}
+
+
+    public static String testJmm(String jmmResource, String expectedOutput, String stdin, Boolean test) {	
 		// Create jmm file
         File tempFolder = SpecsIo.getTempFolder(jmmResource);
         File testFile = SpecsIo.resourceCopy(jmmResource, tempFolder);
 		
 		String jCode = JmmCompiler.compile(testFile);
-	
-		testJasminBase(jCode, expectedOutput, stdin);
+		if(test)
+			testJasminBase(jCode, expectedOutput, stdin);
+		return jCode;
 	}
+
+	
 
 
 	public static File getJasminJar(){
