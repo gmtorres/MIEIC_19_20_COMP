@@ -1,5 +1,9 @@
 package jasmin;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import pt.up.fe.specs.util.SpecsIo;
@@ -7,6 +11,14 @@ import pt.up.fe.specs.util.SpecsIo;
 public class JmmCompiler {
 	
     private static String CLASS_WITH_MAIN = "Main";	
+
+
+    /**
+     * Compiles a .jmm file to .j code with no additional arguments.
+     */
+    public static String compile(File jmm){
+        return compile(jmm, new String[0]);
+    }
     
 
 	
@@ -16,7 +28,7 @@ public class JmmCompiler {
      * @param jmm the .jmm file
      * @return a string with the .j code
 	 */
-	public static String compile(File jmm){
+    public static String compile(File jmm, String... args){
 
 		// This method needs to be implemented before the tests can run
 		// Below there is an example implementation, that assumes that the .j file is generated in the repository root
@@ -34,7 +46,10 @@ public class JmmCompiler {
             Method mainMethod = mainClass.getMethod("main", String[].class);
 
             // Invoke main method with file as argument
-            String[] mainArgs = { jmm.getAbsolutePath() };
+            List<String> allArgs = new ArrayList<>();
+            allArgs.add(jmm.getAbsolutePath());
+            allArgs.addAll(Arrays.asList(args));
+            String[] mainArgs = allArgs.toArray(size -> new String[size]);
             Object[] invokeArgs = { mainArgs };
             mainMethod.invoke(null, invokeArgs);
 
