@@ -60,6 +60,29 @@ public class JasminUtils {
         File testFile = SpecsIo.resourceCopy(jmmResource, tempFolder);
 		
 		String jCode = JmmCompiler.compile(testFile);
+		String jFilename = SpecsIo.removeExtension(testFile.getName()) + ".j";
+		SpecsIo.write(new File(tempFolder, jFilename), jCode);
+	
+		File resultsFolder = SpecsIo.mkdir("resultsProject"); 
+
+
+		String jBaseFilename = SpecsIo.removeExtension(jmmResource) + ".j";		
+		File jBaseFile = new File(jBaseFilename);
+
+		File testFolder = SpecsIo.mkdir(resultsFolder, jBaseFile.getParent());
+
+		File jmmFile = new File(testFolder, testFile.getName());
+		SpecsIo.write(jmmFile, SpecsIo.read(testFile));
+		
+		File jFile = new File(testFolder, jBaseFile.getName());
+		SpecsIo.write(jFile, jCode);
+
+		//System.out.println("Writing generated code to folder: " + testFolder.getAbsolutePath());	
+	
+
+//		SpecsIo.mkdir("j_files");
+//		File jFile = new File(
+		
 		if(test)
 			testJasminBase(jCode, expectedOutput, stdin);
 		return jCode;
