@@ -1,24 +1,55 @@
 package jasmin;
 
-public class CodeGeneratorUtils {
+import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
+import pt.up.fe.specs.util.utilities.StringLines;
+import pt.up.fe.specs.util.SpecsStrings;
 
+public class CodeGeneratorUtils {
+/*
   public static String getBetweenStrings(String text,String textFrom,String textTo) {
     String result = "";
     result = text.substring(text.indexOf(textFrom) + textFrom.length(),text.length());
     result =result.substring(0,result.indexOf(textTo));
     return result;
   }
-
-  public static String getMethod(String code, String methodName) {
-    return CodeGeneratorUtils.getBetweenStrings(code, ".method public " + methodName, ".end method");
+ */ 
+  
+  public static String getMethod(String code, String methodName) {	
+	var regex = "\\.method\\s+public\\s+"+methodName+"((.|\\s)+?)\\.end\\s+method";
+	var results = SpecsStrings.getRegex(code, regex);
+	
+	if(results.isEmpty()) {
+		throw new RuntimeException("Could not find method '"+methodName+"' in the following code:\n" + code);
+	}	
+	
+	return results.get(0);
   }
 
-  public static String getLimit(String method, String limitType) {
-    return CodeGeneratorUtils.getBetweenStrings(method, ".limit " + limitType + " ", "\n");
+  public static String getLimit(String method, String limitType) {	
+	var regex = "\\.limit\\s+"+limitType+"\\s+(.+?)(\\n|\\r)";
+	var results = SpecsStrings.getRegex(method, regex);
+	
+	if(results.isEmpty()) {
+		throw new RuntimeException("Could not find limit '"+limitType+"' in the following code:\n" + method);
+	}	
+
+	return results.get(0);	
+	
   }
 
   public static String getExprIndex(String method, String expression){
-    String index = CodeGeneratorUtils.getBetweenStrings(method, expression, "\n");
+	  
+	var regex = expression + "((.|\\s)+?)(\\n|\\r)";
+	var results = SpecsStrings.getRegex(method, regex);
+	
+	if(results.isEmpty()) {
+		throw new RuntimeException("Could not find expression '"+expression+"' in the following code:\n" + method);
+	}		  
+		  
+    String index = results.get(0);
+
     String[] tokens = index.split("_|\\s");
     if (tokens.length < 2)
       return "";
@@ -51,9 +82,11 @@ public class CodeGeneratorUtils {
   public static boolean methodContainsExpression(String code, String methodName, String[] expressions) {
     String method = "";
     method = CodeGeneratorUtils.getMethod(code, methodName);
+    method = method.replaceAll("\\s","");
     boolean ret = false;
     for(int i = 0; i < expressions.length; i++){
-        ret |= method.contains(expressions[i]);
+        String str = expressions[i].replaceAll("\\s","");
+        ret |= method.contains(str);
     }
     return ret;
   }
