@@ -3,8 +3,11 @@ package jasmin;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.regex.Pattern;
+
 import pt.up.fe.specs.util.utilities.StringLines;
 import pt.up.fe.specs.util.SpecsStrings;
+
 
 public class CodeGeneratorUtils {
 /*
@@ -69,6 +72,12 @@ public class CodeGeneratorUtils {
         limitValue = -1;
     }
     return limitValue;
+  }
+
+  public static boolean codeContainsExpressionRegex(String code, String regex) {
+	  Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
+
+	  return SpecsStrings.matches(code,pattern);
   }
 
   public static boolean codeContainsExpression(String code, String[] expressions) {
